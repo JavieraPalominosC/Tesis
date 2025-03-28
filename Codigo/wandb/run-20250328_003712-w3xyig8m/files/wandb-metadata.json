@@ -1,0 +1,46 @@
+{
+  "os": "Linux-6.1.85+-x86_64-with-glibc2.35",
+  "python": "CPython 3.11.11",
+  "startedAt": "2025-03-28T00:37:13.020281Z",
+  "args": [
+    "--dataset_path",
+    "/content/drive/MyDrive/Tesis/Tesis/Codigo/TimeVQVAE/supernova_light_curves_1.csv"
+  ],
+  "program": "/content/drive/MyDrive/Tesis/Tesis/Codigo/TimeVQVAE/stage1-1.py",
+  "codePath": "Codigo/TimeVQVAE/stage1-1.py",
+  "git": {
+    "remote": "https://JavieraPalominosC:@github.com/JavieraPalominosC/Tesis.git",
+    "commit": "34645d0ff6495e3838ee7d7e3065a1addabe03db"
+  },
+  "email": "javiera.palominos@ug.uchile.cl",
+  "root": ".",
+  "host": "f0e5567af260",
+  "executable": "/usr/bin/python3",
+  "codePathLocal": "TimeVQVAE/stage1-1.py",
+  "cpu_count": 1,
+  "cpu_count_logical": 2,
+  "gpu": "Tesla T4",
+  "gpu_count": 1,
+  "disk": {
+    "/": {
+      "total": "120942624768",
+      "used": "44611735552"
+    }
+  },
+  "memory": {
+    "total": "13609422848"
+  },
+  "cpu": {
+    "count": 1,
+    "countLogical": 2
+  },
+  "gpu_nvidia": [
+    {
+      "name": "Tesla T4",
+      "memoryTotal": "16106127360",
+      "cudaCores": 2560,
+      "architecture": "Turing"
+    }
+  ],
+  "cudaVersion": "12.4"
+}

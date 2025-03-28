@@ -57,6 +57,8 @@ class ExpStage1(pl.LightningModule):
 
         # 🔹 Paso 3: Decodificación
         x_rec = self.decoder(z_q)  # (batch, channels, length)
+        x_rec = x_rec.transpose(1, 2)
+        print("Forma de x_rec después de decodificación:", x_rec.shape)
 
         if return_x_rec:
             return x_rec
@@ -96,19 +98,21 @@ class ExpStage1(pl.LightningModule):
 
     def log_wandb(self, batch, losses):
         """🔹 Función para graficar series originales vs reconstruidas en wandb"""
-        x = batch
+        x = batch  # Asumiendo que x tiene la forma (batch_size, length, channels)
         x_rec = self.forward(batch, batch_idx=0, return_x_rec=True)
 
-        b = np.random.randint(0, x_rec.shape[0])  # 🔹 Elegimos un batch aleatorio
-        c = 0  # 🔹 Forzamos c=0 porque solo hay 1 canal
-        
+        # Seleccionar un índice de ejemplo aleatorio del batch
+        b = np.random.randint(0, x.shape[0])
 
-
-        alpha = 0.7
         fig, ax = plt.subplots(figsize=(6, 3))
-        plt.title(f'step-{self.global_step} | channel idx:{c} \n (blue:GT, orange:reconstructed)')
-        ax.scatter(x[b, c].cpu(), label="Original")
-        ax.plot(x_rec[b, c].detach().cpu(), alpha=alpha, label="Reconstrucción")  # ✅ Ahora no se sale del rango
+        plt.title(f'step-{self.global_step} (blue:GT, orange:reconstructed)')
+
+        # Asegurarse de eliminar la dimensión del canal para la graficación
+        x_plotted = x[b, :, 0].cpu().numpy()  # Removemos la dimensión de canal para x
+        x_rec_plotted = x_rec[b, :, 0].detach().cpu().numpy()  # Removemos la dimensión de canal para x_rec
+
+        ax.plot(x_plotted, label="Original", color='blue')
+        ax.plot(x_rec_plotted, label="Reconstrucción", color='orange', alpha=0.7)
         ax.legend()
 
         plt.tight_layout()
@@ -117,5 +121,8 @@ class ExpStage1(pl.LightningModule):
 
     def configure_optimizers(self):
         opt = torch.optim.AdamW(self.parameters(), lr=self.config['exp_params']['lr'])
-        scheduler = linear_warmup_cosine_annealingLR(opt, self.config['trainer_params']['max_steps']['stage1'], self.config['exp_params']['linear_warmup_rate'], min_lr=self.config['exp_params']['min_lr'])
+        total_steps = self.config['trainer_params']['max_steps']['stage1']
+        warmup_steps = int(self.config['exp_params']['linear_warmup_rate'] * total_steps)
+        scheduler = torch.optim.lr_scheduler.OneCycleLR(opt, max_lr=self.config['exp_params']['lr'], total_steps=total_steps, pct_start=self.config['exp_params']['linear_warmup_rate'], anneal_strategy='cos', final_div_factor=(self.config['exp_params']['lr'] / self.config['exp_params']['min_lr']))
+
         return {'optimizer': opt, 'lr_scheduler': scheduler}

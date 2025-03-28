@@ -1,0 +1,23 @@
+2025-03-28 00:33:49,439 INFO    MainThread:17508 [wandb_setup.py:_flush():67] Current SDK version is 0.19.8
+2025-03-28 00:33:49,441 INFO    MainThread:17508 [wandb_setup.py:_flush():67] Configure stats pid to 17508
+2025-03-28 00:33:49,441 INFO    MainThread:17508 [wandb_setup.py:_flush():67] Loading settings from /root/.config/wandb/settings
+2025-03-28 00:33:49,441 INFO    MainThread:17508 [wandb_setup.py:_flush():67] Loading settings from /content/drive/MyDrive/Tesis/Tesis/Codigo/wandb/settings
+2025-03-28 00:33:49,441 INFO    MainThread:17508 [wandb_setup.py:_flush():67] Loading settings from environment variables
+2025-03-28 00:33:49,441 INFO    MainThread:17508 [wandb_init.py:setup_run_log_directory():647] Logging user logs to ./wandb/run-20250328_003349-fr21azpt/logs/debug.log
+2025-03-28 00:33:49,441 INFO    MainThread:17508 [wandb_init.py:setup_run_log_directory():648] Logging internal logs to ./wandb/run-20250328_003349-fr21azpt/logs/debug-internal.log
+2025-03-28 00:33:49,442 INFO    MainThread:17508 [wandb_init.py:init():761] calling init triggers
+2025-03-28 00:33:49,442 INFO    MainThread:17508 [wandb_init.py:init():766] wandb.init called with sweep_config: {}
+config: {'dataset': {'data_scaling': True, 'batch_sizes': {'stage1': 32, 'stage2': 32, 'stage_neural_mapper': 32}, 'num_workers': 0}, 'exp_params': {'lr': 0.005, 'linear_warmup_rate': 0.05, 'min_lr': 0.0001}, 'trainer_params': {'max_steps': {'stage1': 20000, 'stage2': 40000, 'stage_neural_mapper': 3000}, 'val_check_interval': {'stage1': 1, 'stage2': 1000, 'stage_neural_mapper': 1000}}, 'encoder': {'init_dim': 4, 'hid_dim': 128, 'n_resnet_blocks': 2, 'downsampled_width': {'lf': 8, 'hf': 32}}, 'decoder': {'n_resnet_blocks': 2}, 'VQ-VAE': {'latent_dim': 64, 'codebook_size': 256, 'kmeans_init': True, 'codebook_dim': 8}, 'MaskGIT': {'choice_temperatures': {'lf': 10, 'hf': 0}, 'T': {'lf': 10, 'hf': 10}, 'prior_model_l': {'hidden_dim': 128, 'n_layers': 4, 'heads': 2, 'ff_mult': 1, 'use_rmsnorm': True, 'p_unconditional': 0.2, 'model_dropout': 0.3, 'emb_dropout': 0.3}, 'prior_model_h': {'hidden_dim': 32, 'n_layers': 1, 'heads': 1, 'ff_mult': 1, 'use_rmsnorm': True, 'p_unconditional': 0.2, 'model_dropout': 0.3, 'emb_dropout': 0.3}, 'cfg_scale': 1.0, 'ESS': {'use': False, 'error_ratio_ma_rate': 0.3}}, 'neural_mapper': {'dim': 8, 'dim_mults': [1, 2, 4, 8], 'resnet_block_groups': 4, 'dropout': 0.5, 'tau_search_rng': [0.1, 0.5, 1, 2, 4]}, 'evaluation': {'batch_size': 32, 'min_num_gen_samples': 1024}, 'dataset_path': '/content/drive/MyDrive/Tesis/Tesis/Codigo/TimeVQVAE/supernova_light_curves_1.csv', 'n_trainable_params': 57900, '_wandb': {}}
+2025-03-28 00:33:49,442 INFO    MainThread:17508 [wandb_init.py:init():784] starting backend
+2025-03-28 00:33:49,442 INFO    MainThread:17508 [wandb_init.py:init():788] sending inform_init request
+2025-03-28 00:33:49,448 INFO    MainThread:17508 [backend.py:_multiprocessing_setup():101] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2025-03-28 00:33:49,448 INFO    MainThread:17508 [wandb_init.py:init():798] backend started and connected
+2025-03-28 00:33:49,451 INFO    MainThread:17508 [wandb_init.py:init():891] updated telemetry
+2025-03-28 00:33:49,532 INFO    MainThread:17508 [wandb_init.py:init():915] communicating run to backend with 90.0 second timeout
+2025-03-28 00:33:50,205 INFO    MainThread:17508 [wandb_init.py:init():990] starting run threads in backend
+2025-03-28 00:33:50,637 INFO    MainThread:17508 [wandb_run.py:_console_start():2375] atexit reg
+2025-03-28 00:33:50,639 INFO    MainThread:17508 [wandb_run.py:_redirect():2227] redirect: wrap_raw
+2025-03-28 00:33:50,640 INFO    MainThread:17508 [wandb_run.py:_redirect():2292] Wrapping output streams.
+2025-03-28 00:33:50,642 INFO    MainThread:17508 [wandb_run.py:_redirect():2315] Redirects installed.
+2025-03-28 00:33:50,644 INFO    MainThread:17508 [wandb_init.py:init():1032] run started, returning control to user process
+2025-03-28 00:36:03,967 INFO    MsgRouterThr:17508 [mailbox.py:close():129] Closing mailbox, abandoning 1 handles.

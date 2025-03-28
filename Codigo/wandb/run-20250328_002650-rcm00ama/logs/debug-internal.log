@@ -1,0 +1,15 @@
+{"time":"2025-03-28T00:26:51.00170258Z","level":"INFO","msg":"stream: starting","core version":"0.19.8","symlink path":"wandb/run-20250328_002650-rcm00ama/logs/debug-core.log"}
+{"time":"2025-03-28T00:26:51.112370746Z","level":"INFO","msg":"created new stream","id":"rcm00ama"}
+{"time":"2025-03-28T00:26:51.113420047Z","level":"INFO","msg":"writer: Do: started","stream_id":"rcm00ama"}
+{"time":"2025-03-28T00:26:51.113450515Z","level":"INFO","msg":"stream: started","id":"rcm00ama"}
+{"time":"2025-03-28T00:26:51.113492648Z","level":"INFO","msg":"sender: started","stream_id":"rcm00ama"}
+{"time":"2025-03-28T00:26:51.113516264Z","level":"INFO","msg":"handler: started","stream_id":"rcm00ama"}
+{"time":"2025-03-28T00:26:51.775956122Z","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-03-28T00:33:28.618868449Z","level":"INFO","msg":"stream: closing","id":"rcm00ama"}
+{"time":"2025-03-28T00:33:28.619028129Z","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-03-28T00:33:28.619789554Z","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-03-28T00:33:30.125824866Z","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-03-28T00:33:30.405068305Z","level":"INFO","msg":"handler: closed","stream_id":"rcm00ama"}
+{"time":"2025-03-28T00:33:30.405134765Z","level":"INFO","msg":"writer: Close: closed","stream_id":"rcm00ama"}
+{"time":"2025-03-28T00:33:30.405287826Z","level":"INFO","msg":"sender: closed","stream_id":"rcm00ama"}
+{"time":"2025-03-28T00:33:30.407757522Z","level":"INFO","msg":"stream: closed","id":"rcm00ama"}

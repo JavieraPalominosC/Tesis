@@ -1,0 +1,243 @@
+_wandb:
+    value:
+        cli_version: 0.19.8
+        m:
+            - "1": val/recons_loss
+              "5": 2
+              "6":
+                - 1
+                - 3
+              "7": []
+            - "1": trainer/global_step
+              "6":
+                - 3
+              "7": []
+            - "1": val/perplexity
+              "5": 2
+              "6":
+                - 1
+                - 3
+              "7": []
+            - "1": lr-AdamW
+              "5": 2
+              "6":
+                - 1
+                - 3
+              "7": []
+            - "1": x vs x_rec (val).width
+              "5": 2
+              "6":
+                - 1
+                - 3
+              "7": []
+            - "1": val/vq_loss
+              "5": 2
+              "6":
+                - 1
+                - 3
+              "7": []
+            - "1": epoch
+              "5": 2
+              "6":
+                - 1
+                - 3
+              "7": []
+            - "1": train/perplexity
+              "5": 2
+              "6":
+                - 1
+                - 3
+              "7": []
+            - "1": train/vq_loss
+              "5": 2
+              "6":
+                - 1
+                - 3
+              "7": []
+            - "1": train/loss
+              "5": 2
+              "6":
+                - 1
+                - 3
+              "7": []
+            - "1": x vs x_rec (val).sha256
+              "5": 2
+              "6":
+                - 1
+                - 3
+              "7": []
+            - "1": x vs x_rec (val).format
+              "5": 2
+              "6":
+                - 1
+                - 3
+              "7": []
+            - "1": x vs x_rec (val).size
+              "5": 2
+              "6":
+                - 1
+                - 3
+              "7": []
+            - "1": train/recons_loss
+              "5": 2
+              "6":
+                - 1
+                - 3
+              "7": []
+            - "1": x vs x_rec (val)._type
+              "5": 2
+              "6":
+                - 1
+                - 3
+              "7": []
+            - "1": val/loss
+              "5": 2
+              "6":
+                - 1
+                - 3
+              "7": []
+            - "1": x vs x_rec (val).height
+              "5": 2
+              "6":
+                - 1
+                - 3
+              "7": []
+            - "1": x vs x_rec (val).path
+              "5": 2
+              "6":
+                - 1
+                - 3
+              "7": []
+        python_version: 3.11.11
+        t:
+            "1":
+                - 1
+                - 5
+                - 9
+                - 11
+                - 41
+                - 49
+                - 53
+                - 55
+                - 71
+                - 103
+                - 105
+            "2":
+                - 1
+                - 5
+                - 9
+                - 11
+                - 41
+                - 49
+                - 53
+                - 55
+                - 71
+                - 103
+                - 105
+            "3":
+                - 7
+                - 16
+                - 23
+                - 55
+                - 66
+            "4": 3.11.11
+            "5": 0.19.8
+            "6": 4.50.0
+            "8":
+                - 5
+            "12": 0.19.8
+            "13": linux-x86_64
+MaskGIT:
+    value:
+        ESS:
+            error_ratio_ma_rate: 0.3
+            use: false
+        T:
+            hf: 10
+            lf: 10
+        cfg_scale: 1
+        choice_temperatures:
+            hf: 0
+            lf: 10
+        prior_model_h:
+            emb_dropout: 0.3
+            ff_mult: 1
+            heads: 1
+            hidden_dim: 32
+            model_dropout: 0.3
+            n_layers: 1
+            p_unconditional: 0.2
+            use_rmsnorm: true
+        prior_model_l:
+            emb_dropout: 0.3
+            ff_mult: 1
+            heads: 2
+            hidden_dim: 128
+            model_dropout: 0.3
+            n_layers: 4
+            p_unconditional: 0.2
+            use_rmsnorm: true
+VQ-VAE:
+    value:
+        codebook_dim: 8
+        codebook_size: 256
+        kmeans_init: true
+        latent_dim: 64
+dataset:
+    value:
+        batch_sizes:
+            stage_neural_mapper: 32
+            stage1: 32
+            stage2: 32
+        data_scaling: true
+        num_workers: 0
+dataset_path:
+    value: /content/drive/MyDrive/Tesis/Tesis/Codigo/TimeVQVAE/supernova_light_curves_1.csv
+decoder:
+    value:
+        n_resnet_blocks: 2
+encoder:
+    value:
+        downsampled_width:
+            hf: 32
+            lf: 8
+        hid_dim: 128
+        init_dim: 4
+        n_resnet_blocks: 2
+evaluation:
+    value:
+        batch_size: 32
+        min_num_gen_samples: 1024
+exp_params:
+    value:
+        linear_warmup_rate: 0.05
+        lr: 0.005
+        min_lr: 0.0001
+n_trainable_params:
+    value: 57900
+neural_mapper:
+    value:
+        dim: 8
+        dim_mults:
+            - 1
+            - 2
+            - 4
+            - 8
+        dropout: 0.5
+        resnet_block_groups: 4
+        tau_search_rng:
+            - 0.1
+            - 0.5
+            - 1
+            - 2
+            - 4
+trainer_params:
+    value:
+        max_steps:
+            stage_neural_mapper: 3000
+            stage1: 20000
+            stage2: 40000
+        val_check_interval:
+            stage_neural_mapper: 1000
+            stage1: 1
+            stage2: 1000
