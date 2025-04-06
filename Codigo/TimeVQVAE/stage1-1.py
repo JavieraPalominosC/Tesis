@@ -12,8 +12,8 @@ from pytorch_lightning.callbacks import LearningRateMonitor
 from pytorch_lightning.loggers import WandbLogger
 from torch.utils.data import DataLoader
 
-from preprocessing.supernova_dataset import SupernovaDataset  # 🔹 Importamos el dataset corregido
-from experiments.exp_stage01 import ExpStage1  # 🔹 Usa la versión con Autoencoder
+from preprocessing.supernova_dataset import SupernovaDataset  
+from experiments.exp_stage01 import ExpStage1  
 from utils import get_root_dir, load_yaml_param_settings, str2bool
 
 
@@ -36,15 +36,15 @@ def train_stage1(config: dict,
     """
     project_name = 'TimeVQVAE-stage1'
 
-    # 🔹 Obtener la forma del dataset correctamente
-    sample_data = next(iter(train_data_loader))  # Tomamos un batch en vez de dataset[0]
+
+    sample_data = next(iter(train_data_loader)) 
     print(f"Tipo de sample_data: {type(sample_data)}")  # Debugging
     print(f"Shape de sample_data: {sample_data.shape}")  # Debugging
 
-    _, input_length, _ = sample_data.shape  # Extraemos la forma correcta
-    in_channels = 1  # 🔹 Solo hay una banda (brightness)
+    _, input_length, _ = sample_data.shape  
+    in_channels = 1  
 
-    train_exp = ExpStage1(in_channels, input_length, config)  # 🔹 Usa la versión con Autoencoder
+    train_exp = ExpStage1(in_channels, input_length, config) 
     
     n_trainable_params = sum(p.numel() for p in train_exp.parameters() if p.requires_grad)
     wandb_logger = WandbLogger(project=project_name, name=None, config={**config, 'dataset_path': dataset_path, 'n_trainable_params': n_trainable_params})
@@ -87,12 +87,14 @@ if __name__ == '__main__':
 
     # Load dataset
     batch_size = config['dataset']['batch_sizes']['stage1']
-    dataset = SupernovaDataset(args.dataset_path)  # 🔹 Cargamos dataset de supernovas
+    dataset = SupernovaDataset(args.dataset_path)  # carga datos
+
+    #Split
     train_size = int(0.8 * len(dataset))  # 80% train, 20% test
     test_size = len(dataset) - train_size
     train_dataset, test_dataset = torch.utils.data.random_split(dataset, [train_size, test_size])
 
-    # 🔹 Crear DataLoaders
+    #DataLoaders
     train_data_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_data_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 

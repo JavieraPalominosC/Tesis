@@ -42,32 +42,45 @@ class ExpStage1(pl.LightningModule):
         x = batch  # Solo usamos la serie, ignoramos etiquetas si las hay
         print(x.shape)
 
-        # 🔹 Paso 1: Autoencoder → Extraer Representación Latente
-        z = self.autoencoder.encoder(x.view(x.shape[0], -1))
+        # Encoder
+        z = self.autoencoder.encoder(x.transpose(1, 2))  # (batch, 1, timesteps)
 
-        # 🔹 Paso 2: Cuantización Vectorial
+
+        # Cuantización Vectorial
         z = (z - z.mean()) / (z.std() + 1e-5)  # 🔹 Normalización
         z = z.unsqueeze(1)  # Añade una dimensión: (batch_size, 1, latent_dim)
 
-        # 🔹 Debugging
+        #Debugging
         print(f"Shape de z después de reshape: {z.shape}")  # Debería ser (20, 1, 128)
 
-        z_q, s, vq_loss, perplexity = quantize(z, self.vq_model)  # ✅ Ahora con la forma correcta
+        z_q, s, vq_loss, perplexity = quantize(z, self.vq_model)  
+        print("z_q ejemplo:", z_q[0, 0, :5].detach().cpu().numpy())
 
 
-        # 🔹 Paso 3: Decodificación
-        x_rec = self.decoder(z_q)  # (batch, channels, length)
-        x_rec = x_rec.transpose(1, 2)
-        print("Forma de x_rec después de decodificación:", x_rec.shape)
+        # Ignoramos VQ 
+        #z_q = z  # ya es (batch, latent_dim)
+        #vq_loss = {"loss": torch.tensor(0.0, device=self.device)}
+        #perplexity = 0.0
+
+
+
+        #Decoder
+        x_rec = self.autoencoder.decoder(z_q.squeeze(1))  # → (batch, 1, timesteps)
+        x_rec = x_rec.transpose(1, 2)          # → (batch, timesteps, 1)
+        print("Reconstrucción:", x_rec.shape)
 
         if return_x_rec:
             return x_rec
 
-        # 🔹 Pérdidas
-        recons_loss = F.mse_loss(x, x_rec.transpose(1, 2))
+       # loss
+        recons_loss = F.mse_loss(x, x_rec)
         total_loss = recons_loss + vq_loss["loss"]
 
-        return {"recons_loss": recons_loss, "vq_loss": vq_loss, "total_loss": total_loss, "perplexity": perplexity}
+        return {
+            "recons_loss": recons_loss,
+            "vq_loss": vq_loss,
+            "total_loss": total_loss,
+            "perplexity": perplexity}
 
     def training_step(self, batch, batch_idx):
         losses = self.forward(batch, batch_idx)
@@ -86,7 +99,7 @@ class ExpStage1(pl.LightningModule):
     def validation_step(self, batch, batch_idx):
         losses = self.forward(batch, batch_idx)
 
-        # 🔹 Visualización con wandb
+        
         if batch_idx == 0:
             self.log_wandb(batch, losses)
 
@@ -108,8 +121,8 @@ class ExpStage1(pl.LightningModule):
         plt.title(f'step-{self.global_step} (blue:GT, orange:reconstructed)')
 
         # Asegurarse de eliminar la dimensión del canal para la graficación
-        x_plotted = x[b, :, 0].cpu().numpy()  # Removemos la dimensión de canal para x
-        x_rec_plotted = x_rec[b, :, 0].detach().cpu().numpy()  # Removemos la dimensión de canal para x_rec
+        x_plotted = x[b, :, 0].cpu().numpy()  # (50,)
+        x_rec_plotted = x_rec[b, :, 0].detach().cpu().numpy()  # (50,)
 
         ax.plot(x_plotted, label="Original", color='blue')
         ax.plot(x_rec_plotted, label="Reconstrucción", color='orange', alpha=0.7)

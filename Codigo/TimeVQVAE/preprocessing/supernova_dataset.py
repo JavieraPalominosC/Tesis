@@ -23,15 +23,15 @@ class SupernovaDataset(Dataset):
 
         supernova_series = []
         for sn_id, group in self.df.groupby('id'):
-            f = interp1d(group['time'], group['brightness'], kind='linear', fill_value="extrapolate")
+            f = interp1d(group['time'], group['brightness'], kind='cubic', fill_value="extrapolate")
             brightness_interp = f(grid_times)  # Interpolamos en el grid uniforme
             supernova_series.append(brightness_interp)
 
         X = np.array(supernova_series)  # (num_supernovas, num_timesteps)
 
-        # Normalizar entre 0 y 1
-        scaler = MinMaxScaler()
-        X = scaler.fit_transform(X)
+        X_mean = X.mean(axis=1, keepdims=True)
+        X_std = X.std(axis=1, keepdims=True) + 1e-6  # Evita división por cero
+        X = (X - X_mean) / X_std
 
         # Convertir a Tensor PyTorch
         return torch.tensor(X, dtype=torch.float32).unsqueeze(-1)  # (num_supernovas, num_timesteps, 1)
@@ -41,3 +41,4 @@ class SupernovaDataset(Dataset):
 
     def __getitem__(self, idx):
         return self.data[idx]  # Devolvemos solo la serie
+
