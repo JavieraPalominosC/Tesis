@@ -6,6 +6,8 @@ import torch.nn as nn
 from torch.nn.utils import weight_norm
 import torch.nn.functional as F
 import numpy as np
+if not hasattr(np, "float_") and hasattr(np, "float64"):
+    np.float_ = np.float64
 from utils import timefreq_to_time, time_to_timefreq, SnakeActivation
 
 

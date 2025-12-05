@@ -1,5 +1,7 @@
 import torch
 import numpy as np
+if not hasattr(np, "float_") and hasattr(np, "float64"):
+    np.float_ = np.float64
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 import wandb

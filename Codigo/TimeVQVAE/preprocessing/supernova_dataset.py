@@ -1,4 +1,6 @@
 import numpy as np
+if not hasattr(np, "float_") and hasattr(np, "float64"):
+    np.float_ = np.float64
 import pandas as pd
 import torch
 from scipy.interpolate import interp1d
