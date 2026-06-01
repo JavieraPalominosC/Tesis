@@ -31,6 +31,7 @@ if torch.cuda.is_available():
     gpu_name = torch.cuda.get_device_name(torch.cuda.current_device())
     logging.info(f'🖥️ GPU detected: {gpu_name}')
 else:
+    gpu_name = "No GPU"
     logging.info('⚠️ No GPU available.')
 
 def load_dataset(name_dataset, config):
@@ -127,6 +128,7 @@ def perform_ft_classification(run, config, dataset, experiment_name):
         val_check_interval=1.0,
         log_every_n_steps=100,
         accelerator="gpu",
+        devices=1,
         min_epochs=1,
         max_epochs=max_epochs,
         num_sanity_val_steps=-1,

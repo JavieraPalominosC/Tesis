@@ -17,7 +17,7 @@ ft_classification:
   } 
   pretrained_model: {
     'use': true,
-    'path': "microsoft/swinv2-tiny-patch4-window16-256",
+    'path': "/home/jpalominos/.cache/huggingface/hub/models--microsoft--swinv2-tiny-patch4-window16-256/snapshots/f4d3075206f2ad5eda586c30d6b4d0500f312421",
   }
   list_folds: [0]
   

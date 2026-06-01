@@ -1,0 +1,32 @@
+vqvae:
+  # Encoder / Decoder
+  in_channels: 3
+  hidden_channels: [64, 128, 256]
+  embedding_dim: 256
+  
+  # Codebook
+  num_embeddings: 512
+  commitment_cost: 0.25
+
+  # Training
+  learning_rate: 0.0002
+  batch_size: 32
+  num_epochs: 100
+  num_workers: 0
+
+  # Data
+  image_dir: "data/images/elasticc_1/2grid"
+  image_size: 256
+  val_split: 0.1
+
+  # Clasificación supervisada
+  # num_classes: 0  → sin clasificación (comportamiento original)
+  # num_classes: 17 → con clasificación sobre el codebook
+  labels_path: "data/folds/labels.json"
+  num_classes: 17
+  cls_weight: 1.0
+  cls_dropout: 0.1
+  
+  # Checkpoints
+  checkpoint_dir: "results/vqvae/checkpoints"
+  log_dir: "results/vqvae/logs"

@@ -32,3 +32,10 @@ zizz951J
 results_v1
 create_zips.py
 download_results.sh
+venv/
+*.pt
+*.ckpt
+*_backup.py
+*_backup.yaml
+notebooks/
+models/
