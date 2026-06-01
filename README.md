@@ -1,157 +1,42 @@
-# Visual Transformer for Light Curve Classification
+# Detección de Outliers en Curvas de Luz de Supernovas con VQ-VAE
 
-This repository contains the implementation of a Vision Transformer (VT) model called SwinV2, for classifying astronomical light curves. The model is designed to dynamically generate images from astronomical time series data during training, allowing flexibility in modifying hyperparameters without storing images on disk.
+Tesis de Magíster — Javiera Palominos C.
+Universidad de Chile
 
-<p align="center">
-  <img src="images/input_model.png" alt="Modelo de Entrada" width="45%" style="vertical-align: top; margin-right: 10px;" />
-  <img src="images/model.png" alt="Modelo General" width="45%" style="vertical-align: top;" />
-</p>
+## Descripción
 
-## Getting Started
+Pipeline de detección de anomalías y generación de contrafactuales para curvas de luz de supernovas del dataset ELAsTiCC-1, usando un VQ-VAE con representación 2grid y un prior MaskGIT.
 
-### **Clone the Repository**
+## Pipeline
 
-To begin, clone this repository to your local machine:
+Curvas de luz (6 bandas) → Imágenes 2grid (256x256) → VQ-VAE → Tokens discretos → MaskGIT prior → Anomaly score + Contrafactuales
 
-```bash
-git clone https://github.com/dnlmoreno/VT_Model_for_LightCurves_Classification.git
-cd VT_Model_for_LightCurves_Classification
-```
+## Estructura
 
-### **Set Up the Environment**
+src/models/vqvae/       - VQ-VAE con EMA, codebook reset, clasificación supervisada
+src/models/maskgit/     - Prior MaskGIT para anomaly detection
+src/data/               - Dataset y preprocesamiento
+scripts/                - Entrenamiento, generación de tokens, análisis
+configs/                - Configuraciones
 
-A Docker environment is provided to ensure reproducibility. Follow these steps to set up and run the container:
+## Dataset
 
-### Run the Docker Container
+ELAsTiCC-1: ~895,000 supernovas de 17 tipos, 6 bandas fotométricas (u, g, r, i, z, Y).
 
-1. **Build the Docker image:**
+## Modelos
 
-   ```bash
-   docker build -t visualtrans .
-   ```
+VQ-VAE: encoder CNN + codebook EMA (512 embeddings, dim=256) + decoder CNN.
+Opcionalmente con cabeza de clasificación supervisada sobre z_q (17 clases).
 
-2. **Run the container with GPU support:**
+MaskGIT: prior sobre secuencias de 1024 tokens para anomaly scoring
+y generación de contrafactuales.
 
-   For Windows:
-   ```bash
-   docker run --gpus all -it --rm -v ${PWD}:/app -p 6006:6006 visualtrans
-   ```
+## Entrenamiento
 
-   For Linux:
-   ```bash
-   docker run --gpus all -it --rm -v $(pwd):/app -p 6006:6006 visualtrans
-   ```
+sbatch run_vqvae.sh
+sbatch run_maskgit.sh
 
-### Alternative: Using Conda
+## Cluster
 
-You can also set up the environment using Conda and install the required dependencies. However, we recommend using Docker to avoid compatibility issues across different machines.
-
-```bash
-conda create -n visualtrans python=3.10.9
-conda activate visualtrans
-pip install -r requirements.txt
-```
-
-### **Download the Data**
-
-Download the required datasets using the provided script:
-
-```bash
-bash download_data.sh elasticc_1
-bash download_data.sh macho
-```
-
-The downloaded data includes raw files and Parquet files containing partitions (training, validation, and test) with IDs corresponding to Astromer and ATAT. When you run the script to train the model, the raw files and partition.parquet are loaded directly into memory in `src/data/CustomDataset.py`, and any necessary adjustments or considerations are handled in `src/data/processing/get_data.py`. During training, images are generated dynamically, allowing hyperparameters to be adjusted on the fly without requiring new image versions to be stored on disk.
-
-## Running the Model
-
-### **Training with Best Hyperparameters**
-
-The scripts for running the model with the best hyperparameters can be found in `scripts/run_best_hp/wo_slurm`. For example, to run the model with the best hyperparameters for multi-band MACHO using the Overlay approach and 500 samples per class, execute the following command:
-
-```bash
-bash scripts/run_best_hp/wo_slurm/run_macho_multiband_overlay_500.sh
-```
-
-We recommend reviewing these files, as they explain how to configure and use the hyperparameters. Note that the primary training script used within the execution scripts is `scripts/run_online.py`.
-
-This command will create a `results/ml-runs` directory where all experiments will be logged using MLflow. See the section below for tracking experiments.
-
-### **Core Training Script**
-
-If you want to run `run_online.py` directly, you can do so using:
-
-```
-CUDA_VISIBLE_DEVICES=0 python -m scripts.run_online
-```
-
-It will use the default hyperparameter configuration from `configs/online/run_config.yaml`.
-
-
-### **Configuration Files**
-
-We use **Hydra** for flexible hyperparameter management. The main configuration files are:
-
-- Model configuration: `configs/online/run_config.yaml`
-- Dataset configuration: `configs/datasets_config.yaml`
-
-For example, you can modify hyperparameters by passing them as arguments using the following structure:
-
-```
-python -m scripts.run_online ft_classification.loader.name_dataset='macho_multiband' ft_classification.loader.spc=500 ft_classification.imgs_params.input_type='2grid'
-```
-
-### **Hyperparameter Search**
-
-The scripts for hyperparameter tuning are available for execution on a SLURM-based system. You can find them in `scripts/hp_tuning`.
-
-
-## Tracking Experiments with MLflow
-
-To monitor training runs using MLflow, start the UI with:
-
-```bash
-mlflow ui --backend-store-uri file:./results/ml-runs --host 0.0.0.0 --port 6006
-```
-
-Then, open the following URL in your browser:
-
-```bash
-localhost:6006
-```
-
-Once training is complete, you can find the hyperparameters, model weights, evaluation metrics, and confusion matrices in the corresponding MLflow **artifacts** folder.
-
-## Notebooks
-
-The `notebooks` directory contains Jupyter notebooks used for extracting results from MLflow and generating visualizations for the paper. You can use these as references for analyzing and plotting results.
-
-If you are using docker you should
-```bash
-jupyter notebook --ip=0.0.0.0 --port=6006 --allow-root
-```
-
-Then, open the following URL in your browser:
-
-```bash
-localhost:6006
-```
-
-## Inference
-
-Inference is performed at the end of the training script `run_online.py`. However, if you need to use a trained model for inference separately, update the main part of `scripts/predict_clf.py` with the appropriate values for the following variables:
-
-* `exp_name`: *<mlflow_experiment_name>*
-* `run_name`: <mlflow_run_name>
-* `results_dir`: <directory containing results before the 'ml-flow' folder>
-* `fold`: <fold_number>
-
-Then, run the script with:
-
-```bash
-CUDA_VISIBLE_DEVICES=0 python -m scripts.predict_clf
-```
-
----
-
-For any issues or questions, feel free to open an issue in this repository. 🚀
+Leftraru HPC (NLHPC Chile), partición mi210, AMD Instinct MI210.
+Stack: Python 3.10, PyTorch ROCm 6.3, PyTorch Lightning 2.4.
