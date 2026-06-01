@@ -20,13 +20,11 @@ vqvae:
   val_split: 0.1
 
   # Clasificación supervisada
-  # num_classes: 0  → sin clasificación (comportamiento original)
-  # num_classes: 17 → con clasificación sobre el codebook
   labels_path: "data/folds/labels.json"
   num_classes: 17
-  cls_weight: 1.0
+  cls_weight: 0.1
   cls_dropout: 0.1
   
   # Checkpoints
-  checkpoint_dir: "results/vqvae/checkpoints"
+  checkpoint_dir: "results/vqvae/checkpoints_cls01"
   log_dir: "results/vqvae/logs"

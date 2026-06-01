@@ -84,3 +84,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+# Este bloque no se ejecuta, es solo referencia para resume manual
+# Para resumir: cambiar trainer.fit(model, dm) por:
+# trainer.fit(model, dm, ckpt_path="results/vqvae/checkpoints/MEJOR.ckpt")

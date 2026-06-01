@@ -39,3 +39,4 @@ venv/
 *_backup.yaml
 notebooks/
 models/
+__pycache__/
