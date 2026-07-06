@@ -41,7 +41,7 @@ for g in GROUP_NAMES:
     ax.axvline(results[g]['mean'], color=COLORS[g], linestyle='--',
                alpha=0.5, linewidth=1)
 
-ax.set_xlabel(r'Score de anomal\'ia $(-\log\, p(\mathbf{s}))$', fontsize=12)
+ax.set_xlabel('Score de anomalía $(-\log\, p(\mathbf{s}))$', fontsize=12)
 ax.set_ylabel('Densidad', fontsize=12)
 ax.set_title(u'Distribuci\u00f3n del score de anomal\u00eda por grupo de supernova',
              fontsize=13)
@@ -68,7 +68,7 @@ means = [results[g]['mean'] for g in order]
 ax.scatter(range(1, len(order)+1), means, color='black', marker='D',
            s=40, zorder=5, label='Media')
 
-ax.set_ylabel(r'Score de anomal\'ia $(-\log\, p(\mathbf{s}))$', fontsize=12)
+ax.set_ylabel('Score de anomalía $(-\log\, p(\mathbf{s}))$', fontsize=12)
 ax.set_title(u'Score de anomal\u00eda por grupo de supernova', fontsize=13)
 ax.legend(fontsize=9)
 ax.grid(True, alpha=0.3, axis='y')

@@ -1,0 +1,20 @@
+vqvae:
+  in_channels: 3
+  hidden_channels: [64, 128, 256]
+  embedding_dim: 256
+  num_embeddings: 512
+  commitment_cost: 0.25
+  learning_rate: 0.0002
+  batch_size: 32
+  num_epochs: 20
+  num_workers: 4
+  image_dir: "data/images_exp/overlay"
+  image_size: 256
+  val_split: 0.1
+  folds_path: "data/images_exp/folds_overlay.json"
+  labels_path: "data/images_exp/labels_subset.json"
+  num_classes: 17
+  cls_weight: 0.1
+  cls_dropout: 0.1
+  checkpoint_dir: "results/vqvae_exp/overlay/checkpoints"
+  log_dir: "results/vqvae_exp/overlay/logs"
