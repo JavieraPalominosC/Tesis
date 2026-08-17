@@ -51,7 +51,7 @@ def main():
         filename   = "vqvae-{epoch:02d}-{train/loss:.4f}",
         monitor    = "train/loss",
         mode       = "min",
-        save_top_k = 3,
+        save_top_k = 1,
     )
     early_stop = EarlyStopping(
         monitor  = "train/loss",

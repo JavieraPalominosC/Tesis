@@ -22,9 +22,9 @@ for job in "${JOBS[@]}"; do
   set -- $job
   fname=$1; label=$2
   part="${fname#lc_}"; part="${part%.parquet}"
-  sbatch --partition=mi210 --gres=gpu:1 --job-name=ov_${part} \
+  sbatch --partition=main --job-name=ov_${part} \
     --output=logs/ov_full_${part}_%j.log --cpus-per-task=4 --mem=16G \
     --time=12:00:00 \
-    --wrap="cd /home/jpalominos/VT_Model_for_LightCurves_Classification && source venv/bin/activate && python scripts/generate_overlay_full.py $fname $label"
+    --wrap="cd /home/jpalominos/VT_Model_for_LightCurves_Classification && source venv/bin/activate && python scripts/generate_overlay_fast.py $fname $label"
   echo "Lanzado: $part"
 done
