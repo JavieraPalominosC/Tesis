@@ -167,6 +167,8 @@ Los inserts/pulsos anteriores eran ad hoc (amplitudes 2x/5x/15x del rango, centr
 
 Scripts: `generate_synthetic_mad.py`, `eval_synthetic_mad.py`. Figura: `results/synthetic_eval/mad/hitrate_by_band.png`.
 
+Variante en unidades de error del punto (`f ← f + k·FLUXCALERR`): `generate_synthetic_err.py`, `eval_synthetic_err.py`. El hit es el mismo: MaskGIT sube el score de esa curva respecto a su control.
+
 ---
 
 ## 7. Aprendizajes negativos (todos reportables en la tesis)
