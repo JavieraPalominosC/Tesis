@@ -1,5 +1,5 @@
 """
-Compara los anomaly scores de las 3 representaciones lado a lado.
+Compara los anomaly scores de las 4 representaciones lado a lado.
 Carga los scores_by_group.json de cada una y calcula la metrica de
 separacion (rango inter-grupo / dispersion media intra-grupo).
 
@@ -10,7 +10,7 @@ import json
 import numpy as np
 from pathlib import Path
 
-REPS = ['overlay_lines', 'points', 'waterfall']
+REPS = ['overlay_lines', 'points', 'waterfall', 'waterfall_global']
 GROUP_NAMES = ['SNIa', 'SNIbc', 'SNII', 'SNIIn', 'SLSN', 'PISN']
 
 print("="*75)

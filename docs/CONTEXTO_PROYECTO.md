@@ -86,7 +86,7 @@ Nota: el de points paró por límite de tiempo (48h) en la época 54; se usa el 
     overlay:          'results/maskgit_full/overlay_lines/checkpoints/maskgit-epoch=14-val/loss=2.8207.ckpt'   (18h31)
     points:           'results/maskgit_full/points/checkpoints/maskgit-epoch=13-val/loss=2.9244.ckpt'          (17h37)
     waterfall:        'results/maskgit_full/waterfall/checkpoints/maskgit-epoch=31-val/loss=3.1783.ckpt'       (1d04h53)
-    waterfall_global: PENDIENTE (job 11577250)
+    waterfall_global: 'results/maskgit_full/waterfall_global/checkpoints/maskgit-epoch=20-val/loss=3.6256.ckpt'  (1d00h51, job 11577250)
 
 **Tokens:** `data/tokens/tokens_{rep}_full.npy` (1389147 x 1024, uint16, ~2.8GB cada uno) y `paths_{rep}_full.txt`.
 
@@ -105,7 +105,7 @@ Método: media del NLL sobre tokens enmascarados, mask_ratio 0.5, 10 rondas (est
 | overlay | 0.381 | SNII > PISN > SLSN > SNIIn > SNIa > SNIbc (desordenada) |
 | points | 0.421 | PISN > SNII > SLSN > SNIIn > SNIa > SNIbc (desordenada) |
 | **waterfall** | **0.792** | SLSN(3.286) > PISN(3.174) > SNIIn(3.087) > SNII(3.068) > SNIa(3.048) > SNIbc(3.026) |
-| waterfall_global | pendiente | pendiente |
+| waterfall_global | pendiente (eval en curso) | pendiente |
 
 Waterfall gana claro: casi el doble de separación y la ÚNICA con jerarquía físicamente correcta, o sea los tipos raros arriba y los comunes abajo.
 
@@ -154,6 +154,18 @@ Conclusiones:
 - **NO localiza temporalmente:** la razón centro/fuera no escala con la amplitud.
 - **Sensibilidad baja:** 0.137 es solo ~0.45 sigmas (la dispersión intra-grupo es ~0.3), y eso con un pulso que visualmente aplasta toda la banda.
 - Los contrafactuales SÍ suavizan el pico insertado (ver `cf_synthetic_insert.py`, resultados en `results/synthetic_eval/insert_cf/`).
+
+### 6.3 Protocolo sistemático: un punto × k MAD × banda (el que pidió el profe)
+
+Los inserts/pulsos anteriores eran ad hoc (amplitudes 2x/5x/15x del rango, centro temporal, solo banda r). Protocolo nuevo:
+
+1. SNIa-SALT2, objetos con ≥8 obs en las 6 bandas.
+2. En cada banda, un punto **existente** al azar. MAD = median(|f − median(f)|) de esa banda.
+3. Perturbar solo ese punto: `f ← f + k·MAD`, k = 1,2,…,10. El punto se reusa entre k.
+4. Normalización del waterfall **congelada** con p01-p99 del control (si no, el outlier mueve el p99 y se diluye al pintar).
+5. Hit = Δscore > 0.3 (dispersión intra-grupo de waterfall). Curva: eje X = k en MAD, eje Y = hit rate, una línea por banda.
+
+Scripts: `generate_synthetic_mad.py`, `eval_synthetic_mad.py`. Figura: `results/synthetic_eval/mad/hitrate_by_band.png`.
 
 ---
 
@@ -238,12 +250,14 @@ Anomalías sintéticas:
 - `generate_synthetic_insert.py` (inserta pulso, el que funciona)
 - `eval_synthetic_insert.py`
 - `cf_synthetic_insert.py`
+- `generate_synthetic_second_peak.py`, `eval_synthetic_second_peak.py`, `cf_synthetic_second_peak.py`
+- `generate_synthetic_mad.py`, `eval_synthetic_mad.py` (hit rate vs k·MAD por banda)
 
 ---
 
 ## 10. Pendientes
 
-1. **MaskGIT waterfall_global** terminando. Después su eval de scores (~5h) para cerrar la tabla comparativa de las 4 representaciones. Los tokens ya están generados.
+1. **Eval de scores waterfall_global** (`eval_anomaly_scores_full.py waterfall_global`, ~5h) para cerrar la tabla de las 4 representaciones. MaskGIT ya terminó (época 20, val/loss=3.6256). Tokens listos.
 2. Evaluar las **anomalías sintéticas también sobre waterfall_global**.
 3. **Escribir la tesis:** `04_resultados.tex` y `05_discusion_conclusiones.tex` tienen TODOs. Actualizar todas las referencias de 895k a 1.389.147.
 4. **Idea abierta:** condicionar el prior POR CLASE, algo como "esto es una SNIa, debería verse así". Tensión metodológica importante: la tesis es de detección NO SUPERVISADA, y en Rubin real no hay etiqueta en tiempo real. Una alternativa sería usar la clase PREDICHA por la cabeza clasificadora del VQ-VAE. Conversar con el profe antes de implementar.

@@ -1,7 +1,7 @@
 """
 Evaluacion de anomaly scores con el prior MaskGIT full, parametrizado por representacion.
 Uso: python scripts/eval_anomaly_scores_full.py <REP>
-     REP in {overlay_lines, points, waterfall}
+     REP in {overlay_lines, points, waterfall, waterfall_global}
 """
 
 import sys
@@ -22,17 +22,19 @@ from tqdm import tqdm
 from scripts.train_maskgit_cls import MaskGITWithViz
 
 REP = sys.argv[1]
-assert REP in ('overlay_lines', 'points', 'waterfall')
+assert REP in ('overlay_lines', 'points', 'waterfall', 'waterfall_global')
 
 CHECKPOINTS = {
-    'overlay_lines': 'results/maskgit_full/overlay_lines/checkpoints/maskgit-epoch=14-val/loss=2.8207.ckpt',
-    'points':        'results/maskgit_full/points/checkpoints/maskgit-epoch=13-val/loss=2.9244.ckpt',
-    'waterfall':     'results/maskgit_full/waterfall/checkpoints/maskgit-epoch=31-val/loss=3.1783.ckpt',
+    'overlay_lines':    'results/maskgit_full/overlay_lines/checkpoints/maskgit-epoch=14-val/loss=2.8207.ckpt',
+    'points':           'results/maskgit_full/points/checkpoints/maskgit-epoch=13-val/loss=2.9244.ckpt',
+    'waterfall':        'results/maskgit_full/waterfall/checkpoints/maskgit-epoch=31-val/loss=3.1783.ckpt',
+    'waterfall_global': 'results/maskgit_full/waterfall_global/checkpoints/maskgit-epoch=20-val/loss=3.6256.ckpt',
 }
 LABELS_PATHS = {
-    'overlay_lines': 'data/labels_overlay_full.json',
-    'points':        'data/labels_points_full.json',
-    'waterfall':     'data/labels_waterfall_full.json',
+    'overlay_lines':    'data/labels_overlay_full.json',
+    'points':           'data/labels_points_full.json',
+    'waterfall':        'data/labels_waterfall_full.json',
+    'waterfall_global': 'data/labels_waterfall_global_full.json',
 }
 
 CHECKPOINT  = CHECKPOINTS[REP]
