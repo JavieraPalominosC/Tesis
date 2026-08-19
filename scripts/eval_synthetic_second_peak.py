@@ -2,7 +2,8 @@
 Evalua el segundo peak: el modelo lo detecta, y lo localiza en el tiempo
 del pulso extra (no en el peak original de la SN)?
 
-Uso: python scripts/eval_synthetic_second_peak.py
+Uso: python scripts/eval_synthetic_second_peak.py [REP]
+     REP in {waterfall, waterfall_global}
 """
 import sys
 sys.path.insert(0, '.')
@@ -17,11 +18,35 @@ import torchvision.transforms as T
 from scripts.train_maskgit_cls import MaskGITWithViz
 from src.models.vqvae.model import VQVAE
 
-VQVAE_CKPT   = 'results/vqvae_waterfall_full/checkpoints/vqvae-epoch=26-train/loss=0.0808.ckpt'
-MASKGIT_CKPT = 'results/maskgit_full/waterfall/checkpoints/maskgit-epoch=31-val/loss=3.1783.ckpt'
-IMG_DIR      = 'data/images/elasticc_1/synthetic_second_peak'
-MANIFEST     = 'data/synthetic_second_peak_manifest.json'
-OUT          = Path('results/synthetic_eval/second_peak')
+REP = sys.argv[1] if len(sys.argv) > 1 else 'waterfall'
+assert REP in ('waterfall', 'waterfall_global')
+
+VQVAE_CKPTS = {
+    'waterfall':        'results/vqvae_waterfall_full/checkpoints/vqvae-epoch=26-train/loss=0.0808.ckpt',
+    'waterfall_global': 'results/vqvae_waterfall_global_full/checkpoints/vqvae-epoch=26-train/loss=0.0597.ckpt',
+}
+MASKGIT_CKPTS = {
+    'waterfall':        'results/maskgit_full/waterfall/checkpoints/maskgit-epoch=31-val/loss=3.1783.ckpt',
+    'waterfall_global': 'results/maskgit_full/waterfall_global/checkpoints/maskgit-epoch=20-val/loss=3.6256.ckpt',
+}
+PATHS = {
+    'waterfall': dict(
+        img='data/images/elasticc_1/synthetic_second_peak',
+        man='data/synthetic_second_peak_manifest.json',
+        out='results/synthetic_eval/second_peak',
+    ),
+    'waterfall_global': dict(
+        img='data/images/elasticc_1/synthetic_second_peak_wfg',
+        man='data/synthetic_second_peak_wfg_manifest.json',
+        out='results/synthetic_eval/second_peak_wfg',
+    ),
+}
+
+VQVAE_CKPT   = VQVAE_CKPTS[REP]
+MASKGIT_CKPT = MASKGIT_CKPTS[REP]
+IMG_DIR      = PATHS[REP]['img']
+MANIFEST     = PATHS[REP]['man']
+OUT          = Path(PATHS[REP]['out'])
 OUT.mkdir(parents=True, exist_ok=True)
 
 GRID = 32
@@ -120,7 +145,7 @@ def main():
 
     tags = ['amp2', 'amp5', 'amp15']
     print('\n' + '=' * 88)
-    print('SEGUNDO PEAK: diferencia respecto al control')
+    print(f'SEGUNDO PEAK [{REP}]: diferencia respecto al control')
     print('nll_peak = NLL en la ventana del maximo real de la SN')
     print('nll_2nd  = NLL en la ventana del pulso insertado (decline tardio)')
     print('prec_t   = Δnll_2nd / (|Δnll_2nd| + |Δnll_peak|); 1 = solo el extra')

@@ -3,7 +3,7 @@
 **Autora:** Javiera Palominos Clarke — FCFM, Universidad de Chile
 **Título:** Detección de Outliers en Curvas de Luz de Supernovas con VQ-VAE y Generación de Ejemplos Contrafactuales
 **Profesor guía:** Francisco Förster
-**Última actualización:** agosto 2026
+**Última actualización:** 19 agosto 2026
 
 ---
 
@@ -104,10 +104,10 @@ Método: media del NLL sobre tokens enmascarados, mask_ratio 0.5, 10 rondas (est
 |---|---|---|
 | overlay | 0.381 | SNII > PISN > SLSN > SNIIn > SNIa > SNIbc (desordenada) |
 | points | 0.421 | PISN > SNII > SLSN > SNIIn > SNIa > SNIbc (desordenada) |
-| **waterfall** | **0.792** | SLSN(3.286) > PISN(3.174) > SNIIn(3.087) > SNII(3.068) > SNIa(3.048) > SNIbc(3.026) |
-| waterfall_global | pendiente (eval en curso) | pendiente |
+| waterfall | 0.792 | SLSN(3.286) > PISN(3.174) > SNIIn(3.087) > SNII(3.068) > SNIa(3.048) > SNIbc(3.026) |
+| **waterfall_global** | **0.858** | SLSN(3.235) > PISN(3.083) > SNIIn(3.058) > SNII(3.052) > SNIa(2.995) > SNIbc(2.980) |
 
-Waterfall gana claro: casi el doble de separación y la ÚNICA con jerarquía físicamente correcta, o sea los tipos raros arriba y los comunes abajo.
+Eval completo 1.389.146 objetos, job 11668859 (4h50, 19 ago 2026). Overlay y points no ordenan los tipos raros arriba. Las dos waterfall sí. Waterfall_global gana la separación y además conserva el flujo relativo entre bandas, que era la objeción del profe.
 
 ### 5.2 Accuracy de clasificación (17 clases, validación, muestra de 30k)
 
@@ -120,11 +120,11 @@ Calculada aparte con `scripts/eval_classification.py`. IMPORTANTE: el `val/acc` 
 | points | 0.392 |
 | waterfall (local) | 0.377 |
 
-**Trade-off central:** overlay clasifica mejor pero no separa anomalías; waterfall separa anomalías pero clasifica peor. La normalización por-banda de waterfall pierde el flujo relativo entre bandas, que es justo lo que objetó el profe, y eso se paga en clasificación. Waterfall_global recupera parte (0.431 frente a 0.377).
+**Trade-off actualizado:** overlay sigue siendo el mejor clasificador (0.486) pero no separa anomalías. Waterfall local separa bien (0.792) y clasifica peor (0.377). Waterfall_global queda en el medio en clasificación (0.431) y **primero** en separación de anomalías (0.858). Para el objetivo de la tesis (outliers), waterfall_global es la representación a defender: responde la objeción del profe y gana la métrica que decide.
 
 ### 5.3 Hallazgo transversal: el loss del MaskGIT no predice la calidad
 
-Waterfall tiene el loss MÁS ALTO (3.18 frente a 2.82 de overlay) y los MEJORES scores. Ya había pasado en el prototipo (filled tenía menor loss que overlay pero peores contrafactuales). Una representación con más estructura morfológica real es más difícil de predecir, y eso resulta bueno para el prior.
+Waterfall_global tiene el loss MÁS ALTO (3.63), waterfall 3.18, overlay 2.82, y el ranking de separación es el inverso. Ya había pasado en el prototipo (filled tenía menor loss que overlay pero peores contrafactuales). Una representación con más estructura morfológica real es más difícil de predecir, y eso resulta bueno para el prior.
 
 ---
 
@@ -155,19 +155,40 @@ Conclusiones:
 - **Sensibilidad baja:** 0.137 es solo ~0.45 sigmas (la dispersión intra-grupo es ~0.3), y eso con un pulso que visualmente aplasta toda la banda.
 - Los contrafactuales SÍ suavizan el pico insertado (ver `cf_synthetic_insert.py`, resultados en `results/synthetic_eval/insert_cf/`).
 
-### 6.3 Protocolo sistemático: un punto × k MAD × banda (el que pidió el profe)
+### 6.3 Protocolo sistemático: un punto × k × banda (pedido del profe)
 
-Los inserts/pulsos anteriores eran ad hoc (amplitudes 2x/5x/15x del rango, centro temporal, solo banda r). Protocolo nuevo:
+Los inserts anteriores eran ad hoc (solo banda r, amplitudes 2x/5x/15x del rango). Protocolo:
 
-1. SNIa-SALT2, objetos con ≥8 obs en las 6 bandas.
-2. En cada banda, un punto **existente** al azar. MAD = median(|f − median(f)|) de esa banda.
-3. Perturbar solo ese punto: `f ← f + k·MAD`, k = 1,2,…,10. El punto se reusa entre k.
-4. Normalización del waterfall **congelada** con p01-p99 del control (si no, el outlier mueve el p99 y se diluye al pintar).
-5. Hit = Δscore > 0.3 (dispersión intra-grupo de waterfall). Curva: eje X = k en MAD, eje Y = hit rate, una línea por banda.
+1. 40 SNIa-SALT2 con ≥8 obs en las 6 bandas.
+2. En cada banda, un punto **existente** al azar. El mismo punto se reusa para todos los k.
+3. Dos escalas: MAD de la banda, y FLUXCALERR de ese punto.
+4. `f ← f + k·escala`, k = 1…10.
+5. Normalización del waterfall congelada con p01-p99 del control.
+6. Hit = Δscore MaskGIT > 0.3 (subida respecto al control de ESA misma supernova).
 
-Scripts: `generate_synthetic_mad.py`, `eval_synthetic_mad.py`. Figura: `results/synthetic_eval/mad/hitrate_by_band.png`.
+Resultado (jobs 11668861 y 11671197, 19 ago 2026): **hit rate = 0 en todas las bandas y todos los k**, con ambas escalas. El Δscore medio llega a ~0.02 en k=10, un orden de magnitud bajo el umbral. Incluso con TAU=0.15 el hit máximo es 0.025. Un solo punto corrido no existe para el prior: el VQ-VAE tokeniza parches de 8×8 píxeles y el punto se diluye. Detectaba el insert de 3 puntos gordos; este protocolo muestra el piso de sensibilidad.
 
-Variante en unidades de error del punto (`f ← f + k·FLUXCALERR`): `generate_synthetic_err.py`, `eval_synthetic_err.py`. El hit es el mismo: MaskGIT sube el score de esa curva respecto a su control.
+Figuras: `results/synthetic_eval/mad/hitrate_by_band.png` y `results/synthetic_eval/err/hitrate_by_band.png`.
+
+### 6.4 Segundo peak (respuesta al “suaviza otros spikes”)
+
+El insert en el centro se confunde con el máximo de la SN. Aquí se insertan 3 puntos en banda r **después** del máximo real (delay 0.40 del span). 8 SNIa, waterfall + MaskGIT waterfall.
+
+| Amplitud | Δscore | Δ NLL r | Δ peak | Δ 2nd | prec_t | tok dist |
+|---|---|---|---|---|---|---|
+| 2x | 0.169 | 0.504 | 0.071 | 2.650 | 0.840 | 335 |
+| 5x | 0.194 | 0.533 | 0.123 | 2.665 | 0.785 | 358 |
+| 15x | 0.221 | 0.524 | −0.113 | 2.802 | 0.799 | 378 |
+
+Contrafactuales (quantile 0.85, 154 tokens editados):
+
+- prec_cf medio = 0.910 (masa |recon−CF| en el extra / (extra+peak))
+- fracción del cambio en el peak original = 0.055
+- fracción del cambio en el segundo peak = 0.474
+
+Cuando el extra está separado en el tiempo, el CF **no** se pone a suavizar el peak real. El reclamo del profe aplica al caso en que el pulso se parece al máximo canónico, no a un segundo peak tardío.
+
+Scripts: `generate_synthetic_second_peak.py`, `eval_synthetic_second_peak.py`, `cf_synthetic_second_peak.py` (aceptan `waterfall` o `waterfall_global`). Replica en waterfall_global: `run_synthetic_second_peak_wfg.sh`.
 
 ---
 
@@ -182,6 +203,8 @@ Variante en unidades de error del punto (`f ← f + k·FLUXCALERR`): `generate_s
 4. **La atribución por banda sobre supernovas reales sale PLANA** (~0.19 por banda frente a 0.167 esperado por azar), y el NLL por token es un moteado uniforme sin estructura espacial. Solo con anomalías sintéticas insertadas aparece atribución real.
 
 5. **Muestrear 12k basta** para comparar representaciones: la separación calculada sobre 12k (0.813) coincide con la del 1.39M completo (0.792). El eval completo tarda ~5h; el de 12k, minutos.
+
+6. **Un punto fotométrico no alcanza.** k=1…10 en MAD o en FLUXCALERR deja Δscore ~0.02. El prior reacciona a deformaciones extendidas (insert de varios puntos, segundo peak), no a un outlier de un dato.
 
 ---
 
@@ -254,16 +277,16 @@ Anomalías sintéticas:
 - `cf_synthetic_insert.py`
 - `generate_synthetic_second_peak.py`, `eval_synthetic_second_peak.py`, `cf_synthetic_second_peak.py`
 - `generate_synthetic_mad.py`, `eval_synthetic_mad.py` (hit rate vs k·MAD por banda)
+- `generate_synthetic_err.py`, `eval_synthetic_err.py` (igual, escala = FLUXCALERR del punto)
 
 ---
 
 ## 10. Pendientes
 
-1. **Eval de scores waterfall_global** (`eval_anomaly_scores_full.py waterfall_global`, ~5h) para cerrar la tabla de las 4 representaciones. MaskGIT ya terminó (época 20, val/loss=3.6256). Tokens listos.
-2. Evaluar las **anomalías sintéticas también sobre waterfall_global**.
-3. **Escribir la tesis:** `04_resultados.tex` y `05_discusion_conclusiones.tex` tienen TODOs. Actualizar todas las referencias de 895k a 1.389.147.
-4. **Idea abierta:** condicionar el prior POR CLASE, algo como "esto es una SNIa, debería verse así". Tensión metodológica importante: la tesis es de detección NO SUPERVISADA, y en Rubin real no hay etiqueta en tiempo real. Una alternativa sería usar la clase PREDICHA por la cabeza clasificadora del VQ-VAE. Conversar con el profe antes de implementar.
-5. **Sin resolver:** la baja sensibilidad del prior y la falta de localización temporal. Hipótesis a discutir: el MaskGIT es muy chico (3.7M params, 4 capas, hidden 256), el masking al 50% es demasiado destructivo, o el score por NLL enmascarado no es sensible a cambios locales.
+1. Evaluar las **anomalías sintéticas también sobre waterfall_global** (insert, segundo peak, MAD/err). El eval de scores ya está: separación 0.858.
+2. **Escribir la tesis:** `04_resultados.tex` y `05_discusion_conclusiones.tex` tienen TODOs. Actualizar todas las referencias de 895k a 1.389.147. Incluir la tabla de 4 representaciones y el piso de sensibilidad (un punto no se detecta; un segundo peak sí se localiza).
+3. **Idea abierta:** condicionar el prior POR CLASE, algo como "esto es una SNIa, debería verse así". Tensión metodológica: la tesis es de detección NO SUPERVISADA. Alternativa: usar la clase PREDICHA por la cabeza del VQ-VAE. Conversar con el profe.
+4. **Sin resolver:** sensibilidad a outliers de un solo punto, y localización temporal cuando el pulso se superpone al peak. Hipótesis: MaskGIT chico (3.7M, 4 capas), masking al 50% destructivo, o el NLL global no ve cambios locales.
 
 ---
 

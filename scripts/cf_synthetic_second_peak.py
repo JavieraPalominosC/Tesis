@@ -4,7 +4,8 @@ Contrafactual del segundo peak + metrica del reclamo del profe:
 que fraccion del cambio |recon-CF| cae sobre el pulso extra vs sobre el
 peak original de la SN.
 
-Uso: python scripts/cf_synthetic_second_peak.py
+Uso: python scripts/cf_synthetic_second_peak.py [REP]
+     REP in {waterfall, waterfall_global}
 """
 import sys
 sys.path.insert(0, '.')
@@ -22,11 +23,35 @@ import torchvision.transforms as T
 from scripts.train_maskgit_cls import MaskGITWithViz
 from src.models.vqvae.model import VQVAE
 
-VQVAE_CKPT   = 'results/vqvae_waterfall_full/checkpoints/vqvae-epoch=26-train/loss=0.0808.ckpt'
-MASKGIT_CKPT = 'results/maskgit_full/waterfall/checkpoints/maskgit-epoch=31-val/loss=3.1783.ckpt'
-IMG_DIR      = 'data/images/elasticc_1/synthetic_second_peak'
-MANIFEST     = 'data/synthetic_second_peak_manifest.json'
-OUT          = Path('results/synthetic_eval/second_peak_cf')
+REP = sys.argv[1] if len(sys.argv) > 1 else 'waterfall'
+assert REP in ('waterfall', 'waterfall_global')
+
+VQVAE_CKPTS = {
+    'waterfall':        'results/vqvae_waterfall_full/checkpoints/vqvae-epoch=26-train/loss=0.0808.ckpt',
+    'waterfall_global': 'results/vqvae_waterfall_global_full/checkpoints/vqvae-epoch=26-train/loss=0.0597.ckpt',
+}
+MASKGIT_CKPTS = {
+    'waterfall':        'results/maskgit_full/waterfall/checkpoints/maskgit-epoch=31-val/loss=3.1783.ckpt',
+    'waterfall_global': 'results/maskgit_full/waterfall_global/checkpoints/maskgit-epoch=20-val/loss=3.6256.ckpt',
+}
+PATHS = {
+    'waterfall': dict(
+        img='data/images/elasticc_1/synthetic_second_peak',
+        man='data/synthetic_second_peak_manifest.json',
+        out='results/synthetic_eval/second_peak_cf',
+    ),
+    'waterfall_global': dict(
+        img='data/images/elasticc_1/synthetic_second_peak_wfg',
+        man='data/synthetic_second_peak_wfg_manifest.json',
+        out='results/synthetic_eval/second_peak_wfg_cf',
+    ),
+}
+
+VQVAE_CKPT   = VQVAE_CKPTS[REP]
+MASKGIT_CKPT = MASKGIT_CKPTS[REP]
+IMG_DIR      = PATHS[REP]['img']
+MANIFEST     = PATHS[REP]['man']
+OUT          = Path(PATHS[REP]['out'])
 OUT.mkdir(parents=True, exist_ok=True)
 
 GRID = 32
@@ -158,7 +183,7 @@ def main():
         vmin = np.percentile(diff, 60)
         fig, ax = plt.subplots(1, 5, figsize=(22, 5))
         fig.suptitle(
-            f'{snid} | 2nd peak amp15 | tokens mod={n_mod}/1024 | '
+            f'[{REP}] {snid} | 2nd peak amp15 | tokens mod={n_mod}/1024 | '
             f'prec_cf={prec_cf:.2f} (1=solo extra, 0.5=ambos)',
             fontsize=11,
         )
