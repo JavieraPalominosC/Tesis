@@ -1,0 +1,4200 @@
+{
+  "ctrl_quantile": 0.95,
+  "tau_max": 10.830993318557738,
+  "tau_mean": 3.3228696227073664,
+  "n_control": 40,
+  "per_tag": {
+    "df10_unfrozen": {
+      "mean_max": 9.638548398017884,
+      "mean_dmax": 0.4017115950584412,
+      "mean_dmean": 0.08951159119606018,
+      "max_detector": {
+        "tp": 6,
+        "fp": 2,
+        "fn": 34,
+        "precision": 0.75,
+        "recall": 0.15,
+        "f1": 0.24999999999999997,
+        "n_pos": 40
+      },
+      "mean_detector": {
+        "tp": 3,
+        "fp": 2,
+        "fn": 37,
+        "precision": 0.6,
+        "recall": 0.075,
+        "f1": 0.13333333333333333,
+        "n_pos": 40
+      }
+    },
+    "df20_unfrozen": {
+      "mean_max": 9.970389759540558,
+      "mean_dmax": 0.7335529565811157,
+      "mean_dmean": 0.04441268444061279,
+      "max_detector": {
+        "tp": 8,
+        "fp": 2,
+        "fn": 32,
+        "precision": 0.8,
+        "recall": 0.2,
+        "f1": 0.32000000000000006,
+        "n_pos": 40
+      },
+      "mean_detector": {
+        "tp": 3,
+        "fp": 2,
+        "fn": 37,
+        "precision": 0.6,
+        "recall": 0.075,
+        "f1": 0.13333333333333333,
+        "n_pos": 40
+      }
+    },
+    "df30_unfrozen": {
+      "mean_max": 9.923701548576355,
+      "mean_dmax": 0.6868647456169128,
+      "mean_dmean": -0.03376308679580688,
+      "max_detector": {
+        "tp": 5,
+        "fp": 2,
+        "fn": 35,
+        "precision": 0.7142857142857143,
+        "recall": 0.125,
+        "f1": 0.2127659574468085,
+        "n_pos": 40
+      },
+      "mean_detector": {
+        "tp": 2,
+        "fp": 2,
+        "fn": 38,
+        "precision": 0.5,
+        "recall": 0.05,
+        "f1": 0.09090909090909091,
+        "n_pos": 40
+      }
+    },
+    "df40_unfrozen": {
+      "mean_max": 10.320590901374818,
+      "mean_dmax": 1.0837540984153748,
+      "mean_dmean": -0.08777239322662353,
+      "max_detector": {
+        "tp": 13,
+        "fp": 2,
+        "fn": 27,
+        "precision": 0.8666666666666667,
+        "recall": 0.325,
+        "f1": 0.4727272727272728,
+        "n_pos": 40
+      },
+      "mean_detector": {
+        "tp": 1,
+        "fp": 2,
+        "fn": 39,
+        "precision": 0.3333333333333333,
+        "recall": 0.025,
+        "f1": 0.046511627906976744,
+        "n_pos": 40
+      }
+    },
+    "df50_unfrozen": {
+      "mean_max": 10.354686832427978,
+      "mean_dmax": 1.1178500294685363,
+      "mean_dmean": -0.12581623196601868,
+      "max_detector": {
+        "tp": 12,
+        "fp": 2,
+        "fn": 28,
+        "precision": 0.8571428571428571,
+        "recall": 0.3,
+        "f1": 0.4444444444444444,
+        "n_pos": 40
+      },
+      "mean_detector": {
+        "tp": 0,
+        "fp": 2,
+        "fn": 40,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "n_pos": 40
+      }
+    },
+    "df60_unfrozen": {
+      "mean_max": 10.700156211853027,
+      "mean_dmax": 1.4633194088935852,
+      "mean_dmean": -0.15991777777671815,
+      "max_detector": {
+        "tp": 16,
+        "fp": 2,
+        "fn": 24,
+        "precision": 0.8888888888888888,
+        "recall": 0.4,
+        "f1": 0.5517241379310346,
+        "n_pos": 40
+      },
+      "mean_detector": {
+        "tp": 0,
+        "fp": 2,
+        "fn": 40,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "n_pos": 40
+      }
+    },
+    "df70_unfrozen": {
+      "mean_max": 11.071671056747437,
+      "mean_dmax": 1.8348342537879945,
+      "mean_dmean": -0.19960818886756898,
+      "max_detector": {
+        "tp": 25,
+        "fp": 2,
+        "fn": 15,
+        "precision": 0.9259259259259259,
+        "recall": 0.625,
+        "f1": 0.7462686567164178,
+        "n_pos": 40
+      },
+      "mean_detector": {
+        "tp": 0,
+        "fp": 2,
+        "fn": 40,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "n_pos": 40
+      }
+    },
+    "df80_unfrozen": {
+      "mean_max": 10.845121788978577,
+      "mean_dmax": 1.6082849860191346,
+      "mean_dmean": -0.2247766971588135,
+      "max_detector": {
+        "tp": 17,
+        "fp": 2,
+        "fn": 23,
+        "precision": 0.8947368421052632,
+        "recall": 0.425,
+        "f1": 0.576271186440678,
+        "n_pos": 40
+      },
+      "mean_detector": {
+        "tp": 0,
+        "fp": 2,
+        "fn": 40,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "n_pos": 40
+      }
+    },
+    "df90_unfrozen": {
+      "mean_max": 11.181575655937195,
+      "mean_dmax": 1.9447388529777527,
+      "mean_dmean": -0.23880937695503235,
+      "max_detector": {
+        "tp": 20,
+        "fp": 2,
+        "fn": 20,
+        "precision": 0.9090909090909091,
+        "recall": 0.5,
+        "f1": 0.6451612903225806,
+        "n_pos": 40
+      },
+      "mean_detector": {
+        "tp": 0,
+        "fp": 2,
+        "fn": 40,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "n_pos": 40
+      }
+    },
+    "df100_unfrozen": {
+      "mean_max": 11.048399686813354,
+      "mean_dmax": 1.8115628838539124,
+      "mean_dmean": -0.27256691455841064,
+      "max_detector": {
+        "tp": 16,
+        "fp": 2,
+        "fn": 24,
+        "precision": 0.8888888888888888,
+        "recall": 0.4,
+        "f1": 0.5517241379310346,
+        "n_pos": 40
+      },
+      "mean_detector": {
+        "tp": 0,
+        "fp": 2,
+        "fn": 40,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "n_pos": 40
+      }
+    }
+  },
+  "per_image": [
+    {
+      "snid": "26824154",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.526387214660645,
+      "mean_nll": 3.4828543663024902
+    },
+    {
+      "snid": "26824154",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 8.849065780639648,
+      "mean_nll": 3.538802146911621
+    },
+    {
+      "snid": "26824154",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.206207275390625,
+      "mean_nll": 3.534379005432129
+    },
+    {
+      "snid": "26824154",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 8.90031623840332,
+      "mean_nll": 3.4176230430603027
+    },
+    {
+      "snid": "26824154",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.516990661621094,
+      "mean_nll": 3.3171722888946533
+    },
+    {
+      "snid": "26824154",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.236639976501465,
+      "mean_nll": 3.310075521469116
+    },
+    {
+      "snid": "26824154",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.413163185119629,
+      "mean_nll": 3.2366952896118164
+    },
+    {
+      "snid": "26824154",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 11.653945922851562,
+      "mean_nll": 3.1789493560791016
+    },
+    {
+      "snid": "26824154",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 11.042725563049316,
+      "mean_nll": 3.0698084831237793
+    },
+    {
+      "snid": "26824154",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.541519165039062,
+      "mean_nll": 3.0538649559020996
+    },
+    {
+      "snid": "26824154",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.72971248626709,
+      "mean_nll": 3.1037356853485107
+    },
+    {
+      "snid": "12851454",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.621193885803223,
+      "mean_nll": 2.9358558654785156
+    },
+    {
+      "snid": "12851454",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 9.044415473937988,
+      "mean_nll": 3.0311193466186523
+    },
+    {
+      "snid": "12851454",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.187336921691895,
+      "mean_nll": 2.854355812072754
+    },
+    {
+      "snid": "12851454",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.800227165222168,
+      "mean_nll": 2.848837375640869
+    },
+    {
+      "snid": "12851454",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 13.275352478027344,
+      "mean_nll": 2.7009048461914062
+    },
+    {
+      "snid": "12851454",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 12.04173755645752,
+      "mean_nll": 2.6810216903686523
+    },
+    {
+      "snid": "12851454",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.836638450622559,
+      "mean_nll": 2.630929470062256
+    },
+    {
+      "snid": "12851454",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.221434593200684,
+      "mean_nll": 2.5150983333587646
+    },
+    {
+      "snid": "12851454",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 12.375059127807617,
+      "mean_nll": 2.5623974800109863
+    },
+    {
+      "snid": "12851454",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.693922996520996,
+      "mean_nll": 2.571904420852661
+    },
+    {
+      "snid": "12851454",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.829109191894531,
+      "mean_nll": 2.534238338470459
+    },
+    {
+      "snid": "9681766",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.279993057250977,
+      "mean_nll": 2.537921905517578
+    },
+    {
+      "snid": "9681766",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 8.771685600280762,
+      "mean_nll": 2.639019727706909
+    },
+    {
+      "snid": "9681766",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 7.806684494018555,
+      "mean_nll": 2.755037784576416
+    },
+    {
+      "snid": "9681766",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 9.040962219238281,
+      "mean_nll": 2.698608875274658
+    },
+    {
+      "snid": "9681766",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 9.936131477355957,
+      "mean_nll": 2.7422218322753906
+    },
+    {
+      "snid": "9681766",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 11.139342308044434,
+      "mean_nll": 2.7587337493896484
+    },
+    {
+      "snid": "9681766",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 11.721068382263184,
+      "mean_nll": 2.7453036308288574
+    },
+    {
+      "snid": "9681766",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 11.452051162719727,
+      "mean_nll": 2.7713394165039062
+    },
+    {
+      "snid": "9681766",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 13.062217712402344,
+      "mean_nll": 2.7763752937316895
+    },
+    {
+      "snid": "9681766",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 10.227452278137207,
+      "mean_nll": 2.733569860458374
+    },
+    {
+      "snid": "9681766",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 10.769462585449219,
+      "mean_nll": 2.7395236492156982
+    },
+    {
+      "snid": "38948886",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 9.763090133666992,
+      "mean_nll": 3.1372690200805664
+    },
+    {
+      "snid": "38948886",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.698946952819824,
+      "mean_nll": 3.242640495300293
+    },
+    {
+      "snid": "38948886",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 9.876133918762207,
+      "mean_nll": 3.0808045864105225
+    },
+    {
+      "snid": "38948886",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.773782730102539,
+      "mean_nll": 2.9307761192321777
+    },
+    {
+      "snid": "38948886",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.283571243286133,
+      "mean_nll": 2.848839521408081
+    },
+    {
+      "snid": "38948886",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 11.210193634033203,
+      "mean_nll": 2.8180861473083496
+    },
+    {
+      "snid": "38948886",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.07128620147705,
+      "mean_nll": 2.790198564529419
+    },
+    {
+      "snid": "38948886",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.911742210388184,
+      "mean_nll": 2.7789247035980225
+    },
+    {
+      "snid": "38948886",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 12.341683387756348,
+      "mean_nll": 2.7424068450927734
+    },
+    {
+      "snid": "38948886",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 11.386651039123535,
+      "mean_nll": 2.663996696472168
+    },
+    {
+      "snid": "38948886",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.826700210571289,
+      "mean_nll": 2.747408628463745
+    },
+    {
+      "snid": "19777315",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 9.69597339630127,
+      "mean_nll": 2.9208950996398926
+    },
+    {
+      "snid": "19777315",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.087262153625488,
+      "mean_nll": 2.962110996246338
+    },
+    {
+      "snid": "19777315",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.387075424194336,
+      "mean_nll": 2.982982873916626
+    },
+    {
+      "snid": "19777315",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.898305892944336,
+      "mean_nll": 3.089139223098755
+    },
+    {
+      "snid": "19777315",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.691204071044922,
+      "mean_nll": 3.05505108833313
+    },
+    {
+      "snid": "19777315",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.936681747436523,
+      "mean_nll": 3.0564491748809814
+    },
+    {
+      "snid": "19777315",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.914311408996582,
+      "mean_nll": 3.0284018516540527
+    },
+    {
+      "snid": "19777315",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.639425277709961,
+      "mean_nll": 2.9988932609558105
+    },
+    {
+      "snid": "19777315",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 12.286168098449707,
+      "mean_nll": 2.8926262855529785
+    },
+    {
+      "snid": "19777315",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 12.013263702392578,
+      "mean_nll": 2.936720132827759
+    },
+    {
+      "snid": "19777315",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.754232406616211,
+      "mean_nll": 2.8975775241851807
+    },
+    {
+      "snid": "43539413",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 10.238387107849121,
+      "mean_nll": 3.0335235595703125
+    },
+    {
+      "snid": "43539413",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.293309211730957,
+      "mean_nll": 3.0812647342681885
+    },
+    {
+      "snid": "43539413",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.363309860229492,
+      "mean_nll": 3.1269478797912598
+    },
+    {
+      "snid": "43539413",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.745795249938965,
+      "mean_nll": 3.262502670288086
+    },
+    {
+      "snid": "43539413",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.804369926452637,
+      "mean_nll": 3.2925639152526855
+    },
+    {
+      "snid": "43539413",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.717059135437012,
+      "mean_nll": 3.2204232215881348
+    },
+    {
+      "snid": "43539413",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 11.412185668945312,
+      "mean_nll": 3.180352210998535
+    },
+    {
+      "snid": "43539413",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.92355728149414,
+      "mean_nll": 3.115067958831787
+    },
+    {
+      "snid": "43539413",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.004897117614746,
+      "mean_nll": 3.0504634380340576
+    },
+    {
+      "snid": "43539413",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.02879524230957,
+      "mean_nll": 3.0233569145202637
+    },
+    {
+      "snid": "43539413",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.5897855758667,
+      "mean_nll": 3.0114028453826904
+    },
+    {
+      "snid": "23388497",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 9.39889907836914,
+      "mean_nll": 3.028411388397217
+    },
+    {
+      "snid": "23388497",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 9.459138870239258,
+      "mean_nll": 3.2777843475341797
+    },
+    {
+      "snid": "23388497",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 8.647027969360352,
+      "mean_nll": 3.0282187461853027
+    },
+    {
+      "snid": "23388497",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.460845947265625,
+      "mean_nll": 2.817498207092285
+    },
+    {
+      "snid": "23388497",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.46537971496582,
+      "mean_nll": 2.8849129676818848
+    },
+    {
+      "snid": "23388497",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 11.826024055480957,
+      "mean_nll": 2.733887195587158
+    },
+    {
+      "snid": "23388497",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 12.77959156036377,
+      "mean_nll": 2.7505767345428467
+    },
+    {
+      "snid": "23388497",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 13.324224472045898,
+      "mean_nll": 2.741053581237793
+    },
+    {
+      "snid": "23388497",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 12.728936195373535,
+      "mean_nll": 2.71201753616333
+    },
+    {
+      "snid": "23388497",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 11.134391784667969,
+      "mean_nll": 2.675579071044922
+    },
+    {
+      "snid": "23388497",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.939591407775879,
+      "mean_nll": 2.611980676651001
+    },
+    {
+      "snid": "26009489",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.160390853881836,
+      "mean_nll": 2.9647412300109863
+    },
+    {
+      "snid": "26009489",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 8.25156021118164,
+      "mean_nll": 3.063915729522705
+    },
+    {
+      "snid": "26009489",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 9.223562240600586,
+      "mean_nll": 3.133110523223877
+    },
+    {
+      "snid": "26009489",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 8.412846565246582,
+      "mean_nll": 2.993985891342163
+    },
+    {
+      "snid": "26009489",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.570621490478516,
+      "mean_nll": 2.898932933807373
+    },
+    {
+      "snid": "26009489",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.447749137878418,
+      "mean_nll": 2.897533416748047
+    },
+    {
+      "snid": "26009489",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.815526962280273,
+      "mean_nll": 2.856611728668213
+    },
+    {
+      "snid": "26009489",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 11.085406303405762,
+      "mean_nll": 2.6905996799468994
+    },
+    {
+      "snid": "26009489",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.614190101623535,
+      "mean_nll": 2.8245131969451904
+    },
+    {
+      "snid": "26009489",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.748429298400879,
+      "mean_nll": 2.7291531562805176
+    },
+    {
+      "snid": "26009489",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.636679649353027,
+      "mean_nll": 2.6398563385009766
+    },
+    {
+      "snid": "70131961",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.962945938110352,
+      "mean_nll": 3.088744640350342
+    },
+    {
+      "snid": "70131961",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 9.742834091186523,
+      "mean_nll": 3.1053860187530518
+    },
+    {
+      "snid": "70131961",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 9.700579643249512,
+      "mean_nll": 3.215538740158081
+    },
+    {
+      "snid": "70131961",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 9.86161994934082,
+      "mean_nll": 3.1133346557617188
+    },
+    {
+      "snid": "70131961",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 7.933823585510254,
+      "mean_nll": 2.922747850418091
+    },
+    {
+      "snid": "70131961",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 9.539148330688477,
+      "mean_nll": 2.9858522415161133
+    },
+    {
+      "snid": "70131961",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 9.660629272460938,
+      "mean_nll": 2.89367413520813
+    },
+    {
+      "snid": "70131961",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 8.142093658447266,
+      "mean_nll": 2.7840871810913086
+    },
+    {
+      "snid": "70131961",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 9.597261428833008,
+      "mean_nll": 2.786811590194702
+    },
+    {
+      "snid": "70131961",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 10.545412063598633,
+      "mean_nll": 2.809645652770996
+    },
+    {
+      "snid": "70131961",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 9.861359596252441,
+      "mean_nll": 2.752913236618042
+    },
+    {
+      "snid": "69084754",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 9.655492782592773,
+      "mean_nll": 3.2851719856262207
+    },
+    {
+      "snid": "69084754",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 11.415473937988281,
+      "mean_nll": 3.3487868309020996
+    },
+    {
+      "snid": "69084754",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 9.966984748840332,
+      "mean_nll": 3.3093769550323486
+    },
+    {
+      "snid": "69084754",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 9.363874435424805,
+      "mean_nll": 3.236326217651367
+    },
+    {
+      "snid": "69084754",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 8.931632041931152,
+      "mean_nll": 3.2188191413879395
+    },
+    {
+      "snid": "69084754",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 9.540369987487793,
+      "mean_nll": 3.1393871307373047
+    },
+    {
+      "snid": "69084754",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 10.056731224060059,
+      "mean_nll": 3.051650285720825
+    },
+    {
+      "snid": "69084754",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 9.961531639099121,
+      "mean_nll": 3.022535800933838
+    },
+    {
+      "snid": "69084754",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 9.899930000305176,
+      "mean_nll": 3.0271997451782227
+    },
+    {
+      "snid": "69084754",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 10.210323333740234,
+      "mean_nll": 3.0141592025756836
+    },
+    {
+      "snid": "69084754",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 9.691458702087402,
+      "mean_nll": 2.9872260093688965
+    },
+    {
+      "snid": "59790045",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 10.020186424255371,
+      "mean_nll": 2.632645606994629
+    },
+    {
+      "snid": "59790045",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.9556245803833,
+      "mean_nll": 2.8103485107421875
+    },
+    {
+      "snid": "59790045",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 13.2568359375,
+      "mean_nll": 2.8145432472229004
+    },
+    {
+      "snid": "59790045",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.472638130187988,
+      "mean_nll": 2.6393418312072754
+    },
+    {
+      "snid": "59790045",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 8.759323120117188,
+      "mean_nll": 2.577690839767456
+    },
+    {
+      "snid": "59790045",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.764020919799805,
+      "mean_nll": 2.606635570526123
+    },
+    {
+      "snid": "59790045",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.56787395477295,
+      "mean_nll": 2.5558197498321533
+    },
+    {
+      "snid": "59790045",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 12.783265113830566,
+      "mean_nll": 2.4689860343933105
+    },
+    {
+      "snid": "59790045",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.457106590270996,
+      "mean_nll": 2.5316061973571777
+    },
+    {
+      "snid": "59790045",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 11.103981971740723,
+      "mean_nll": 2.467390775680542
+    },
+    {
+      "snid": "59790045",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.395596504211426,
+      "mean_nll": 2.3992741107940674
+    },
+    {
+      "snid": "56379089",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.582767486572266,
+      "mean_nll": 3.43530011177063
+    },
+    {
+      "snid": "56379089",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 20,
+      "max_nll": 9.84520149230957,
+      "mean_nll": 3.4608068466186523
+    },
+    {
+      "snid": "56379089",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 20,
+      "max_nll": 9.679472923278809,
+      "mean_nll": 3.4835219383239746
+    },
+    {
+      "snid": "56379089",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 20,
+      "max_nll": 9.546630859375,
+      "mean_nll": 3.3944249153137207
+    },
+    {
+      "snid": "56379089",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 20,
+      "max_nll": 9.314476013183594,
+      "mean_nll": 3.35636568069458
+    },
+    {
+      "snid": "56379089",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 20,
+      "max_nll": 9.048970222473145,
+      "mean_nll": 3.260185718536377
+    },
+    {
+      "snid": "56379089",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 20,
+      "max_nll": 10.360447883605957,
+      "mean_nll": 3.2120769023895264
+    },
+    {
+      "snid": "56379089",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 20,
+      "max_nll": 10.303431510925293,
+      "mean_nll": 3.0801992416381836
+    },
+    {
+      "snid": "56379089",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 20,
+      "max_nll": 9.433634757995605,
+      "mean_nll": 3.1559035778045654
+    },
+    {
+      "snid": "56379089",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 20,
+      "max_nll": 11.454306602478027,
+      "mean_nll": 3.1701912879943848
+    },
+    {
+      "snid": "56379089",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 20,
+      "max_nll": 10.373459815979004,
+      "mean_nll": 3.115023374557495
+    },
+    {
+      "snid": "15332998",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 9.29150676727295,
+      "mean_nll": 2.8591630458831787
+    },
+    {
+      "snid": "15332998",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 8.308116912841797,
+      "mean_nll": 2.8817033767700195
+    },
+    {
+      "snid": "15332998",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 8.675098419189453,
+      "mean_nll": 2.9634437561035156
+    },
+    {
+      "snid": "15332998",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 10.485564231872559,
+      "mean_nll": 3.130174160003662
+    },
+    {
+      "snid": "15332998",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 10.066380500793457,
+      "mean_nll": 3.1387758255004883
+    },
+    {
+      "snid": "15332998",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 12.134057998657227,
+      "mean_nll": 3.0588467121124268
+    },
+    {
+      "snid": "15332998",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 9.904906272888184,
+      "mean_nll": 3.032515048980713
+    },
+    {
+      "snid": "15332998",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 11.6044340133667,
+      "mean_nll": 3.0580310821533203
+    },
+    {
+      "snid": "15332998",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 10.417869567871094,
+      "mean_nll": 2.984217643737793
+    },
+    {
+      "snid": "15332998",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 9.83224105834961,
+      "mean_nll": 3.024688959121704
+    },
+    {
+      "snid": "15332998",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 9.148445129394531,
+      "mean_nll": 2.877591609954834
+    },
+    {
+      "snid": "43226918",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 9.00011920928955,
+      "mean_nll": 2.9774913787841797
+    },
+    {
+      "snid": "43226918",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.167618751525879,
+      "mean_nll": 3.1491637229919434
+    },
+    {
+      "snid": "43226918",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.552915573120117,
+      "mean_nll": 2.8824825286865234
+    },
+    {
+      "snid": "43226918",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 11.90478801727295,
+      "mean_nll": 2.814204216003418
+    },
+    {
+      "snid": "43226918",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 12.194523811340332,
+      "mean_nll": 2.873624563217163
+    },
+    {
+      "snid": "43226918",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 11.52741527557373,
+      "mean_nll": 2.7254934310913086
+    },
+    {
+      "snid": "43226918",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.472704887390137,
+      "mean_nll": 2.6649274826049805
+    },
+    {
+      "snid": "43226918",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.405046463012695,
+      "mean_nll": 2.6827144622802734
+    },
+    {
+      "snid": "43226918",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.269392967224121,
+      "mean_nll": 2.645404100418091
+    },
+    {
+      "snid": "43226918",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.168996810913086,
+      "mean_nll": 2.6650569438934326
+    },
+    {
+      "snid": "43226918",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.32362174987793,
+      "mean_nll": 2.6302263736724854
+    },
+    {
+      "snid": "52636766",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.496108055114746,
+      "mean_nll": 3.1009182929992676
+    },
+    {
+      "snid": "52636766",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 12.871444702148438,
+      "mean_nll": 3.0634121894836426
+    },
+    {
+      "snid": "52636766",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 11.564719200134277,
+      "mean_nll": 3.171698570251465
+    },
+    {
+      "snid": "52636766",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.72375202178955,
+      "mean_nll": 3.0477535724639893
+    },
+    {
+      "snid": "52636766",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.728975296020508,
+      "mean_nll": 3.027768135070801
+    },
+    {
+      "snid": "52636766",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.727925300598145,
+      "mean_nll": 2.842057704925537
+    },
+    {
+      "snid": "52636766",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.008403778076172,
+      "mean_nll": 2.8575074672698975
+    },
+    {
+      "snid": "52636766",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 11.399470329284668,
+      "mean_nll": 2.8495309352874756
+    },
+    {
+      "snid": "52636766",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 12.13489818572998,
+      "mean_nll": 2.9054551124572754
+    },
+    {
+      "snid": "52636766",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 12.950352668762207,
+      "mean_nll": 2.699953079223633
+    },
+    {
+      "snid": "52636766",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 13.485848426818848,
+      "mean_nll": 2.699617385864258
+    },
+    {
+      "snid": "5296441",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.51608943939209,
+      "mean_nll": 2.7149949073791504
+    },
+    {
+      "snid": "5296441",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 8.50804615020752,
+      "mean_nll": 2.8844947814941406
+    },
+    {
+      "snid": "5296441",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 10.618654251098633,
+      "mean_nll": 2.8886380195617676
+    },
+    {
+      "snid": "5296441",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 9.606339454650879,
+      "mean_nll": 2.680598735809326
+    },
+    {
+      "snid": "5296441",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 10.992971420288086,
+      "mean_nll": 2.6349775791168213
+    },
+    {
+      "snid": "5296441",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 11.335052490234375,
+      "mean_nll": 2.6125988960266113
+    },
+    {
+      "snid": "5296441",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 13.011075019836426,
+      "mean_nll": 2.5474212169647217
+    },
+    {
+      "snid": "5296441",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 12.252866744995117,
+      "mean_nll": 2.585357189178467
+    },
+    {
+      "snid": "5296441",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 11.611947059631348,
+      "mean_nll": 2.5213797092437744
+    },
+    {
+      "snid": "5296441",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 11.53376293182373,
+      "mean_nll": 2.526236057281494
+    },
+    {
+      "snid": "5296441",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 13.594868659973145,
+      "mean_nll": 2.485907793045044
+    },
+    {
+      "snid": "69372042",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.388854026794434,
+      "mean_nll": 2.8775129318237305
+    },
+    {
+      "snid": "69372042",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 8.741211891174316,
+      "mean_nll": 2.9224531650543213
+    },
+    {
+      "snid": "69372042",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 7.9721550941467285,
+      "mean_nll": 2.867206573486328
+    },
+    {
+      "snid": "69372042",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 8.29448127746582,
+      "mean_nll": 2.9139156341552734
+    },
+    {
+      "snid": "69372042",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 8.283523559570312,
+      "mean_nll": 2.95223069190979
+    },
+    {
+      "snid": "69372042",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 8.963125228881836,
+      "mean_nll": 2.9298181533813477
+    },
+    {
+      "snid": "69372042",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.619893074035645,
+      "mean_nll": 2.998746871948242
+    },
+    {
+      "snid": "69372042",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.124557495117188,
+      "mean_nll": 2.9850924015045166
+    },
+    {
+      "snid": "69372042",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.201992988586426,
+      "mean_nll": 2.9901366233825684
+    },
+    {
+      "snid": "69372042",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 15.074423789978027,
+      "mean_nll": 2.9128198623657227
+    },
+    {
+      "snid": "69372042",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 12.760282516479492,
+      "mean_nll": 2.800844669342041
+    },
+    {
+      "snid": "19031855",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 11.701927185058594,
+      "mean_nll": 2.7071213722229004
+    },
+    {
+      "snid": "19031855",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.957600593566895,
+      "mean_nll": 2.8409247398376465
+    },
+    {
+      "snid": "19031855",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 9.590807914733887,
+      "mean_nll": 2.7650904655456543
+    },
+    {
+      "snid": "19031855",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.150297164916992,
+      "mean_nll": 2.6427664756774902
+    },
+    {
+      "snid": "19031855",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.710922241210938,
+      "mean_nll": 2.567485809326172
+    },
+    {
+      "snid": "19031855",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.876904487609863,
+      "mean_nll": 2.50844144821167
+    },
+    {
+      "snid": "19031855",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.055508613586426,
+      "mean_nll": 2.462325096130371
+    },
+    {
+      "snid": "19031855",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.027480125427246,
+      "mean_nll": 2.4270200729370117
+    },
+    {
+      "snid": "19031855",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 9.826637268066406,
+      "mean_nll": 2.4650423526763916
+    },
+    {
+      "snid": "19031855",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 8.957974433898926,
+      "mean_nll": 2.445430278778076
+    },
+    {
+      "snid": "19031855",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.086949348449707,
+      "mean_nll": 2.405057907104492
+    },
+    {
+      "snid": "59861050",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.826276779174805,
+      "mean_nll": 2.9322612285614014
+    },
+    {
+      "snid": "59861050",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 9.748514175415039,
+      "mean_nll": 3.1137397289276123
+    },
+    {
+      "snid": "59861050",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 10.04273796081543,
+      "mean_nll": 2.980297803878784
+    },
+    {
+      "snid": "59861050",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 10.239153861999512,
+      "mean_nll": 2.7838664054870605
+    },
+    {
+      "snid": "59861050",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 11.01861572265625,
+      "mean_nll": 2.731132745742798
+    },
+    {
+      "snid": "59861050",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 10.689573287963867,
+      "mean_nll": 2.6815085411071777
+    },
+    {
+      "snid": "59861050",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 11.747201919555664,
+      "mean_nll": 2.7161996364593506
+    },
+    {
+      "snid": "59861050",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 9.972145080566406,
+      "mean_nll": 2.6450247764587402
+    },
+    {
+      "snid": "59861050",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 10.0001220703125,
+      "mean_nll": 2.49442458152771
+    },
+    {
+      "snid": "59861050",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 11.179337501525879,
+      "mean_nll": 2.580482244491577
+    },
+    {
+      "snid": "59861050",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 11.16683578491211,
+      "mean_nll": 2.524099349975586
+    },
+    {
+      "snid": "30786564",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.745903968811035,
+      "mean_nll": 2.885627269744873
+    },
+    {
+      "snid": "30786564",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 9.874557495117188,
+      "mean_nll": 2.9962856769561768
+    },
+    {
+      "snid": "30786564",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 12.170417785644531,
+      "mean_nll": 2.932921886444092
+    },
+    {
+      "snid": "30786564",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.744630813598633,
+      "mean_nll": 2.866356611251831
+    },
+    {
+      "snid": "30786564",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.872878074645996,
+      "mean_nll": 2.7344744205474854
+    },
+    {
+      "snid": "30786564",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.43496322631836,
+      "mean_nll": 2.8112001419067383
+    },
+    {
+      "snid": "30786564",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 11.314583778381348,
+      "mean_nll": 2.781545639038086
+    },
+    {
+      "snid": "30786564",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 12.111104965209961,
+      "mean_nll": 2.677201271057129
+    },
+    {
+      "snid": "30786564",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 11.401074409484863,
+      "mean_nll": 2.605119228363037
+    },
+    {
+      "snid": "30786564",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 12.188185691833496,
+      "mean_nll": 2.6669766902923584
+    },
+    {
+      "snid": "30786564",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 11.704670906066895,
+      "mean_nll": 2.593977451324463
+    },
+    {
+      "snid": "7732939",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.434717178344727,
+      "mean_nll": 2.7771706581115723
+    },
+    {
+      "snid": "7732939",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 9.719329833984375,
+      "mean_nll": 2.843721866607666
+    },
+    {
+      "snid": "7732939",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 9.462313652038574,
+      "mean_nll": 2.7939579486846924
+    },
+    {
+      "snid": "7732939",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.234330177307129,
+      "mean_nll": 2.662665843963623
+    },
+    {
+      "snid": "7732939",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 9.473278999328613,
+      "mean_nll": 2.6663341522216797
+    },
+    {
+      "snid": "7732939",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.847258567810059,
+      "mean_nll": 2.5485305786132812
+    },
+    {
+      "snid": "7732939",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 11.24981689453125,
+      "mean_nll": 2.535910129547119
+    },
+    {
+      "snid": "7732939",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.947212219238281,
+      "mean_nll": 2.5512685775756836
+    },
+    {
+      "snid": "7732939",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.492096900939941,
+      "mean_nll": 2.5542807579040527
+    },
+    {
+      "snid": "7732939",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.345312118530273,
+      "mean_nll": 2.50199818611145
+    },
+    {
+      "snid": "7732939",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 11.310270309448242,
+      "mean_nll": 2.5603227615356445
+    },
+    {
+      "snid": "3725727",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 9.3497314453125,
+      "mean_nll": 3.0743863582611084
+    },
+    {
+      "snid": "3725727",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.258942604064941,
+      "mean_nll": 3.1282670497894287
+    },
+    {
+      "snid": "3725727",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.207313537597656,
+      "mean_nll": 2.9612832069396973
+    },
+    {
+      "snid": "3725727",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.846529960632324,
+      "mean_nll": 2.9195923805236816
+    },
+    {
+      "snid": "3725727",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 11.687999725341797,
+      "mean_nll": 2.833190679550171
+    },
+    {
+      "snid": "3725727",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 11.761541366577148,
+      "mean_nll": 2.8066039085388184
+    },
+    {
+      "snid": "3725727",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.391572952270508,
+      "mean_nll": 2.6140568256378174
+    },
+    {
+      "snid": "3725727",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.351374626159668,
+      "mean_nll": 2.6752147674560547
+    },
+    {
+      "snid": "3725727",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.415619850158691,
+      "mean_nll": 2.5955262184143066
+    },
+    {
+      "snid": "3725727",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 12.772143363952637,
+      "mean_nll": 2.573427438735962
+    },
+    {
+      "snid": "3725727",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 12.128562927246094,
+      "mean_nll": 2.538512706756592
+    },
+    {
+      "snid": "3434301",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 10.319113731384277,
+      "mean_nll": 3.085038185119629
+    },
+    {
+      "snid": "3434301",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 9.677879333496094,
+      "mean_nll": 3.190739631652832
+    },
+    {
+      "snid": "3434301",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.605015754699707,
+      "mean_nll": 2.9810359477996826
+    },
+    {
+      "snid": "3434301",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.568818092346191,
+      "mean_nll": 2.779649019241333
+    },
+    {
+      "snid": "3434301",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.165026664733887,
+      "mean_nll": 2.665968418121338
+    },
+    {
+      "snid": "3434301",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.590038299560547,
+      "mean_nll": 2.644134998321533
+    },
+    {
+      "snid": "3434301",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.602096557617188,
+      "mean_nll": 2.7285757064819336
+    },
+    {
+      "snid": "3434301",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 14.671198844909668,
+      "mean_nll": 2.597726821899414
+    },
+    {
+      "snid": "3434301",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 9.934558868408203,
+      "mean_nll": 2.5244336128234863
+    },
+    {
+      "snid": "3434301",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.65710735321045,
+      "mean_nll": 2.5370936393737793
+    },
+    {
+      "snid": "3434301",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.631954193115234,
+      "mean_nll": 2.541904926300049
+    },
+    {
+      "snid": "9991963",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 10.173033714294434,
+      "mean_nll": 3.067431926727295
+    },
+    {
+      "snid": "9991963",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 8.696067810058594,
+      "mean_nll": 3.163877487182617
+    },
+    {
+      "snid": "9991963",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.100749015808105,
+      "mean_nll": 3.1282544136047363
+    },
+    {
+      "snid": "9991963",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 8.566871643066406,
+      "mean_nll": 3.0384130477905273
+    },
+    {
+      "snid": "9991963",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.332499504089355,
+      "mean_nll": 2.926362991333008
+    },
+    {
+      "snid": "9991963",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.343743324279785,
+      "mean_nll": 2.8258018493652344
+    },
+    {
+      "snid": "9991963",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.937889099121094,
+      "mean_nll": 2.899343729019165
+    },
+    {
+      "snid": "9991963",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 12.153270721435547,
+      "mean_nll": 2.833141803741455
+    },
+    {
+      "snid": "9991963",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 12.717223167419434,
+      "mean_nll": 2.7494328022003174
+    },
+    {
+      "snid": "9991963",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.615738868713379,
+      "mean_nll": 2.7869997024536133
+    },
+    {
+      "snid": "9991963",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.79198169708252,
+      "mean_nll": 2.7727274894714355
+    },
+    {
+      "snid": "36602057",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.006218910217285,
+      "mean_nll": 2.9673876762390137
+    },
+    {
+      "snid": "36602057",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 9.48893928527832,
+      "mean_nll": 2.969132900238037
+    },
+    {
+      "snid": "36602057",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 9.340603828430176,
+      "mean_nll": 2.956052780151367
+    },
+    {
+      "snid": "36602057",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 9.761418342590332,
+      "mean_nll": 2.8853678703308105
+    },
+    {
+      "snid": "36602057",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 8.879481315612793,
+      "mean_nll": 2.8337275981903076
+    },
+    {
+      "snid": "36602057",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 9.03524398803711,
+      "mean_nll": 2.8199775218963623
+    },
+    {
+      "snid": "36602057",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.509706497192383,
+      "mean_nll": 2.7161848545074463
+    },
+    {
+      "snid": "36602057",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 11.511086463928223,
+      "mean_nll": 2.6736350059509277
+    },
+    {
+      "snid": "36602057",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 11.130224227905273,
+      "mean_nll": 2.658660411834717
+    },
+    {
+      "snid": "36602057",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.699390411376953,
+      "mean_nll": 2.647526741027832
+    },
+    {
+      "snid": "36602057",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.682201385498047,
+      "mean_nll": 2.519806146621704
+    },
+    {
+      "snid": "4436078",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.29391098022461,
+      "mean_nll": 2.9468088150024414
+    },
+    {
+      "snid": "4436078",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 8.516433715820312,
+      "mean_nll": 3.151184558868408
+    },
+    {
+      "snid": "4436078",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.015079498291016,
+      "mean_nll": 2.9742720127105713
+    },
+    {
+      "snid": "4436078",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 9.771265983581543,
+      "mean_nll": 2.8604445457458496
+    },
+    {
+      "snid": "4436078",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 11.237675666809082,
+      "mean_nll": 2.8248114585876465
+    },
+    {
+      "snid": "4436078",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.208704948425293,
+      "mean_nll": 2.7746496200561523
+    },
+    {
+      "snid": "4436078",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 11.589604377746582,
+      "mean_nll": 2.744969129562378
+    },
+    {
+      "snid": "4436078",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.741101264953613,
+      "mean_nll": 2.579503297805786
+    },
+    {
+      "snid": "4436078",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.3574800491333,
+      "mean_nll": 2.654951810836792
+    },
+    {
+      "snid": "4436078",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.295374870300293,
+      "mean_nll": 2.656372547149658
+    },
+    {
+      "snid": "4436078",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 14,
+      "max_nll": 10.070048332214355,
+      "mean_nll": 2.6322317123413086
+    },
+    {
+      "snid": "69153819",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 11.40549373626709,
+      "mean_nll": 3.3169522285461426
+    },
+    {
+      "snid": "69153819",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 9.17080307006836,
+      "mean_nll": 3.2966508865356445
+    },
+    {
+      "snid": "69153819",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 10.356876373291016,
+      "mean_nll": 3.336364507675171
+    },
+    {
+      "snid": "69153819",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 8.242836952209473,
+      "mean_nll": 3.2211525440216064
+    },
+    {
+      "snid": "69153819",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 8.929547309875488,
+      "mean_nll": 3.1442956924438477
+    },
+    {
+      "snid": "69153819",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 9.774643898010254,
+      "mean_nll": 3.1892223358154297
+    },
+    {
+      "snid": "69153819",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 9.708563804626465,
+      "mean_nll": 3.14835786819458
+    },
+    {
+      "snid": "69153819",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 11.82367992401123,
+      "mean_nll": 3.1396918296813965
+    },
+    {
+      "snid": "69153819",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 9.23004150390625,
+      "mean_nll": 3.1123228073120117
+    },
+    {
+      "snid": "69153819",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 11.063752174377441,
+      "mean_nll": 3.1010093688964844
+    },
+    {
+      "snid": "69153819",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 11,
+      "max_nll": 11.822355270385742,
+      "mean_nll": 3.0514326095581055
+    },
+    {
+      "snid": "41717726",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.433286666870117,
+      "mean_nll": 3.170210599899292
+    },
+    {
+      "snid": "41717726",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 7.583003044128418,
+      "mean_nll": 3.2101545333862305
+    },
+    {
+      "snid": "41717726",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 8.560579299926758,
+      "mean_nll": 3.2590205669403076
+    },
+    {
+      "snid": "41717726",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.152901649475098,
+      "mean_nll": 3.2102084159851074
+    },
+    {
+      "snid": "41717726",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 9.714852333068848,
+      "mean_nll": 3.104541063308716
+    },
+    {
+      "snid": "41717726",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 9.27602767944336,
+      "mean_nll": 3.011322021484375
+    },
+    {
+      "snid": "41717726",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.124938011169434,
+      "mean_nll": 2.9327025413513184
+    },
+    {
+      "snid": "41717726",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 11.154845237731934,
+      "mean_nll": 2.914804458618164
+    },
+    {
+      "snid": "41717726",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.044098854064941,
+      "mean_nll": 2.81245756149292
+    },
+    {
+      "snid": "41717726",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 9.805416107177734,
+      "mean_nll": 2.9387619495391846
+    },
+    {
+      "snid": "41717726",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 9.932211875915527,
+      "mean_nll": 2.808706760406494
+    },
+    {
+      "snid": "60398881",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 10.137100219726562,
+      "mean_nll": 2.8918240070343018
+    },
+    {
+      "snid": "60398881",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 11.411080360412598,
+      "mean_nll": 3.0259130001068115
+    },
+    {
+      "snid": "60398881",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 13.343052864074707,
+      "mean_nll": 2.888423442840576
+    },
+    {
+      "snid": "60398881",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 11.884007453918457,
+      "mean_nll": 2.812324047088623
+    },
+    {
+      "snid": "60398881",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 11.218443870544434,
+      "mean_nll": 2.7779221534729004
+    },
+    {
+      "snid": "60398881",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.486685752868652,
+      "mean_nll": 2.7600932121276855
+    },
+    {
+      "snid": "60398881",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 11.171403884887695,
+      "mean_nll": 2.7056033611297607
+    },
+    {
+      "snid": "60398881",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 11.379172325134277,
+      "mean_nll": 2.637563705444336
+    },
+    {
+      "snid": "60398881",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.088888168334961,
+      "mean_nll": 2.646000862121582
+    },
+    {
+      "snid": "60398881",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 12.75829029083252,
+      "mean_nll": 2.6295950412750244
+    },
+    {
+      "snid": "60398881",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.577747344970703,
+      "mean_nll": 2.622130870819092
+    },
+    {
+      "snid": "15159662",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 7.973158359527588,
+      "mean_nll": 2.980499029159546
+    },
+    {
+      "snid": "15159662",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 8.71363353729248,
+      "mean_nll": 3.0730273723602295
+    },
+    {
+      "snid": "15159662",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.184285163879395,
+      "mean_nll": 3.1434712409973145
+    },
+    {
+      "snid": "15159662",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.605390548706055,
+      "mean_nll": 3.0155892372131348
+    },
+    {
+      "snid": "15159662",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.078624725341797,
+      "mean_nll": 2.969383716583252
+    },
+    {
+      "snid": "15159662",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.987629890441895,
+      "mean_nll": 2.849377155303955
+    },
+    {
+      "snid": "15159662",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.859158515930176,
+      "mean_nll": 2.8435285091400146
+    },
+    {
+      "snid": "15159662",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 9.592689514160156,
+      "mean_nll": 2.763427734375
+    },
+    {
+      "snid": "15159662",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.039812088012695,
+      "mean_nll": 2.7557315826416016
+    },
+    {
+      "snid": "15159662",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 12.838980674743652,
+      "mean_nll": 2.678104877471924
+    },
+    {
+      "snid": "15159662",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 15,
+      "max_nll": 10.959269523620605,
+      "mean_nll": 2.696871757507324
+    },
+    {
+      "snid": "2464381",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 9.656278610229492,
+      "mean_nll": 2.703397274017334
+    },
+    {
+      "snid": "2464381",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 18,
+      "max_nll": 9.693246841430664,
+      "mean_nll": 2.758227825164795
+    },
+    {
+      "snid": "2464381",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 18,
+      "max_nll": 10.40043830871582,
+      "mean_nll": 2.796811580657959
+    },
+    {
+      "snid": "2464381",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 18,
+      "max_nll": 8.631966590881348,
+      "mean_nll": 2.8575186729431152
+    },
+    {
+      "snid": "2464381",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 18,
+      "max_nll": 9.195944786071777,
+      "mean_nll": 2.8558640480041504
+    },
+    {
+      "snid": "2464381",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 18,
+      "max_nll": 10.824399948120117,
+      "mean_nll": 2.95603609085083
+    },
+    {
+      "snid": "2464381",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 18,
+      "max_nll": 11.291988372802734,
+      "mean_nll": 2.9141345024108887
+    },
+    {
+      "snid": "2464381",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 18,
+      "max_nll": 11.363777160644531,
+      "mean_nll": 2.790925979614258
+    },
+    {
+      "snid": "2464381",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 18,
+      "max_nll": 12.581844329833984,
+      "mean_nll": 2.8819992542266846
+    },
+    {
+      "snid": "2464381",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 18,
+      "max_nll": 12.224136352539062,
+      "mean_nll": 2.796990394592285
+    },
+    {
+      "snid": "2464381",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 18,
+      "max_nll": 12.391983032226562,
+      "mean_nll": 2.821392297744751
+    },
+    {
+      "snid": "50539358",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 9.068163871765137,
+      "mean_nll": 2.9579248428344727
+    },
+    {
+      "snid": "50539358",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 9.165913581848145,
+      "mean_nll": 3.1089601516723633
+    },
+    {
+      "snid": "50539358",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 9.47411060333252,
+      "mean_nll": 2.951767921447754
+    },
+    {
+      "snid": "50539358",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 8.524835586547852,
+      "mean_nll": 2.835690975189209
+    },
+    {
+      "snid": "50539358",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 10.794781684875488,
+      "mean_nll": 2.7307214736938477
+    },
+    {
+      "snid": "50539358",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 9.11923599243164,
+      "mean_nll": 2.6883978843688965
+    },
+    {
+      "snid": "50539358",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 9.099100112915039,
+      "mean_nll": 2.640932321548462
+    },
+    {
+      "snid": "50539358",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 11.329635620117188,
+      "mean_nll": 2.6917309761047363
+    },
+    {
+      "snid": "50539358",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 9.487377166748047,
+      "mean_nll": 2.592517614364624
+    },
+    {
+      "snid": "50539358",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 10.280632019042969,
+      "mean_nll": 2.604999303817749
+    },
+    {
+      "snid": "50539358",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 12,
+      "max_nll": 9.8316011428833,
+      "mean_nll": 2.59763240814209
+    },
+    {
+      "snid": "8579803",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 9.080906867980957,
+      "mean_nll": 2.9458534717559814
+    },
+    {
+      "snid": "8579803",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 12.059185981750488,
+      "mean_nll": 3.234928607940674
+    },
+    {
+      "snid": "8579803",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 11.085808753967285,
+      "mean_nll": 3.058295488357544
+    },
+    {
+      "snid": "8579803",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 9.835476875305176,
+      "mean_nll": 2.960861921310425
+    },
+    {
+      "snid": "8579803",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 9.780466079711914,
+      "mean_nll": 2.9245219230651855
+    },
+    {
+      "snid": "8579803",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 11.092236518859863,
+      "mean_nll": 2.8296539783477783
+    },
+    {
+      "snid": "8579803",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.989128112792969,
+      "mean_nll": 2.8997459411621094
+    },
+    {
+      "snid": "8579803",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 11.011526107788086,
+      "mean_nll": 2.823967456817627
+    },
+    {
+      "snid": "8579803",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.9110107421875,
+      "mean_nll": 2.711818218231201
+    },
+    {
+      "snid": "8579803",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.545842170715332,
+      "mean_nll": 2.7541940212249756
+    },
+    {
+      "snid": "8579803",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.668318748474121,
+      "mean_nll": 2.6880440711975098
+    },
+    {
+      "snid": "13087695",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 10.800756454467773,
+      "mean_nll": 2.9258694648742676
+    },
+    {
+      "snid": "13087695",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 9.711745262145996,
+      "mean_nll": 2.9539921283721924
+    },
+    {
+      "snid": "13087695",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 8.4798583984375,
+      "mean_nll": 2.9673304557800293
+    },
+    {
+      "snid": "13087695",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 9.085213661193848,
+      "mean_nll": 2.9069766998291016
+    },
+    {
+      "snid": "13087695",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.173442840576172,
+      "mean_nll": 2.714895009994507
+    },
+    {
+      "snid": "13087695",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 9.056665420532227,
+      "mean_nll": 2.6928505897521973
+    },
+    {
+      "snid": "13087695",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.247624397277832,
+      "mean_nll": 2.721848964691162
+    },
+    {
+      "snid": "13087695",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.800722122192383,
+      "mean_nll": 2.6515331268310547
+    },
+    {
+      "snid": "13087695",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 12.290163040161133,
+      "mean_nll": 2.619393825531006
+    },
+    {
+      "snid": "13087695",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.339008331298828,
+      "mean_nll": 2.6268868446350098
+    },
+    {
+      "snid": "13087695",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.890652656555176,
+      "mean_nll": 2.5613555908203125
+    },
+    {
+      "snid": "32067107",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 10.151095390319824,
+      "mean_nll": 2.8770432472229004
+    },
+    {
+      "snid": "32067107",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.813626289367676,
+      "mean_nll": 2.9921908378601074
+    },
+    {
+      "snid": "32067107",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 9.673257827758789,
+      "mean_nll": 2.872560977935791
+    },
+    {
+      "snid": "32067107",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.39571762084961,
+      "mean_nll": 2.8258204460144043
+    },
+    {
+      "snid": "32067107",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 9.118303298950195,
+      "mean_nll": 2.6810669898986816
+    },
+    {
+      "snid": "32067107",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 9.351644515991211,
+      "mean_nll": 2.7429163455963135
+    },
+    {
+      "snid": "32067107",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.468864440917969,
+      "mean_nll": 2.634361743927002
+    },
+    {
+      "snid": "32067107",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.454757690429688,
+      "mean_nll": 2.710784912109375
+    },
+    {
+      "snid": "32067107",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.088663101196289,
+      "mean_nll": 2.6998395919799805
+    },
+    {
+      "snid": "32067107",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 11.80413818359375,
+      "mean_nll": 2.643784523010254
+    },
+    {
+      "snid": "32067107",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 13,
+      "max_nll": 10.331506729125977,
+      "mean_nll": 2.6282055377960205
+    },
+    {
+      "snid": "38247488",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.71835708618164,
+      "mean_nll": 2.8470871448516846
+    },
+    {
+      "snid": "38247488",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 10.019474029541016,
+      "mean_nll": 2.965756893157959
+    },
+    {
+      "snid": "38247488",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 8.851800918579102,
+      "mean_nll": 2.906010866165161
+    },
+    {
+      "snid": "38247488",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 9.643096923828125,
+      "mean_nll": 2.8343682289123535
+    },
+    {
+      "snid": "38247488",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 13.048809051513672,
+      "mean_nll": 2.6480517387390137
+    },
+    {
+      "snid": "38247488",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 10.102736473083496,
+      "mean_nll": 2.6759707927703857
+    },
+    {
+      "snid": "38247488",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 9.590705871582031,
+      "mean_nll": 2.632504940032959
+    },
+    {
+      "snid": "38247488",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 9.589457511901855,
+      "mean_nll": 2.6830575466156006
+    },
+    {
+      "snid": "38247488",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 10.421247482299805,
+      "mean_nll": 2.5569992065429688
+    },
+    {
+      "snid": "38247488",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 13.682544708251953,
+      "mean_nll": 2.5562939643859863
+    },
+    {
+      "snid": "38247488",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 10,
+      "max_nll": 15.161404609680176,
+      "mean_nll": 2.576484441757202
+    },
+    {
+      "snid": "74052470",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.954734802246094,
+      "mean_nll": 2.798440456390381
+    },
+    {
+      "snid": "74052470",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 9.612714767456055,
+      "mean_nll": 2.830629348754883
+    },
+    {
+      "snid": "74052470",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 9.146108627319336,
+      "mean_nll": 2.8312861919403076
+    },
+    {
+      "snid": "74052470",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 9.135890007019043,
+      "mean_nll": 2.8515591621398926
+    },
+    {
+      "snid": "74052470",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 8.386006355285645,
+      "mean_nll": 2.8726282119750977
+    },
+    {
+      "snid": "74052470",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 8.830850601196289,
+      "mean_nll": 2.954977512359619
+    },
+    {
+      "snid": "74052470",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 9.485390663146973,
+      "mean_nll": 2.989022970199585
+    },
+    {
+      "snid": "74052470",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 11.294715881347656,
+      "mean_nll": 2.9418632984161377
+    },
+    {
+      "snid": "74052470",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 9.410320281982422,
+      "mean_nll": 2.948493480682373
+    },
+    {
+      "snid": "74052470",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.147079467773438,
+      "mean_nll": 2.9395766258239746
+    },
+    {
+      "snid": "74052470",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 11.603737831115723,
+      "mean_nll": 2.8591787815093994
+    },
+    {
+      "snid": "45228772",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.885828018188477,
+      "mean_nll": 3.0083510875701904
+    },
+    {
+      "snid": "45228772",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 8.851937294006348,
+      "mean_nll": 3.044654130935669
+    },
+    {
+      "snid": "45228772",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 8.171636581420898,
+      "mean_nll": 3.128681182861328
+    },
+    {
+      "snid": "45228772",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 8.8138427734375,
+      "mean_nll": 3.0823888778686523
+    },
+    {
+      "snid": "45228772",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.741120338439941,
+      "mean_nll": 2.99277663230896
+    },
+    {
+      "snid": "45228772",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 9.319618225097656,
+      "mean_nll": 2.9375815391540527
+    },
+    {
+      "snid": "45228772",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.245197296142578,
+      "mean_nll": 2.8491735458374023
+    },
+    {
+      "snid": "45228772",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.744016647338867,
+      "mean_nll": 2.7636141777038574
+    },
+    {
+      "snid": "45228772",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.965150833129883,
+      "mean_nll": 2.705321788787842
+    },
+    {
+      "snid": "45228772",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.068257331848145,
+      "mean_nll": 2.681720733642578
+    },
+    {
+      "snid": "45228772",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.143732070922852,
+      "mean_nll": 2.6909241676330566
+    },
+    {
+      "snid": "59641417",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 10.38778305053711,
+      "mean_nll": 3.119570732116699
+    },
+    {
+      "snid": "59641417",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 9.816889762878418,
+      "mean_nll": 3.190117359161377
+    },
+    {
+      "snid": "59641417",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 9.96464729309082,
+      "mean_nll": 3.112867832183838
+    },
+    {
+      "snid": "59641417",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 8.325352668762207,
+      "mean_nll": 2.9022409915924072
+    },
+    {
+      "snid": "59641417",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 11.528714179992676,
+      "mean_nll": 2.9850358963012695
+    },
+    {
+      "snid": "59641417",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.437686920166016,
+      "mean_nll": 2.8555493354797363
+    },
+    {
+      "snid": "59641417",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.404542922973633,
+      "mean_nll": 2.7760214805603027
+    },
+    {
+      "snid": "59641417",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.122749328613281,
+      "mean_nll": 2.8659071922302246
+    },
+    {
+      "snid": "59641417",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 10.831417083740234,
+      "mean_nll": 2.8731894493103027
+    },
+    {
+      "snid": "59641417",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 11.54587173461914,
+      "mean_nll": 2.8442044258117676
+    },
+    {
+      "snid": "59641417",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 16,
+      "max_nll": 9.616311073303223,
+      "mean_nll": 2.792365074157715
+    },
+    {
+      "snid": "784694",
+      "tag": "control",
+      "df": null,
+      "frozen": null,
+      "n_pts": 0,
+      "max_nll": 8.371310234069824,
+      "mean_nll": 3.0636610984802246
+    },
+    {
+      "snid": "784694",
+      "tag": "df10_unfrozen",
+      "df": 10,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 8.969460487365723,
+      "mean_nll": 3.0975074768066406
+    },
+    {
+      "snid": "784694",
+      "tag": "df20_unfrozen",
+      "df": 20,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 11.903336524963379,
+      "mean_nll": 3.0214946269989014
+    },
+    {
+      "snid": "784694",
+      "tag": "df30_unfrozen",
+      "df": 30,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 10.49544620513916,
+      "mean_nll": 2.9279422760009766
+    },
+    {
+      "snid": "784694",
+      "tag": "df40_unfrozen",
+      "df": 40,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 12.986950874328613,
+      "mean_nll": 2.923645257949829
+    },
+    {
+      "snid": "784694",
+      "tag": "df50_unfrozen",
+      "df": 50,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 10.603926658630371,
+      "mean_nll": 2.828801155090332
+    },
+    {
+      "snid": "784694",
+      "tag": "df60_unfrozen",
+      "df": 60,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 11.2952241897583,
+      "mean_nll": 2.746164321899414
+    },
+    {
+      "snid": "784694",
+      "tag": "df70_unfrozen",
+      "df": 70,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 11.530638694763184,
+      "mean_nll": 2.7339365482330322
+    },
+    {
+      "snid": "784694",
+      "tag": "df80_unfrozen",
+      "df": 80,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 13.659889221191406,
+      "mean_nll": 2.6755857467651367
+    },
+    {
+      "snid": "784694",
+      "tag": "df90_unfrozen",
+      "df": 90,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 12.800285339355469,
+      "mean_nll": 2.640241861343384
+    },
+    {
+      "snid": "784694",
+      "tag": "df100_unfrozen",
+      "df": 100,
+      "frozen": false,
+      "n_pts": 17,
+      "max_nll": 12.721466064453125,
+      "mean_nll": 2.642943859100342
+    }
+  ]
+}
