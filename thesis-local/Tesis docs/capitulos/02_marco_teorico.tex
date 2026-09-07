@@ -1,0 +1,155 @@
+\chapter{Marco Teórico}
+
+\section{Detección de anomalías en astronomía de dominio temporal}
+
+En astronomía, detectar anomalías en curvas de luz permite priorizar objetos potencialmente nuevos, raros o mal comprendidos. La próxima operación del Observatorio Vera C. Rubin incrementará de manera sustantiva el volumen y la cadencia de datos multibanda, con muestreo irregular, errores heterocedásticos y gaps. Bajo estas condiciones, los enfoques tradicionales (reglas heurísticas, umbrales simples o modelos univariados) resultan insuficientes. Se requieren métodos capaces de modelar patrones complejos y, además, explicar por qué un ejemplo es atípico para apoyar decisiones de seguimiento.
+
+\section{Representación de curvas de luz como imágenes}
+
+La representación de series de tiempo como imágenes ha sido explorada en distintos contextos de aprendizaje automático, con el objetivo de aprovechar la capacidad de las redes convolucionales para detectar patrones espaciales. En este trabajo, cada curva de luz multibanda se convierte en una imagen 2grid de 256×256 píxeles RGB, donde las seis bandas fotométricas (u, g, r, i, z, Y) se disponen verticalmente como subgráficos apilados. El eje horizontal codifica el tiempo en días julianos modificados (MJD), y el eje vertical el flujo fotométrico.
+
+Para que las curvas sean visibles y comparables entre objetos de distinta luminosidad, el tiempo MJD y el flujo fotométrico de cada supernova se normalizan individualmente al rango $[0, 1]$ antes de graficar. Sin esta normalización, las curvas quedan fuera del área visible de la imagen porque los valores reales (MJD ~60.000, flujo ~$-$44 a 95) no corresponden a los límites del gráfico.
+
+Esta representación presenta ventajas concretas frente al uso directo de series de tiempo: elimina la necesidad de manejar muestreo irregular, permite codificar de forma natural la correlación entre bandas como patrones espaciales en la imagen, y habilita el uso de arquitecturas convolucionales estándar sin modificaciones. La conversión se realiza con matplotlib usando \texttt{figsize=[2.56, 2.56]} pulgadas y DPI=100, produciendo imágenes de exactamente 256×256 píxeles.
+
+\section{Autoencoder con cuantización vectorial (VQ-VAE)}
+
+\subsection{Descripción general}
+
+El autoencoder con cuantización vectorial (VQ-VAE, \textit{Vector Quantized Variational Autoencoder}) fue propuesto por van den Oord et al. (2017) como un modelo generativo que aprende representaciones discretas del espacio latente. A diferencia de los VAE estándar que producen representaciones continuas mediante el truco de la reparametrización, el VQ-VAE mapea cada vector latente a su vecino más cercano en un codebook de embeddings aprendidos. Esta discretización permite modelar distribuciones multimodales complejas sin colapso posterior y produce representaciones interpretables como secuencias de tokens, lo que facilita el uso de modelos de lenguaje sobre el espacio latente.
+
+El VQ-VAE consta de tres componentes principales: un encoder, un codebook y un decoder.
+
+\subsection{Encoder}
+
+El encoder $E_\phi$ transforma una imagen de entrada $\mathbf{x} \in \mathbb{R}^{3 \times 256 \times 256}$ en un mapa de features continuo $\mathbf{z}_e \in \mathbb{R}^{D \times H \times W}$, donde $D$ es la dimensión del embedding y $H \times W$ es la resolución espacial del espacio latente.
+
+En este trabajo, el encoder utiliza tres capas convolucionales con stride 2 y tamaño de kernel 4, que reducen la resolución espacial de 256×256 a 32×32, seguidas de dos bloques residuales (ResBlocks) que refinan las representaciones sin alterar la resolución:
+
+\begin{align}
+256 \times 256 &\xrightarrow{\text{Conv}(3 \to 64,\, s=2)} 128 \times 128 \\
+128 \times 128 &\xrightarrow{\text{Conv}(64 \to 128,\, s=2)} 64 \times 64 \\
+64 \times 64 &\xrightarrow{\text{Conv}(128 \to 256,\, s=2)} 32 \times 32 \\
+32 \times 32 &\xrightarrow{\text{ResBlock} \times 2} 32 \times 32
+\end{align}
+
+El resultado es un tensor $\mathbf{z}_e \in \mathbb{R}^{256 \times 32 \times 32}$, es decir, 1024 vectores de dimensión 256, uno por cada posición espacial 32×32. Cada uno de estos vectores representa un parche de 8×8 píxeles de la imagen original.
+
+\subsection{Cuantización vectorial con EMA}
+
+El codebook es un conjunto de $K = 512$ vectores aprendidos $\{\mathbf{e}_k\}_{k=1}^{K} \subset \mathbb{R}^{256}$. Para cada vector continuo $\mathbf{z}_e(i,j)$, se selecciona el embedding más cercano:
+
+\begin{equation}
+k^* = \arg\min_k \|\mathbf{z}_e(i,j) - \mathbf{e}_k\|_2^2
+\end{equation}
+
+En vez de actualizar el codebook por gradientes, se utiliza \textbf{Exponential Moving Average (EMA)}, que actualiza los embeddings directamente a partir de los vectores del encoder que caen en cada cluster:
+
+\begin{align}
+N_k &\leftarrow \gamma N_k + (1-\gamma) n_k \\
+\mathbf{m}_k &\leftarrow \gamma \mathbf{m}_k + (1-\gamma) \sum_{i: k^*_i = k} \mathbf{z}_{e,i} \\
+\mathbf{e}_k &\leftarrow \frac{\mathbf{m}_k}{N_k}
+\end{align}
+
+donde $\gamma = 0.99$ es el factor de decay y $n_k$ es el número de vectores asignados al embedding $k$ en el batch actual. Las actualizaciones EMA se realizan sin gradientes (\texttt{torch.no\_grad()}) y usando operaciones in-place para evitar acumulación de memoria.
+
+\textbf{Straight-through estimator.} Como el argmin no es diferenciable, en el backward pass el gradiente se pasa directamente de $\mathbf{z}_q$ a $\mathbf{z}_e$ sin modificación, como si la cuantización fuera una función identidad.
+
+\subsection{Codebook reset}
+
+Un problema común en VQ-VAE es el \textbf{colapso del codebook}: el modelo converge a usar solo unos pocos embeddings de los $K$ disponibles. Para evitarlo, se implementa un mecanismo de \textbf{codebook reset}: cada 10 steps de entrenamiento, los embeddings con uso muy bajo ($N_k < 1.0$) se reinicializan con vectores aleatorios del batch actual:
+
+\begin{equation}
+\mathbf{e}_k \leftarrow \mathbf{z}_{e,\text{random}} \quad \text{si } N_k < \theta_{\text{reset}}
+\end{equation}
+
+Este mecanismo permite que la perplexity del codebook alcance valores de $\sim$90--335 (de 512 posibles), comparado con valores de 3--4 sin codebook reset.
+
+\subsection{Decoder}
+
+El decoder $G_\theta$ reconstruye la imagen a partir del mapa cuantizado $\mathbf{z}_q$ mediante capas de convolución transpuesta con stride 2 y activación Tanh final.
+
+\subsection{Función de pérdida}
+
+Con EMA, el término de codebook loss desaparece, quedando:
+
+\begin{equation}
+\mathcal{L} = \mathcal{L}_{\text{recon}} + \beta \cdot \mathcal{L}_{\text{commitment}}
+\end{equation}
+
+donde $\mathcal{L}_{\text{recon}} = \|\mathbf{x} - \hat{\mathbf{x}}\|_2^2$ y $\mathcal{L}_{\text{commitment}} = \|\mathbf{z}_e - \text{sg}[\mathbf{z}_q]\|_2^2$, con $\beta = 0.25$.
+
+\subsection{Perplexity del codebook}
+
+La perplexity mide cuántos embeddings se están usando efectivamente:
+
+\begin{equation}
+\text{perplexity} = \exp\left(-\sum_k \bar{p}_k \log \bar{p}_k\right)
+\end{equation}
+
+donde $\bar{p}_k$ es la fracción de vectores asignados al embedding $k$.
+
+\section{Clasificación supervisada sobre el espacio latente discreto}
+
+\subsection{Motivación}
+
+El VQ-VAE entrenado de forma no supervisada aprende una representación orientada a minimizar el error de reconstrucción, sin ninguna señal que organice los embeddings del codebook por tipo de objeto astronómico. Para estudiar si es posible y beneficioso inducir una organización semántica del codebook, se propone extender el VQ-VAE con una \textbf{cabeza de clasificación supervisada} que opera sobre la representación cuantizada $\mathbf{z}_q$.
+
+\subsection{Cabeza de clasificación sobre $\mathbf{z}_q$}
+
+La cabeza de clasificación es un MLP que toma $\mathbf{z}_q \in \mathbb{R}^{D \times H' \times W'}$ y produce logits sobre las $C = 17$ clases de supernovas:
+
+\begin{equation}
+\mathbf{z}_q \xrightarrow{\text{GlobalAvgPool}} \mathbb{R}^{256} \xrightarrow{\text{Linear}(256 \to 128)} \xrightarrow{\text{ReLU}} \xrightarrow{\text{Dropout}} \xrightarrow{\text{Linear}(128 \to 17)} \mathbb{R}^{17}
+\end{equation}
+
+La clasificación se realiza sobre $\mathbf{z}_q$ y no sobre $\mathbf{z}_e$ porque el gradiente fluye hacia el encoder a través del straight-through estimator, presionando al codebook a organizarse semánticamente: embeddings similares quedan asociados a tipos de SN similares. Esto hace los contrafactuales astronómicamente interpretables: al reemplazar tokens anómalos, los tokens de reemplazo corresponden a tipos de SN específicos.
+
+\subsection{Función de pérdida con clasificación}
+
+\begin{equation}
+\mathcal{L} = \mathcal{L}_{\text{recon}} + \mathcal{L}_{\text{vq}} + \lambda \cdot \mathcal{L}_{\text{class}}
+\end{equation}
+
+donde $\mathcal{L}_{\text{class}} = \text{CrossEntropy}(f_\psi(\mathbf{z}_q), y)$ y $\lambda = 1.0$.
+
+\subsection{Análisis de afinidad del codebook}
+
+Para cuantificar la organización semántica del codebook, se define la \textbf{afinidad por clase} de cada embedding $k$:
+
+\begin{equation}
+\text{count}(k, c) = \sum_{n} \sum_{i,j} \mathbf{1}[s_n(i,j) = k] \cdot \mathbf{1}[y_n = c]
+\end{equation}
+
+La clase dominante y la pureza de cada embedding son:
+
+\begin{equation}
+c^*(k) = \arg\max_c \; \text{count}(k, c), \qquad
+\text{pureza}(k) = \frac{\text{count}(k,\, c^*(k))}{\sum_c \text{count}(k, c)}
+\end{equation}
+
+Esta información se visualiza proyectando los 512 embeddings del codebook con UMAP coloreados por clase dominante, permitiendo comparar directamente la organización antes y después de agregar la señal supervisada.
+
+\section{Modelo prior sobre el espacio latente discreto}
+
+Una vez entrenado el VQ-VAE, cada imagen queda representada como una secuencia de 1024 tokens enteros $\mathbf{s} \in \{1, \ldots, 512\}^{32 \times 32}$. Se entrena un prior tipo \textbf{MaskGIT} (\textit{Masked Generative Image Transformer}) que aprende la distribución conjunta $p(\mathbf{s})$.
+
+\subsection{Score de anomalía}
+
+La cantidad de interés es la log-verosimilitud negativa de la secuencia bajo el prior,
+
+\begin{equation}
+\text{score}(\mathbf{s}) = -\log p(\mathbf{s}).
+\end{equation}
+
+Una curva de luz típica produce tokens frecuentes y score bajo; un outlier produce combinaciones inusuales y score alto. MaskGIT no evalúa $p(\mathbf{s})$ de forma autorregresiva: el estimador práctico (NLL medio sobre tokens enmascarados, NLL por posición y el umbral de hit $\tau = 0.3$) se detalla en el capítulo de metodología.
+
+\subsection{Generación de contrafactuales}
+
+Los tokens más improbables se enmascaran y remuestrean condicionalmente:
+
+\begin{equation}
+\mathbf{s}' \sim p(\mathbf{s}_{\text{mask}} \mid \mathbf{s}_{\text{visible}})
+\end{equation}
+
+Al decodificar $\mathbf{s}'$ con el decoder del VQ-VAE se obtiene la curva de luz contrafactual, que al compararse con el original revela qué aspectos hacen al objeto anómalo.

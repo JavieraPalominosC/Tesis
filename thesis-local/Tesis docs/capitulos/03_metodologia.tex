@@ -1,0 +1,276 @@
+\chapter{Dataset}
+
+\section{ELAsTiCC-1}
+
+El dataset utilizado corresponde al Extended LSST Astronomical Time Series Classification Challenge (ELAsTiCC-1), desarrollado en el contexto del Observatorio Vera C. Rubin. Contiene curvas de luz simuladas en seis bandas fotométricas: u, g, r, i, z, Y.
+
+\section{Análisis exploratorio}
+
+\subsection{Distribución de objetos por tipo}
+
+El dataset contiene un total de 1.389.147 supernovas distribuidas en 17 tipos.
+
+\begin{table}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|r|r|r|r|}
+\hline
+\textbf{Tipo} & \textbf{Objetos} & \textbf{Obs. total} & \textbf{Obs./obj. (media)} & \textbf{Obs./obj. (mediana)} \\
+\hline
+SNIa-SALT2         & 211.892 & 23.832.381 & 112.5 & 124.0 \\
+SNIa-91bg          &  53.414 &  6.102.090 & 114.2 & 125.0 \\
+SNIax              &  53.727 &  6.344.784 & 118.1 & 126.0 \\
+SNII-Templates     & 103.536 & 11.298.138 & 109.1 & 122.0 \\
+SNII-NMF           & 102.251 & 12.288.097 & 120.2 & 127.0 \\
+SNII+HostXT\_V19   & 103.189 & 11.214.651 & 108.7 & 121.0 \\
+SNIb-Templates     &  40.065 &  4.530.177 & 113.1 & 125.0 \\
+SNIb+HostXT\_V19   & 102.883 & 11.287.051 & 109.7 & 122.0 \\
+SNIc-Templates     &  20.617 &  2.383.542 & 115.6 & 125.0 \\
+SNIc+HostXT\_V19   & 103.885 & 11.425.289 & 110.0 & 123.0 \\
+SNIcBL+HostXT\_V19 &  42.878 &  4.774.667 & 111.4 & 123.0 \\
+SNIIb+HostXT\_V19  & 103.683 & 11.294.039 & 108.9 & 122.0 \\
+SNIIn-MOSFIT       &  31.162 &  3.905.954 & 125.3 & 130.0 \\
+SNIIn+HostXT\_V19  & 105.281 & 12.285.982 & 116.7 & 125.0 \\
+SLSN-I+host        & 100.977 & 15.814.118 & 156.6 & 163.0 \\
+SLSN-I\_no\_host   &   4.261 &    761.439 & 178.7 & 193.0 \\
+PISN               & 105.446 & 14.563.011 & 138.1 & 139.0 \\
+\hline
+\textbf{Total} & \textbf{1.389.147} & \textbf{163.905.410} & 120.4 & 126.0 \\
+\hline
+\end{tabular}
+}
+\caption{Distribución de objetos por tipo de supernova en el dataset elasticc\_1.}
+\label{tab:distribucion_tipos}
+\end{table}
+
+Se observa un desbalance importante: el tipo más abundante (SNIa-SALT2, 211.892 objetos) tiene 50 veces más objetos que el tipo más escaso (SLSN-I\_no\_host, 4.261 objetos). Este desbalance es relevante para la detección de anomalías, ya que tipos poco frecuentes podrían ser detectados como outliers simplemente por su rareza.
+
+\subsection{Características temporales}
+
+Todos los tipos comparten el mismo rango temporal de 1.104,3 días (~3 años). Destacan dos grupos:
+
+\begin{itemize}
+    \item \textbf{Supernovas estándar} (SNIa, SNII, SNIb, SNIc): entre 108 y 127 observaciones por objeto en promedio.
+    \item \textbf{Supernovas superluminosas} (SLSN-I) y \textbf{PISN}: entre 138 y 178 observaciones por objeto, reflejando su mayor duración y brillo.
+\end{itemize}
+
+\subsection{Objetos potencialmente anómalos}
+
+Desde el punto de vista de la detección de anomalías sin supervisión, destacan como candidatos naturales a outliers:
+
+\begin{itemize}
+    \item \textbf{SLSN-I\_no\_host} (4.261 objetos): el tipo más escaso, con curvas de luz significativamente más largas (mediana 193 observaciones).
+    \item \textbf{PISN} (105.446 objetos): supernovas de inestabilidad de par, con morfología particular.
+    \item \textbf{SLSN-I+host} (100.977 objetos): supernovas superluminosas con curvas muy extendidas (mediana 163 observaciones).
+\end{itemize}
+
+\section{Preprocesamiento: imágenes 2grid}
+
+A partir del dataset se generaron 895.354 imágenes 2grid de 256×256 píxeles. La generación se realizó en paralelo en el cluster Leftraru HPC, lanzando un job SLURM independiente por cada tipo de supernova. Las imágenes se almacenan en \texttt{data/images/elasticc\_1/2grid/\{SNID\}.png}.
+
+Para el entrenamiento del VQ-VAE se utilizaron 899.440 imágenes divididas en:
+\begin{itemize}
+    \item \textbf{Training:} 718.673 imágenes (80\%, fold 0)
+    \item \textbf{Validación:} 179.669 imágenes (20\%, fold 0)
+\end{itemize}
+
+La partición utiliza 5-fold cross-validation estratificada por tipo de supernova (\texttt{StratifiedKFold}, \texttt{random\_state=42}).
+\chapter{Metodología}
+
+La metodología se organiza en tres etapas secuenciales: preprocesamiento de los datos como imágenes, entrenamiento del VQ-VAE, y detección de anomalías con generación de contrafactuales.
+
+\section{Exploración metodológica previa}
+
+Antes de adoptar el enfoque basado en imágenes, se realizó una exploración inicial con series de tiempo directamente como input del VQ-VAE, siguiendo el esquema de TimeVQVAE \cite{lee2023timevqvae}. La transformada de Fourier no resultó adecuada para supernovas (muestreo irregular, características morfológicas no frecuenciales), por lo que se trabajó directamente con la serie de tiempo.
+
+Se realizaron dos corridas variando el tamaño del codebook:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Métrica} & \textbf{codebook\_dim=8} & \textbf{codebook\_dim=64} \\
+\hline
+Perplexity (train) & 1.00 & 5.23 \\
+Recon loss (train) & 0.25012 & 0.02683 \\
+\hline
+\end{tabular}
+\caption{Resultados de la exploración inicial con series de tiempo.}
+\label{tab:exploracion_previa}
+\end{table}
+
+La perplexity de 1.00 indica colapso total del codebook. A pesar de que la calidad de reconstrucción mejoró con \texttt{codebook\_dim=64}, las reconstrucciones presentaban artefactos visibles en los pasos iniciales y no capturaban fielmente la morfología de las curvas de luz, como se muestra en las Figuras~\ref{fig:recon_step1904} y \ref{fig:recon_step5000}.
+
+\begin{figure}[H]
+\centering
+\insertimage[\label{fig:recon_step1904}]{img/reconstruccion_stage1.png}{width=0.7\textwidth}{Reconstrucción del VQ-VAE sobre series de tiempo en el step 1904. Azul: curva original. Naranja: reconstrucción.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\insertimage[\label{fig:recon_step5000}]{img/stage1_newcodebook.png}{width=0.7\textwidth}{Reconstrucción del VQ-VAE sobre series de tiempo en el step 5000. La reconstrucción mejora pero presenta desplazamientos temporales.}
+\end{figure}
+
+Estos resultados, junto con las limitaciones del muestreo irregular, motivaron el cambio a representación en imágenes.
+
+\section{Preprocesamiento: conversión de curvas de luz a imágenes 2grid}
+
+Las curvas de luz se convierten en imágenes RGB de 256×256 píxeles con 6 bandas apiladas verticalmente.
+
+\subsection{Normalización por objeto}
+
+Para cada supernova, el tiempo MJD y el flujo fotométrico se normalizan individualmente al rango $[0, 1]$:
+
+\begin{equation}
+\hat{t} = \frac{t - t_{\min}}{t_{\max} - t_{\min}}, \qquad
+\hat{f} = \frac{f - Q_{0.01}}{Q_{0.99} - Q_{0.01}}
+\end{equation}
+
+Con esta normalización, las imágenes tienen $\sim$10\% de píxeles con contenido, frente al 4\% sin normalización.
+
+\subsection{Normalización para el modelo}
+
+Antes de ser procesadas por el VQ-VAE, las imágenes se normalizan a $[-1, 1]$:
+
+\begin{equation}
+\hat{x} = \frac{x - 0.5}{0.5}
+\end{equation}
+
+Consistente con la activación Tanh del decoder.
+
+\section{Entrenamiento del VQ-VAE}
+
+\subsection{Arquitectura}
+
+\begin{itemize}
+    \item \textbf{Encoder:} tres capas Conv2d con stride 2 (256×256 → 32×32) + dos ResBlocks. Salida: $\mathbf{z}_e \in \mathbb{R}^{256 \times 32 \times 32}$.
+    \item \textbf{Codebook EMA:} 512 embeddings de dimensión 256, decay=0.99. Codebook reset cada 10 steps para embeddings con $N_k < 1.0$.
+    \item \textbf{Decoder:} espejo del encoder con ConvTranspose2d + activación Tanh.
+\end{itemize}
+
+El modelo tiene $\sim$7.7 millones de parámetros entrenables.
+
+\subsection{Configuración del entrenamiento}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Hiperparámetro} & \textbf{Valor} \\
+\hline
+Batch size & 32 \\
+Learning rate & $2 \times 10^{-4}$ \\
+Optimizador & Adam \\
+Commitment cost ($\beta$) & 0.25 \\
+Tamaño del codebook ($K$) & 512 \\
+Dimensión del embedding ($D$) & 256 \\
+Resolución latente & $32 \times 32$ \\
+EMA decay & 0.99 \\
+Codebook reset threshold & 1.0 \\
+Precisión & float16 mixta \\
+Gradient clip & 1.0 \\
+\hline
+\end{tabular}
+\caption{Hiperparámetros del entrenamiento del VQ-VAE.}
+\label{tab:vqvae_config}
+\end{table}
+
+
+\section{Clasificación supervisada sobre el codebook}
+
+\subsection{Motivación}
+
+La visualización mediante UMAP de los tokens generados mostró que las clases de supernovas no se separan claramente en el espacio discreto aprendido con reconstrucción sola. Para investigar si es posible inducir organización semántica del codebook, se incorporó una cabeza de clasificación supervisada sobre $\mathbf{z}_q$.
+
+\subsection{Función de pérdida extendida}
+
+\begin{equation}
+\mathcal{L} = \mathcal{L}_{\text{recon}} + \mathcal{L}_{\text{vq}} + \lambda \cdot \mathcal{L}_{\text{class}}
+\end{equation}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Hiperparámetro} & \textbf{Valor} \\
+\hline
+Número de clases & 17 \\
+Peso de clasificación ($\lambda$) & 1.0 \\
+Dropout clasificador & 0.1 \\
+\hline
+\end{tabular}
+\caption{Hiperparámetros de la cabeza de clasificación.}
+\label{tab:cls_config}
+\end{table}
+
+\subsection{Resultados preliminares (epoch 0 en curso)}
+
+Al inicio del entrenamiento con clasificación, el modelo muestra:
+
+\begin{itemize}
+    \item \textbf{cls\_loss}: parte en $\sim$2.83 (entropía máxima para 17 clases) y desciende a $\sim$2.29 en los primeros 2.000 steps.
+    \item \textbf{acc}: sube de 5.9\% (random) a $\sim$31\% en los primeros 2.000 steps.
+    \item \textbf{perplexity}: $\sim$335, significativamente más alta que el modelo base ($\sim$162), indicando que la señal de clasificación no colapsa el codebook sino que mantiene alta diversidad.
+    \item \textbf{recon\_loss}: $\sim$0.012, comparable con el modelo base al final del epoch 0.
+\end{itemize}
+
+% TODO: actualizar con resultados finales del entrenamiento
+
+\section{Detección de anomalías}
+
+Una vez entrenado el VQ-VAE, cada supernova queda representada como una secuencia $\mathbf{s} \in \{1, \ldots, 512\}^{32 \times 32}$ de $T = 1024$ tokens. El prior MaskGIT aprende $p(\mathbf{s})$ como modelo enmascarado: no factoriza la secuencia de izquierda a derecha, sino que predice tokens tapados a partir del resto. El score de anomalía que se usa en esta tesis es un estimador de $-\log p(\mathbf{s})$ construido con ese mismo mecanismo.
+
+\subsection{Score global de MaskGIT}
+
+En cada ronda $r = 1, \ldots, R$ se elige un conjunto aleatorio $\mathcal{M}_r$ con fracción $\rho = 0.5$ de las posiciones, se reemplazan por el token de máscara y el prior entrega $p(s_i \mid \mathbf{s}_{\setminus \mathcal{M}_r})$. La contribución de esa ronda es el NLL medio sobre las posiciones enmascaradas:
+
+\begin{equation}
+\mathrm{NLL}^{(r)}(\mathbf{s})
+= \frac{1}{|\mathcal{M}_r|}
+\sum_{i \in \mathcal{M}_r}
+-\log p\!\left(s_i \mid \mathbf{s}_{\setminus \mathcal{M}_r}\right).
+\end{equation}
+
+El score de la imagen es el promedio entre rondas, con $R = 10$:
+
+\begin{equation}
+\mathrm{score}(\mathbf{s})
+= \frac{1}{R}\sum_{r=1}^{R} \mathrm{NLL}^{(r)}(\mathbf{s}).
+\end{equation}
+
+Solo entran al promedio las posiciones tapadas en esa ronda. Un objeto típico del conjunto de entrenamiento queda con $\mathrm{score} \approx 3$; combinaciones de tokens poco frecuentes suben el valor.
+
+\subsection{Criterio de detección en perturbaciones controladas}
+
+MaskGIT no entrega una etiqueta binaria. Para decidir si una perturbación de la fotometría es visible al prior se compara el objeto consigo mismo:
+
+\begin{equation}
+\Delta\mathrm{score}
+= \mathrm{score}(\mathbf{s}_{\mathrm{pert}})
+- \mathrm{score}(\mathbf{s}_{\mathrm{control}}).
+\end{equation}
+
+Se declara hit si $\Delta\mathrm{score} > \tau$. El umbral $\tau = 0.3$ no proviene de un test de hipótesis ni de un percentil calibrado sobre una muestra de negativos. Es la escala de la dispersión intra-grupo de los scores en la representación waterfall: supernovas del mismo tipo ya difieren entre sí en $\sim 0.3$ sin ninguna perturbación. Una subida menor que esa variación natural no se distingue de cambiar de objeto dentro de la misma clase.
+
+El valor es operativo: no es un número suelto ni un $p$-value. En los experimentos sintéticos se reporta además $\tau \in \{0.15, 0.5\}$ para verificar que las conclusiones no dependan de un solo corte.
+
+\section{Generación de contrafactuales}
+
+El contrafactual usa el mismo prior, pero no el score escalar. Se estima un NLL \emph{por token}: en cada ronda se acumula $-\log p(s_i \mid \mathbf{s}_{\setminus \mathcal{M}_r})$ solo si $i$ estaba enmascarado, y se promedia sobre las rondas en que esa posición tocó máscara,
+
+\begin{equation}
+\mathrm{NLL}_i
+= \frac{\displaystyle\sum_{r=1}^{R} \mathbf{1}[i\in\mathcal{M}_r]\,
+-\log p\!\left(s_i \mid \mathbf{s}_{\setminus \mathcal{M}_r}\right)}
+{\displaystyle\sum_{r=1}^{R} \mathbf{1}[i\in\mathcal{M}_r]}.
+\end{equation}
+
+En las figuras contrafactuales se usa $R = 5$ (basta para ordenar posiciones). Se enmascaran los tokens con $\mathrm{NLL}_i$ sobre el percentil $0.85$ de esa misma imagen (unas $154$ de $1024$ posiciones) y se remuestrean condicionalmente:
+
+\begin{equation}
+\mathbf{s}' \sim p(\mathbf{s}_{\mathrm{mask}} \mid \mathbf{s}_{\mathrm{visible}}).
+\end{equation}
+
+Ese percentil es relativo a la imagen, no a un umbral absoluto de anomalía. Toda secuencia tiene un $15\%$ de tokens peor rankeados, de modo que el contrafactual siempre reescribe algo. El mapa $|\hat{\mathbf{x}} - \hat{\mathbf{x}}'|$ localiza dónde actúa esa reescritura; no equivale a un hit en $\Delta\mathrm{score}$.
+
+La calidad se evalúa según plausibilidad, parsimonia y consistencia temporal entre bandas.

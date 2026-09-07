@@ -1,0 +1,185 @@
+\chapter{Resultados}
+
+\section{VQ-VAE base}
+
+\subsection{Calidad de reconstrucción}
+
+El VQ-VAE base fue entrenado durante 16 epochs sobre 718.673 imágenes 2grid 
+del dataset ELAsTiCC-1. Al término del entrenamiento, la pérdida total sobre 
+el conjunto de entrenamiento alcanzó 0.0003, con una pérdida de 
+reconstrucción de 0.000216. La perplexity efectiva del codebook se situó en 
+$\sim$162 durante el entrenamiento y $\sim$196 sobre el conjunto de 
+validación, lo que indica que entre 162 y 196 de los 512 embeddings 
+disponibles participan activamente en la representación del dataset 
+(Tabla~\ref{tab:vqvae_base_results}).
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Métrica} & \textbf{Valor} \\
+\hline
+train/loss (mejor checkpoint) & 0.0003 \\
+train/recon\_loss              & 0.000216 \\
+train/perplexity               & $\sim$162 \\
+val/perplexity                 & $\sim$196 \\
+\hline
+\end{tabular}
+\caption{Resultados del VQ-VAE base al finalizar el entrenamiento.}
+\label{tab:vqvae_base_results}
+\end{table}
+
+% TODO: agregar figura de reconstrucciones 2grid (pares original/reconstruido)
+
+\subsection{Análisis del espacio latente discreto}
+\label{sec:umap_base}
+
+Para caracterizar la organización interna del espacio latente aprendido, se 
+proyectaron los tokens generados sobre una muestra del conjunto de validación 
+mediante UMAP, asignando a cada punto el color correspondiente al tipo de 
+supernova de la imagen de origen. La Figura~\ref{fig:umap_tokens} presenta el 
+resultado.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{img/umap_tokens.png}
+\caption{UMAP de tokens del VQ-VAE base coloreados por tipo de supernova. 
+Cada punto corresponde a un token generado por una imagen 2grid del conjunto 
+de validación.}
+\label{fig:umap_tokens}
+\end{figure}
+
+La proyección revela una estructura geométrica con masa central compacta y 
+varios brazos periféricos. Los 17 tipos de supernovas se distribuyen de forma 
+mezclada a lo largo de toda la estructura, sin formar clusters diferenciados 
+por clase. Para cuantificar esta distribución, se identificaron cinco regiones 
+geográficas en el UMAP y se calculó la composición de tipos dentro de cada 
+una (Figura~\ref{fig:umap_zoom} y Figura~\ref{fig:umap_pies}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{img/umap_zoom_regions.png}
+\caption{Delimitación de las cinco regiones identificadas en el espacio UMAP: 
+masa central, brazo derecho, brazo inferior, extremo superior y borde 
+izquierdo.}
+\label{fig:umap_zoom}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{img/umap_composition_pies.png}
+\caption{Composición por tipo de supernova en cada región del UMAP. La 
+distribución de clases es similar entre zonas, sin dominancia de ningún tipo 
+particular.}
+\label{fig:umap_pies}
+\end{figure}
+
+Ninguna región está dominada por un tipo particular y la mezcla de clases es 
+similar entre zonas, con variaciones menores que se explican por el desbalance 
+del dataset. La Figura~\ref{fig:umap_examples} muestra imágenes 2grid 
+representativas de cada región: las curvas de luz varían morfológicamente 
+---el brazo derecho agrupa curvas con peaks más estrechos, la masa central 
+concentra morfologías más extendidas--- pero esa variación no coincide con 
+los límites entre tipos astronómicos.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{img/umap_example_images.png}
+\caption{Imágenes 2grid de ejemplo por región del UMAP. Los títulos en color 
+indican el tipo de supernova de cada imagen.}
+\label{fig:umap_examples}
+\end{figure}
+
+El VQ-VAE base organiza el espacio latente por morfología visual de la curva 
+de luz, no por tipo de objeto. La clasificación por tipo requiere una señal 
+supervisada explícita, lo que justifica la extensión descrita en la sección 
+siguiente.
+
+\section{VQ-VAE con clasificación supervisada}
+\label{sec:cls_supervisada}
+
+\subsection{Entrenamiento}
+
+El VQ-VAE extendido con un módulo de clasificación supervisada 
+(\textit{classification head}) sobre $\mathbf{z}_q$ se entrenó sobre el mismo 
+conjunto de 718.673 imágenes, incorporando la pérdida de clasificación con 
+peso $\lambda = 0.1$. El modelo converge en 7 epochs, alcanzando una 
+exactitud de validación de 55.6\% y una pérdida total de 0.1188 en el mejor 
+checkpoint. La exactitud sobre el conjunto completo de validación (109.737 
+imágenes) es 38.8\%, reflejo del desbalance entre tipos: la matriz de 
+confusión muestra un recall de 0.88 para PISN y 0.81 para SLSN-I+host, 
+mientras SNIIb y SNIc-Templates no superan 0.02 
+(Figura~\ref{fig:confusion_matrix}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{img/confusion_matrix.png}
+\caption{Matriz de confusión del módulo de clasificación supervisada sobre el 
+conjunto de validación (109.737 imágenes, 17 clases). Las filas corresponden 
+a la clase verdadera y las columnas a la clase predicha. PISN y SLSN-I+host 
+concentran la mayor exactitud por clase; los tipos morfológicamente similares 
+entre sí (SNIIb, SNIc-Templates) presentan la mayor tasa de confusión.}
+\label{fig:confusion_matrix}
+\end{figure}
+
+\subsection{Análisis del codebook con señal supervisada}
+
+Con 512 embeddings activos sobre 512 totales, el codebook se utiliza por 
+completo, a diferencia del modelo base donde la perplexity efectiva era de 
+$\sim$162--196. La pureza media del codebook es 0.154: con 17 clases, la 
+pureza aleatoria esperada sería $1/17 \approx 0.059$, de modo que los 
+embeddings aprendidos son $\sim$2.6 veces más puros que el azar, sin llegar 
+a una especialización fuerte.
+
+La Figura~\ref{fig:umap_codebook_cls} presenta la proyección UMAP de los 512 
+embeddings del codebook, coloreada por clase dominante (izquierda) y por 
+pureza (derecha).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{img/umap_codebook_cls.png}
+\caption{UMAP de los 512 embeddings del codebook tras el entrenamiento con 
+clasificación supervisada ($\lambda = 0.1$). Izquierda: color por clase 
+dominante de cada embedding. Derecha: color por pureza 
+($\text{pureza}(k) = \text{count}(k,\,c^*) / \sum_c \text{count}(k,c)$). 
+Pureza media: 0.154.}
+\label{fig:umap_codebook_cls}
+\end{figure}
+
+La estructura del UMAP revela dos comportamientos distintos. El cluster 
+principal agrupa la mayoría de los embeddings con pureza baja (0.1--0.3), 
+donde los tipos de SN estándar (SNIa, SNII, SNIb, SNIc) coexisten sin 
+separación clara. Fuera de este cluster principal aparecen dos grupos 
+aislados de alta pureza ($\geq 0.8$): uno dominado por SLSN-I y otro por 
+PISN. Estos dos tipos son los morfológicamente más distintos del resto del 
+dataset ---curvas de mayor duración y brillo--- y son precisamente los que el 
+módulo de clasificación identifica con mayor recall (0.81 y 0.88 
+respectivamente).
+
+\subsection{Comparación con el modelo base}
+
+El VQ-VAE base organiza el espacio latente por morfología visual de la curva 
+de luz, sin correspondencia con los tipos astronómicos 
+(Sección~\ref{sec:umap_base}). La señal supervisada desplaza parcialmente 
+esa organización: los tipos más atípicos quedan aislados en embeddings 
+dedicados de alta pureza, mientras los tipos estándar ---cuyas curvas de luz 
+son morfológicamente similares entre sí--- permanecen mezclados.
+
+Este resultado es consistente con la exactitud diferencial del módulo de 
+clasificación: $\lambda = 0.1$ alcanza para separar PISN y SLSN-I, pero no 
+para discriminar tipos con morfologías parecidas como SNIIb y SNIc. La 
+organización semántica del codebook refleja directamente la dificultad 
+intrínseca del problema de clasificación sobre representaciones visuales de 
+curvas de luz.
+
+\section{Prior MaskGIT}
+
+% TODO: completar con resultados del entrenamiento MaskGIT
+
+\section{Detección de anomalías}
+
+% TODO: agregar curvas ROC, AUROC, ejemplos de outliers detectados
+
+\section{Generación de contrafactuales}
+
+% TODO: agregar ejemplos visuales de contrafactuales generados

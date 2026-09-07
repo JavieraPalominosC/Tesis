@@ -1,0 +1,22 @@
+vqvae:
+  in_channels: 3
+  hidden_channels: [64, 128, 256]
+  embedding_dim: 256
+  num_embeddings: 512
+  commitment_cost: 0.25
+  learning_rate: 0.0002
+  batch_size: 32
+  # Con 1.39M una epoca son ~53 min. El VQ-VAE original alcanzo su mejor
+  # checkpoint en la epoca 26, asi que 25 con parada temprana alcanza.
+  num_epochs: 25
+  num_workers: 8
+  image_dir: "data/enc_cmp/mad300/images"
+  image_size: 256
+  val_split: 0.1
+  folds_path: "data/enc_cmp/mad300/folds_full.json"
+  labels_path: "data/enc_cmp/mad300/labels.json"
+  num_classes: 17
+  cls_weight: 0.1
+  cls_dropout: 0.1
+  checkpoint_dir: "results/enc_cmp_full/mad300/vqvae/checkpoints"
+  log_dir: "results/enc_cmp_full/mad300/vqvae/logs"

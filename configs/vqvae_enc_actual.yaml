@@ -1,0 +1,20 @@
+vqvae:
+  in_channels: 3
+  hidden_channels: [64, 128, 256]
+  embedding_dim: 256
+  num_embeddings: 512
+  commitment_cost: 0.25
+  learning_rate: 0.0002
+  batch_size: 32
+  num_epochs: 40
+  num_workers: 8
+  image_dir: "data/enc_cmp/actual/images"
+  image_size: 256
+  val_split: 0.1
+  folds_path: "data/enc_cmp/actual/folds.json"
+  labels_path: "data/enc_cmp/actual/labels.json"
+  num_classes: 17
+  cls_weight: 0.1
+  cls_dropout: 0.1
+  checkpoint_dir: "results/enc_cmp/actual/vqvae/checkpoints"
+  log_dir: "results/enc_cmp/actual/vqvae/logs"

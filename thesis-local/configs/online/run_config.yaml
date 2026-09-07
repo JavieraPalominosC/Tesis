@@ -1,0 +1,73 @@
+hydra:
+  run:
+    dir: .
+  output_subdir: null 
+
+ft_classification:
+  results_dir: 'results'
+  exp_description: ''
+
+  model_name: 'swinv2'
+  checkpoint: {
+    'use': false,
+    'exp_name': 'ft_classification/macho_multiband/testing',
+    'run_name': '2024-08-31_01-39-33',
+    'run_id': null,
+    'results_dir': 'results',
+  } 
+  pretrained_model: {
+    'use': true,
+    'path': "/home/jpalominos/.cache/huggingface/hub/models--microsoft--swinv2-tiny-patch4-window16-256/snapshots/f4d3075206f2ad5eda586c30d6b4d0500f312421",
+  }
+  list_folds: [0]
+  
+  # General Configuration
+  debug: false
+  is_searching_hyperparameters: false
+
+  # Loaders Configuration
+  loader:
+    name_dataset: 'macho_multiband'
+    spc: 20
+    num_workers: 12
+    use_png: false
+
+  # Training Configuration
+  training:
+    lr: 5.0e-5
+    patience: 10
+    num_epochs: 10000
+    batch_size: 64
+    use_weighted_sampling: true
+    monitor: 'f1/val'
+    cache_enabled: false
+
+    classifier: {
+      use: true,
+      only_train_classifier: false,
+    }
+
+    use_metadata: false
+  
+  imgs_params:
+    norm_name: 'minmax_by_obj'
+    input_type: 'overlay' 
+    use_err: true
+
+    fig_params: {
+        figsize: [2.56, 2.56],
+        fmt: '-o', 
+        markersize: 2.0, 
+        linewidth: 0.5, 
+        colors: {
+          0: '#00FF7F',  # near to green
+          1: '#7FFF00',  # near to green
+          2: '#FF007F',  # near to red
+          3: '#FF7F00',  # near to red
+          4: '#007FFF',  # near to blue
+          5: '#7F00FF',   # near to blue
+        },
+        alpha: 0.5,
+        xlim: [-0.05, 1.05],
+        ylim: [-0.05, 1.05],
+    }

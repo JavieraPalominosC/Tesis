@@ -1,0 +1,38 @@
+\chapter{Discusión y Conclusiones}
+
+% TODO: completar al finalizar los experimentos
+
+\section{Discusión}
+
+\subsection{Representación 2grid}
+
+La conversión de curvas de luz multibanda a imágenes 2grid resultó efectiva para el entrenamiento del VQ-VAE. La normalización por objeto fue un aspecto crítico: sin ella, las curvas quedan fuera del área visible de la imagen (~4\% de píxeles con contenido), mientras que con normalización se alcanza ~10\%, lo que garantiza que el modelo aprenda patrones morfológicos y no valores absolutos de flujo.
+
+\subsection{Organización semántica del codebook}
+
+% TODO: discutir comparación UMAP antes/después de clasificación
+% TODO: discutir si la mayor pureza del codebook mejora los contrafactuales
+
+\subsection{Calidad de los contrafactuales}
+
+% TODO: discutir plausibilidad, parsimonia y consistencia temporal
+
+\section{Limitaciones}
+
+\begin{itemize}
+    \item El pipeline fue evaluado sobre datos simulados (ELAsTiCC-1). La generalización a datos reales del Observatorio Vera C. Rubin requiere validación adicional.
+    \item El desbalance entre tipos de supernovas (hasta 50x entre el tipo más y menos frecuente) puede sesgar la distribución aprendida por el prior MaskGIT.
+    % TODO: agregar otras limitaciones identificadas
+\end{itemize}
+
+\section{Conclusiones}
+
+% TODO: completar con conclusiones finales
+
+\section{Trabajo futuro}
+
+\begin{itemize}
+    \item Evaluar distintos valores de $\lambda$ para el peso de la clasificación y su efecto en el downstream de anomaly detection.
+    \item Explorar tamaños de codebook alternativos ($K = 256$, $K = 1024$) y su efecto en la calidad de los contrafactuales.
+    \item Aplicar el pipeline a datos reales del Observatorio Vera C. Rubin cuando estén disponibles.
+\end{itemize}

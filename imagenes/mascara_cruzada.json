@@ -1,0 +1,286 @@
+{
+  "dfs": [
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    90,
+    100
+  ],
+  "n_objetos": 40,
+  "rondas": 24,
+  "celdas": {
+    "aleatoria|aleatoria": {
+      "tau": 10.515169858932493,
+      "loc_control": 0.1,
+      "por_df": {
+        "10": {
+          "recall": 0.125,
+          "auc": 0.65,
+          "pareada": 0.625,
+          "localizacion": 0.475
+        },
+        "20": {
+          "recall": 0.225,
+          "auc": 0.641875,
+          "pareada": 0.625,
+          "localizacion": 0.475
+        },
+        "30": {
+          "recall": 0.25,
+          "auc": 0.743125,
+          "pareada": 0.75,
+          "localizacion": 0.725
+        },
+        "40": {
+          "recall": 0.35,
+          "auc": 0.7718750000000001,
+          "pareada": 0.8,
+          "localizacion": 0.725
+        },
+        "50": {
+          "recall": 0.4,
+          "auc": 0.82,
+          "pareada": 0.875,
+          "localizacion": 0.725
+        },
+        "60": {
+          "recall": 0.575,
+          "auc": 0.8987499999999999,
+          "pareada": 0.9,
+          "localizacion": 0.825
+        },
+        "70": {
+          "recall": 0.55,
+          "auc": 0.8875,
+          "pareada": 0.9,
+          "localizacion": 0.8
+        },
+        "80": {
+          "recall": 0.625,
+          "auc": 0.900625,
+          "pareada": 0.925,
+          "localizacion": 0.75
+        },
+        "90": {
+          "recall": 0.625,
+          "auc": 0.93,
+          "pareada": 0.975,
+          "localizacion": 0.75
+        },
+        "100": {
+          "recall": 0.575,
+          "auc": 0.901875,
+          "pareada": 0.9,
+          "localizacion": 0.8
+        }
+      },
+      "monotonia": 0.4969696969696969
+    },
+    "aleatoria|ventana": {
+      "tau": 12.473639392852784,
+      "loc_control": 0.025,
+      "por_df": {
+        "10": {
+          "recall": 0.4,
+          "auc": 0.880625,
+          "pareada": 0.875,
+          "localizacion": 0.4
+        },
+        "20": {
+          "recall": 0.35,
+          "auc": 0.8899999999999999,
+          "pareada": 0.95,
+          "localizacion": 0.4
+        },
+        "30": {
+          "recall": 0.525,
+          "auc": 0.9368749999999999,
+          "pareada": 0.925,
+          "localizacion": 0.375
+        },
+        "40": {
+          "recall": 0.55,
+          "auc": 0.9493750000000001,
+          "pareada": 0.975,
+          "localizacion": 0.375
+        },
+        "50": {
+          "recall": 0.7,
+          "auc": 0.965625,
+          "pareada": 1.0,
+          "localizacion": 0.55
+        },
+        "60": {
+          "recall": 0.65,
+          "auc": 0.958125,
+          "pareada": 0.95,
+          "localizacion": 0.525
+        },
+        "70": {
+          "recall": 0.75,
+          "auc": 0.97125,
+          "pareada": 0.95,
+          "localizacion": 0.475
+        },
+        "80": {
+          "recall": 0.8,
+          "auc": 0.974375,
+          "pareada": 0.95,
+          "localizacion": 0.4
+        },
+        "90": {
+          "recall": 0.875,
+          "auc": 0.98125,
+          "pareada": 0.975,
+          "localizacion": 0.425
+        },
+        "100": {
+          "recall": 0.8,
+          "auc": 0.974375,
+          "pareada": 0.975,
+          "localizacion": 0.625
+        }
+      },
+      "monotonia": 0.4606060606060606
+    },
+    "ventana|aleatoria": {
+      "tau": 11.086326122283936,
+      "loc_control": 0.1,
+      "por_df": {
+        "10": {
+          "recall": 0.025,
+          "auc": 0.52625,
+          "pareada": 0.375,
+          "localizacion": 0.2
+        },
+        "20": {
+          "recall": 0.05,
+          "auc": 0.54625,
+          "pareada": 0.525,
+          "localizacion": 0.275
+        },
+        "30": {
+          "recall": 0.125,
+          "auc": 0.599375,
+          "pareada": 0.65,
+          "localizacion": 0.575
+        },
+        "40": {
+          "recall": 0.125,
+          "auc": 0.635,
+          "pareada": 0.625,
+          "localizacion": 0.575
+        },
+        "50": {
+          "recall": 0.075,
+          "auc": 0.6525000000000001,
+          "pareada": 0.625,
+          "localizacion": 0.65
+        },
+        "60": {
+          "recall": 0.15,
+          "auc": 0.75625,
+          "pareada": 0.775,
+          "localizacion": 0.7
+        },
+        "70": {
+          "recall": 0.25,
+          "auc": 0.746875,
+          "pareada": 0.775,
+          "localizacion": 0.725
+        },
+        "80": {
+          "recall": 0.175,
+          "auc": 0.776875,
+          "pareada": 0.75,
+          "localizacion": 0.6
+        },
+        "90": {
+          "recall": 0.225,
+          "auc": 0.788125,
+          "pareada": 0.825,
+          "localizacion": 0.675
+        },
+        "100": {
+          "recall": 0.15,
+          "auc": 0.754375,
+          "pareada": 0.725,
+          "localizacion": 0.675
+        }
+      },
+      "monotonia": 0.39999999999999997
+    },
+    "ventana|ventana": {
+      "tau": 11.702896881103515,
+      "loc_control": 0.075,
+      "por_df": {
+        "10": {
+          "recall": 0.675,
+          "auc": 0.91125,
+          "pareada": 0.9,
+          "localizacion": 0.225
+        },
+        "20": {
+          "recall": 0.725,
+          "auc": 0.949375,
+          "pareada": 1.0,
+          "localizacion": 0.325
+        },
+        "30": {
+          "recall": 0.775,
+          "auc": 0.9550000000000001,
+          "pareada": 0.95,
+          "localizacion": 0.4
+        },
+        "40": {
+          "recall": 0.9,
+          "auc": 0.9775,
+          "pareada": 0.975,
+          "localizacion": 0.45
+        },
+        "50": {
+          "recall": 0.8,
+          "auc": 0.971875,
+          "pareada": 0.975,
+          "localizacion": 0.525
+        },
+        "60": {
+          "recall": 0.8,
+          "auc": 0.96375,
+          "pareada": 0.925,
+          "localizacion": 0.55
+        },
+        "70": {
+          "recall": 0.725,
+          "auc": 0.944375,
+          "pareada": 0.925,
+          "localizacion": 0.55
+        },
+        "80": {
+          "recall": 0.75,
+          "auc": 0.955,
+          "pareada": 0.95,
+          "localizacion": 0.625
+        },
+        "90": {
+          "recall": 0.725,
+          "auc": 0.95875,
+          "pareada": 0.9,
+          "localizacion": 0.5
+        },
+        "100": {
+          "recall": 0.575,
+          "auc": 0.9225,
+          "pareada": 0.9,
+          "localizacion": 0.55
+        }
+      },
+      "monotonia": -0.22424242424242422
+    }
+  }
+}

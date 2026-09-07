@@ -1,0 +1,190 @@
+elasticc_1:
+  data_dir: 'data/lightcurves/elasticc_1/raw'
+  path_partition: 'data/lightcurves/elasticc_1/ATAT_partition/partitions_v1.parquet'
+  dict_columns: {
+    snid: 'SNID',
+    mjd: 'MJD',
+    flux: 'FLUXCAL',
+    flux_err: 'FLUXCALERR',
+    band: 'BAND', 
+    label: 'label',
+  }
+  all_bands: {
+    u: 0, 
+    g: 1, 
+    r: 2, 
+    i: 3, 
+    z: 4, 
+    Y: 5,
+    }
+  dict_mapping_real_classes: {
+    AGN: 'AGN',
+    CART: 'CART',
+    Cepheid: 'Cepheid',
+    d-Sct: 'Delta Scuti',
+    dwarf-nova: 'Dwarf Novae',
+    EB: 'EB',
+    ILOT: 'ILOT',
+    KN_B19: 'KN',
+    KN_K17: 'KN',
+    Mdwarf-flare: 'M-dwarf Flare',
+    PISN: 'PISN',
+    RRL: 'RR Lyrae',
+    SLSN-I+host: 'SLSN',
+    SLSN-I_no_host: 'SLSN',
+    SNIa-91bg: '91bg',
+    SNIa-SALT2: 'Ia',
+    SNIax: 'Iax',
+    SNIb+HostXT_V19: 'Ib/c',
+    SNIb-Templates: 'Ib/c',
+    SNIc+HostXT_V19: 'Ib/c',
+    SNIc-Templates: 'Ib/c',
+    SNIcBL+HostXT_V19: 'Ib/c',
+    SNII+HostXT_V19: 'II',
+    SNII-NMF: 'II',
+    SNII-Templates: 'II',
+    SNIIb+HostXT_V19: 'SN-like/Other',
+    SNIIn+HostXT_V19: 'II',
+    SNIIn-MOSFIT: 'II',
+    TDE: 'TDE',
+    uLens-Binary: 'uLens',
+    uLens-Single-GenLens: 'uLens',
+    uLens-Single_PyLIMA: 'uLens'
+  }
+  dict_mapping_classes: {
+    91bg: 0,
+    AGN: 1,
+    CART: 2,
+    Cepheid: 3,
+    Delta Scuti: 4,
+    Dwarf Novae: 5,
+    EB: 6,
+    II: 7,
+    ILOT: 8,
+    Ia: 9,
+    Iax: 10,
+    Ib/c: 11,
+    KN: 12,
+    M-dwarf Flare: 13,
+    PISN: 14,
+    RR Lyrae: 15,
+    SLSN: 16,
+    SN-like/Other: 17,
+    TDE: 18,
+    uLens: 19
+  }
+  col_metadata: [
+    'HOSTGAL2_ELLIPTICITY',
+    'HOSTGAL2_MAG_Y',
+    'HOSTGAL2_MAG_g',
+    'HOSTGAL2_MAG_i',
+    'HOSTGAL2_MAG_r',
+    'HOSTGAL2_MAG_u',
+    'HOSTGAL2_MAG_z',
+    'HOSTGAL2_MAGERR_Y',
+    'HOSTGAL2_MAGERR_g',
+    'HOSTGAL2_MAGERR_i',
+    'HOSTGAL2_MAGERR_r',
+    'HOSTGAL2_MAGERR_u',
+    'HOSTGAL2_MAGERR_z',
+    'HOSTGAL2_SNSEP',
+    'HOSTGAL2_SQRADIUS',
+    'HOSTGAL2_PHOTOZ',
+    'HOSTGAL2_PHOTOZ_ERR',
+    'HOSTGAL2_ZPHOT_Q000',
+    'HOSTGAL2_ZPHOT_Q010',
+    'HOSTGAL2_ZPHOT_Q020',
+    'HOSTGAL2_ZPHOT_Q030',
+    'HOSTGAL2_ZPHOT_Q040',
+    'HOSTGAL2_ZPHOT_Q050',
+    'HOSTGAL2_ZPHOT_Q060',
+    'HOSTGAL2_ZPHOT_Q070',
+    'HOSTGAL2_ZPHOT_Q080',
+    'HOSTGAL2_ZPHOT_Q090',
+    'HOSTGAL2_ZPHOT_Q100',
+    'HOSTGAL2_SPECZ',
+    'HOSTGAL2_SPECZ_ERR',
+    'HOSTGAL_ELLIPTICITY',
+    'HOSTGAL_MAG_Y',
+    'HOSTGAL_MAG_g',
+    'HOSTGAL_MAG_i',
+    'HOSTGAL_MAG_r',
+    'HOSTGAL_MAG_u',
+    'HOSTGAL_MAG_z',
+    'HOSTGAL_MAGERR_Y',
+    'HOSTGAL_MAGERR_g',
+    'HOSTGAL_MAGERR_i',
+    'HOSTGAL_MAGERR_r',
+    'HOSTGAL_MAGERR_u',
+    'HOSTGAL_MAGERR_z',
+    'HOSTGAL_SNSEP',
+    'HOSTGAL_SQRADIUS',
+    'HOSTGAL_PHOTOZ',
+    'HOSTGAL_PHOTOZ_ERR',
+    'HOSTGAL_ZPHOT_Q000',
+    'HOSTGAL_ZPHOT_Q010',
+    'HOSTGAL_ZPHOT_Q020',
+    'HOSTGAL_ZPHOT_Q030',
+    'HOSTGAL_ZPHOT_Q040',
+    'HOSTGAL_ZPHOT_Q050',
+    'HOSTGAL_ZPHOT_Q060',
+    'HOSTGAL_ZPHOT_Q070',
+    'HOSTGAL_ZPHOT_Q080',
+    'HOSTGAL_ZPHOT_Q090',
+    'HOSTGAL_ZPHOT_Q100',
+    'HOSTGAL_SPECZ',
+    'HOSTGAL_SPECZ_ERR',
+    'MWEBV',
+    'MWEBV_ERR',
+    'REDSHIFT_HELIO',
+    'REDSHIFT_HELIO_ERR'
+  ]
+
+macho:
+  data_dir: 'data/lightcurves/macho/raw'
+  path_partition: 'data/lightcurves/macho/ASTROMER_partition/partitions_v1.parquet'
+  #path_partition: 'data/lightcurves/macho/bright_biased_partition/partitions_v1.parquet'
+  dict_columns: {
+    snid: 'lcid',
+    mjd: 'mjd',
+    flux: 'mag',
+    flux_err: 'err',
+    band: 'band',
+    label: 'label',
+  }
+  all_bands: {
+    R: 1, 
+    }
+  dict_mapping_classes: {
+    Cep_0: 0,  # Cepheid Type I
+    Cep_1: 1,  # Cepheid Type II
+    EC: 2,     # Eclipsing Binary
+    LPV: 3,    # Long Period Variable
+    RRab: 4,   # RR Lyrae Type AB
+    RRc: 5,    # RR Lyrae Type C
+  }
+
+macho_multiband:
+  data_dir: 'data/lightcurves/macho/raw'
+  path_partition: 'data/lightcurves/macho/ASTROMER_partition/partitions_v1.parquet'
+  #path_partition: 'data/lightcurves/macho/bright_biased_partition/partitions_v1.parquet'
+  dict_columns: {
+    snid: 'lcid',
+    mjd: 'mjd',
+    flux: 'mag',
+    flux_err: 'err',
+    band: 'band',
+    label: 'label',
+  }
+  all_bands: {
+    B: 0, 
+    R: 1, 
+    }
+  dict_mapping_classes: {
+    Cep_0: 0,  # Cepheid Type I
+    Cep_1: 1,  # Cepheid Type II
+    EC: 2,     # Eclipsing Binary
+    LPV: 3,    # Long Period Variable
+    RRab: 4,   # RR Lyrae Type AB
+    RRc: 5,    # RR Lyrae Type C
+  }

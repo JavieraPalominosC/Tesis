@@ -4,6 +4,21 @@ data/
 results/
 results_vis/
 
+# Credenciales: token.rtf guarda un token en texto plano.
+token.rtf
+
+.DS_Store
+
+# Copias comprimidas de directorios que ya estan versionados.
+*.zip
+
+# Intermedios de compilacion de LaTeX; el .pdf y el .bbl si se versionan.
+*.aux
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+
 lightning_logs/
 *.log
 
