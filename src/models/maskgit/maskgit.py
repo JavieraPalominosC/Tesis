@@ -158,7 +158,8 @@ class MaskGIT(L.LightningModule):
         return total_nll / T  # normalizar por largo
 
     @torch.no_grad()
-    def generate_counterfactual(self, tokens, anomaly_positions, n_steps=10):
+    def generate_counterfactual(self, tokens, anomaly_positions, n_steps=10,
+                                temperatura=True):
         """
         Genera un contrafactual enmascarando las posiciones anómalas
         y remuestreando iterativamente.
@@ -176,18 +177,23 @@ class MaskGIT(L.LightningModule):
         cf_tokens[anomaly_positions] = self.mask_token
 
         # Remuestreo iterativo estilo MaskGIT
-        n_masked = anomaly_positions.sum(dim=1).max().item()
         for step in range(n_steps):
             logits = self(cf_tokens)  # (B, T, num_tokens)
-            probs  = F.softmax(logits, dim=-1)  # (B, T, num_tokens)
 
             # Samplear tokens para posiciones enmascaradas
             still_masked = (cf_tokens == self.mask_token)
             if not still_masked.any():
                 break
 
-            # Samplear con temperatura
-            temperature = 1.0 - (step / n_steps)  # temperatura decrece
+            # Recocido de temperatura: baja de 1.0 hasta 1/n_steps, de modo que
+            # las primeras revelaciones exploran y las ultimas son casi
+            # deterministas. Antes se calculaba esta linea y nunca se aplicaba.
+            if temperatura:
+                t = max(1.0 - step / n_steps, 1e-2)
+                probs = F.softmax(logits / t, dim=-1)
+            else:
+                probs = F.softmax(logits, dim=-1)
+
             for b in range(B):
                 mask_pos = still_masked[b].nonzero(as_tuple=True)[0]
                 if len(mask_pos) == 0:
