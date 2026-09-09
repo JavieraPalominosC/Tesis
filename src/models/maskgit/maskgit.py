@@ -159,7 +159,7 @@ class MaskGIT(L.LightningModule):
 
     @torch.no_grad()
     def generate_counterfactual(self, tokens, anomaly_positions, n_steps=10,
-                                temperatura=True):
+                                temperatura=True, modo='muestreo', k=0):
         """
         Genera un contrafactual enmascarando las posiciones anómalas
         y remuestreando iterativamente.
@@ -167,7 +167,16 @@ class MaskGIT(L.LightningModule):
         tokens:            (B, seq_len) secuencia original
         anomaly_positions: (B, seq_len) bool mask — True donde hay anomalía
         n_steps:           número de pasos de remuestreo iterativo
+        modo:              'muestreo' multinomial sobre todo el vocabulario, con
+                           recocido si temperatura=True; 'greedy' toma la moda;
+                           'topk' muestrea entre los k más probables a T=1.
+        k:                 tamaño del top-k cuando modo='topk'
         retorna:           (B, seq_len) secuencia contrafactual
+
+        Para un contrafactual la moda es lo que se busca: no queremos una
+        muestra plausible de lo normal sino la completación más plausible. Como
+        el revelado es progresivo y lo revelado queda fijo, un token sacado de
+        la cola en los primeros pasos contamina el contexto de todo el resto.
         """
         self.eval()
         B, T = tokens.shape
@@ -188,7 +197,7 @@ class MaskGIT(L.LightningModule):
             # Recocido de temperatura: baja de 1.0 hasta 1/n_steps, de modo que
             # las primeras revelaciones exploran y las ultimas son casi
             # deterministas. Antes se calculaba esta linea y nunca se aplicaba.
-            if temperatura:
+            if temperatura and modo == 'muestreo':
                 t = max(1.0 - step / n_steps, 1e-2)
                 probs = F.softmax(logits / t, dim=-1)
             else:
@@ -199,10 +208,17 @@ class MaskGIT(L.LightningModule):
                 if len(mask_pos) == 0:
                     continue
                 p = probs[b, mask_pos, :]  # (n_mask, num_tokens)
-                sampled = torch.multinomial(p, num_samples=1).squeeze(1)
-
-                # Calcular confianza y revelar los más seguros
-                confidence = p[torch.arange(len(mask_pos)), sampled]
+                fila = torch.arange(len(mask_pos), device=p.device)
+                if modo == 'greedy':
+                    confidence, sampled = p.max(dim=-1)
+                elif modo == 'topk':
+                    v, idx = p.topk(min(k, p.shape[-1]), dim=-1)
+                    j = torch.multinomial(v / v.sum(-1, keepdim=True), 1).squeeze(1)
+                    sampled = idx[fila, j]
+                    confidence = p[fila, sampled]
+                else:
+                    sampled = torch.multinomial(p, num_samples=1).squeeze(1)
+                    confidence = p[fila, sampled]
                 n_reveal = max(1, len(mask_pos) // (n_steps - step))
                 top_idx = confidence.topk(n_reveal).indices
                 cf_tokens[b, mask_pos[top_idx]] = sampled[top_idx]
