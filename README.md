@@ -7,21 +7,6 @@ Universidad de Chile, Facultad de Ciencias Físicas y Matemáticas
 
 Pipeline de detección de anomalías y generación de contrafactuales para curvas de luz de supernovas del dataset ELAsTiCC-1. Las curvas se renderizan como imágenes 2grid con codificación de flujo `mad300`, un VQ-VAE las cuantiza en tokens, y un prior MaskGIT asigna el score de anomalía y reescribe la región anómala.
 
-## Skill de escritura
-
-Cursor redacta y revisa la tesis con la skill en `.cursor/skills/magister-tesis/`. El paquete instalable, con el mismo contenido, está en `magister-tesis.skill` en la raíz del repo.
-
-| Archivo | Para qué |
-|---------|----------|
-| `SKILL.md` | Cuándo usarla, en qué capítulo va cada contenido, y el flujo de redacción |
-| `references/estilo-humano.md` | Reglas de prosa y voz |
-| `references/muestra-javiera.md` | Muestra verificada de su escritura |
-| `references/registro-memoria-fcfm.md` | Cómo se discute un resultado y cómo se cierran las conclusiones en una memoria FCFM |
-| `references/notacion.md` | Términos y símbolos que ya están fijados |
-| `references/dominio.md` | Contexto astronómico, arquitectura y estado del experimento |
-
-Los capítulos en LaTeX viven en `thesis-local/Tesis docs/`. Overleaf no está sincronizado con este repo: las figuras que un `.tex` referencia hay que copiarlas a `thesis-local/Tesis docs/img/` y subirlas a Overleaf aparte.
-
 ## Pipeline
 
 Curvas de luz (6 bandas) → imágenes 2grid (256×256, codificación `mad300`) → VQ-VAE → tokens discretos → prior MaskGIT → score de anomalía + contrafactuales
@@ -31,7 +16,6 @@ La codificación `mad300` está en `scripts/enc_flujo.py`: el flujo se centra en
 ## Estructura
 
 ```
-.cursor/skills/magister-tesis/   skill de escritura y sus referencias
 thesis-local/Tesis docs/         capítulos LaTeX y figuras usadas en la tesis
 src/models/vqvae/                VQ-VAE con EMA, codebook reset y clasificación supervisada
 src/models/maskgit/              prior MaskGIT para detección y contrafactuales
