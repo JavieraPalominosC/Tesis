@@ -1,0 +1,59 @@
+\begin{thebibliography}{1}
+  \providecommand\backrefparscanfalse{}
+  \providecommand\backrefparscantrue{}
+  \providecommand\backrefprint{}
+
+\backrefparscanfalse
+\bibitem{moreno2025swinv2}
+Moreno-Cartagena, D., Protopapas, P., Cabrera-Vives, G., C{\'a}diz-Leyton, M.,
+  Becker, I., y Donoso-Oliva, C., ``Leveraging pre-trained visual transformers
+  for multi-band photometric light curve classification'', {arXiv preprint
+  arXiv:2502.20479}, 2025, \href{https://arxiv.org/abs/2502.20479}
+  {\nolinkurl{\detokenize{https://arxiv.org/abs/2502.20479}}}.
+\backrefprint\backrefparscantrue
+
+\backrefparscanfalse
+\bibitem{vqvae2017}
+van~den Oord, A., Vinyals, O., y Kavukcuoglu, K., ``Neural discrete
+  representation learning'', en {Advances in Neural Information Processing
+  Systems}, vol.~30, 2017, \href{https://arxiv.org/abs/1711.00937}
+  {\nolinkurl{\detokenize{https://arxiv.org/abs/1711.00937}}}.
+\backrefprint\backrefparscantrue
+
+\backrefparscanfalse
+\bibitem{maskgit2022}
+Chang, H., Zhang, H., Jiang, L., Liu, C., y Freeman, W.~T., ``{MaskGIT}: Masked
+  generative image transformer'', en {Proceedings of the IEEE/CVF Conference on
+  Computer Vision and Pattern Recognition}, pp.~11315--11325, 2022,
+  \href{https://arxiv.org/abs/2202.04200}
+  {\nolinkurl{\detokenize{https://arxiv.org/abs/2202.04200}}}.
+\backrefprint\backrefparscantrue
+
+\backrefparscanfalse
+\bibitem{lee2023timevqvae_ad}
+Lee, D., Malacarne, S., y Aune, E., ``Explainable time series anomaly detection
+  using masked latent generative modeling'', {arXiv preprint arXiv:2311.12550},
+  2023, \href{https://arxiv.org/abs/2311.12550}
+  {\nolinkurl{\detokenize{https://arxiv.org/abs/2311.12550}}}.
+\backrefprint\backrefparscantrue
+
+\backrefparscanfalse
+\bibitem{lee2023timevqvae}
+Lee, D., Malacarne, S., y Aune, E., ``Vector quantized time series generation
+  with a bidirectional prior model'', en {Proceedings of the 26th International
+  Conference on Artificial Intelligence and Statistics (AISTATS)}, vol.~206 de
+  {Proceedings of Machine Learning Research}, pp.~7665--7693, 2023,
+  \href{https://arxiv.org/abs/2303.04743}
+  {\nolinkurl{\detokenize{https://arxiv.org/abs/2303.04743}}}.
+\backrefprint\backrefparscantrue
+
+\backrefparscanfalse
+\bibitem{tian2024var}
+Tian, K., Jiang, Y., Yuan, Z., Peng, B., y Wang, L., ``Visual autoregressive
+  modeling: Scalable image generation via next-scale prediction'', en {Advances
+  in Neural Information Processing Systems}, vol.~37, 2024,
+  \href{https://arxiv.org/abs/2404.02905}
+  {\nolinkurl{\detokenize{https://arxiv.org/abs/2404.02905}}}.
+\backrefprint\backrefparscantrue
+
+\end{thebibliography}

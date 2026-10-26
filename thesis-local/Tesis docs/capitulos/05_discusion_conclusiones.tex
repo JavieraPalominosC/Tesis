@@ -8,30 +8,115 @@
 
 La conversión de curvas de luz multibanda a imágenes 2grid resultó efectiva para el entrenamiento del VQ-VAE. La normalización por objeto fue un aspecto crítico: sin ella, las curvas quedan fuera del área visible de la imagen (~4\% de píxeles con contenido), mientras que con normalización se alcanza ~10\%, lo que garantiza que el modelo aprenda patrones morfológicos y no valores absolutos de flujo.
 
+Esa misma normalización, sin embargo, entra en conflicto con la detección de outliers cuando se implementa con percentiles. Un percentil alto queda determinado por los puntos más brillantes, de modo que una anomalía suficientemente grande fija la escala con que se la mide y desaparece de la imagen. El diagnóstico de la Sección~\ref{sec:res_codificacion} muestra que el problema no es de sensibilidad del prior sino de la representación: los tokens sí cambian al inyectar el pico, pero cambian de una forma que corresponde a una curva reescalada, y una curva reescalada es plausible. Sustituir los percentiles por la mediana y el MAD resuelve el conflicto sin abandonar la normalización por objeto.
+
+Conviene separar dos propiedades que la representación mezcla, porque que las curvas sean comparables entre objetos de brillo distinto exige normalizar, mientras que el hecho de que una anomalía siga siendo visible exige que el estadístico de normalización no reaccione a ella. El MAD cumple ambas condiciones, ya que necesita más de un 50\% de contaminación para desplazarse, mientras que a $Q_{0.99}$ le basta un solo punto para moverse.
+
 \subsection{Organización semántica del codebook}
 
-% TODO: discutir comparación UMAP antes/después de clasificación
-% TODO: discutir si la mayor pureza del codebook mejora los contrafactuales
+El VQ-VAE base organiza el espacio latente por morfología visual de la curva, agrupando imágenes que se parecen entre sí sin que esos grupos correspondan a los tipos astronómicos (Sección~\ref{sec:umap_base}), y al incorporar la cabeza de clasificación con $\lambda = 0.1$ esa organización cambia solo en parte, ya que el codebook pasa a ocuparse por completo, con los 512 embeddings activos frente a la perplexity efectiva de entre 162 y 196 del modelo base, además de subir la pureza media a 0.154 contra el $1/17 \approx 0.059$ que daría el azar con 17 clases.
+
+Ese factor de 2.6 sobre el azar no se reparte entre los embeddings sino que se concentra en unos pocos. En la Figura~\ref{fig:umap_codebook_cls} se muestra que el cúmulo principal reúne la mayoría de los embeddings con pureza de entre 0.1 y 0.3, donde SNIa, SNII, SNIb y SNIc conviven sin separación, mientras que los dos grupos aislados que superan 0.8 corresponden a SLSN-I y PISN, que son los tipos con curvas de mayor duración y brillo, además de ser los que el módulo de clasificación reconoce con mayor recall, 0.81 y 0.88 respectivamente, por lo que la señal supervisada no reordena el codebook por tipo sino que le reserva vocabulario propio a aquello que ya era morfológicamente distinto en la imagen.
+
+Que el codebook quede más puro no implica por sí solo que los contrafactuales mejoren, y el lugar donde se concentra esa pureza da una razón concreta para dudarlo, ya que los contrafactuales se evaluaron sobre 300 SNIa, que caen justamente en el cúmulo mezclado de pureza baja, de modo que los tokens con que el prior reescribe esas curvas no cargan información de tipo que el modelo base no tuviera. Sobre SLSN-I o PISN, que sí disponen de vocabulario propio, cabría esperar un comportamiento distinto, aunque esa comparación no llegó a hacerse porque la inyección de anomalías sintéticas se restringió a SNIa para mantener homogéneo el conjunto de evaluación.
+
+% Pendiente: resultado de la rama de control sin cabeza de clasificacion
+% (run_mad300_nocls.sh). Aisla la senal supervisada dejando fijas las imagenes
+% y la particion; con eso se cierra la parte abierta del objetivo 3.
 
 \subsection{Calidad de los contrafactuales}
 
-% TODO: discutir plausibilidad, parsimonia y consistencia temporal
+El contrafactual repara el 36\% del residuo en flujo dentro de la ventana perturbada, frente al 7\% que consigue reescribir una región de igual tamaño en una posición al azar. La diferencia entre ambos es lo que aporta dirigir la reescritura, y sostiene que el procedimiento hace algo más que redibujar una zona cualquiera de la imagen. La cifra absoluta, en cambio, deja la mayor parte del residuo en pie.
+
+Dos decisiones metodológicas resultaron determinantes para medir esto sin engañarse, siendo la primera evaluar en FLUXCAL y no en píxeles, ya que el fondo ocupa la mayor parte de la imagen y no contiene fotometría, por lo que cualquier error cuadrático global queda dominado por regiones sin información. La segunda es contar el borrado como fracaso, dado que el contrafactual elimina la observación en el 29\% de las épocas reescritas y el detector premia esa eliminación, porque borrar la anomalía baja el NLL, de manera que excluir esos casos del cálculo infla la reparación de 36\% a más del 60\%. Un contrafactual que borra el dato no responde qué habría sido normal en esa fecha, así que contarlo como reparación sería medir otra cosa.
+
+La parsimonia y la plausibilidad quedan acotadas por el mismo mecanismo, ya que en el 37\% de las épocas reescritas la traza que produce el decodificador resulta más tenue que la más débil que se obtiene al reconstruir una curva limpia real, una comparación que no depende de ningún umbral porque usa como referencia el propio decodificador operando sobre datos verdaderos. Lo que aparece en la región reescrita no es entonces una curva alternativa, sino una traza degradada.
+
+La consistencia entre bandas resultó ser un problema de localización antes que de generación. El prior dibuja en el carril de la banda \textit{r} un trazo del color de otra banda en el 18\% de las épocas cuando la máscara se elige por percentil, y en el 3\% cuando se elige por región contigua; el control en posición al azar llega al 28\%. La reconstrucción de una curva limpia acierta la banda en el 99.9\% de los casos. El error aparece cuando la máscara invade carriles vecinos y obliga al modelo a inventar contenido en bandas sobre las que la anomalía no dice nada.
+
+\subsection{Detección sobre anomalías reales}
+
+Sustituir las perturbaciones inyectadas por clases retiradas del entrenamiento cambia por completo la escala de los números, y conviene decir primero lo obvio: el AUROC promedio pasa de valores cercanos a 1 en el barrido sintético a 0.634 sobre clases reales. No son la misma tarea. En el barrido se conoce la forma, la banda y la ubicación de la anomalía, y el detector se evalúa contra su propia curva limpia; sobre clases excluidas hay que distinguir un tipo astrofísico de otro sin ninguna de esas ayudas.
+
+Dentro de ese resultado hay dos lecturas distintas que no conviene mezclar. La primera es que el prior queda primero entre los métodos comparados, por delante del error de reconstrucción que comparte con él el VQ-VAE y las imágenes. Esa comparación aísla el aporte del prior, pero la diferencia es de 0.022 sobre seis clases y no soporta más peso que el de una tendencia consistente. La segunda, bastante más informativa, es que la elección del estadístico de puntuación mueve el resultado cinco veces más que la elección del método, 0.113 contra 0.022. Que el promedio de la secuencia supere al máximo por token es coherente con que aquí lo anómalo sea el objeto entero, y refuerza una idea que ya aparecía con las máscaras: en este pipeline las decisiones sobre cómo se interroga al prior pesan más que las decisiones sobre cómo se lo entrena.
+
+\subsection{La normalización temporal descarta la señal}
+
+El diagnóstico por rasgo deja el hallazgo más incómodo del trabajo. La duración de la curva en días, un número que se calcula sin modelo alguno, separa \texttt{SLSN-I\_no\_host} de las clases vistas con AUROC 0.895, por encima del 0.883 que alcanza el pipeline completo. El brillo absoluto, en cambio, apenas discrimina, de modo que la explicación intuitiva de que las \texttt{SLSN-I} se detectan por superluminosas queda descartada: lo que las distingue es que duran casi el doble.
+
+El motivo es la normalización temporal del renderizado, que divide por el recorrido observado de cada objeto y hace que toda curva ocupe el ancho completo de la imagen. La duración queda así eliminada antes de que el VQ-VAE reciba nada, y ningún codebook ni ningún prior la pueden recuperar después.
+
+Conviene notar la simetría con el problema del flujo que ocupa buena parte de este capítulo, porque son el mismo error cometido en dos ejes. En los dos casos la normalización por objeto se introdujo para hacer comparables supernovas distintas, y en los dos casos terminó borrando justamente aquello que se quería detectar. La diferencia está en el remedio. Para el flujo bastó cambiar el estadístico, reemplazando percentiles por mediana y MAD, porque la información seguía en la imagen y solo estaba mal escalada. Para el tiempo no hay estadístico que sirva, ya que la información no está mal escalada sino ausente, y recuperarla obliga a renderizar de nuevo y reentrenar la cadena completa.
+
+Eso sugiere una lectura más general que el caso particular. Al rasterizar una serie de tiempo, cada eje que se normaliza por objeto compra comparabilidad a cambio de descartar una variable física, y conviene decidir eje por eje si esa variable importa para la tarea, en vez de aplicar la misma receta a los dos por simetría.
 
 \section{Limitaciones}
 
 \begin{itemize}
     \item El pipeline fue evaluado sobre datos simulados (ELAsTiCC-1). La generalización a datos reales del Observatorio Vera C. Rubin requiere validación adicional.
     \item El desbalance entre tipos de supernovas (hasta 50x entre el tipo más y menos frecuente) puede sesgar la distribución aprendida por el prior MaskGIT.
-    % TODO: agregar otras limitaciones identificadas
+    \item La detección sobre anomalías reales solo funciona con las clases morfológicamente exóticas. En \texttt{SNIa-91bg}, \texttt{SNIax} y \texttt{SNIIb} ningún método supera 0.577 de AUROC, y tampoco lo hace ningún rasgo individual de la curva, de modo que en esta representación esos tipos son indistinguibles de las clases vistas.
+    \item La normalización temporal por objeto elimina la duración de la curva, que el diagnóstico por rasgo identifica como la variable más discriminativa frente a las clases excluidas. Las cifras de la Sección~\ref{sec:res_heldout} deben leerse como el desempeño alcanzable sin acceso a esa variable.
+    \item Las anomalías del barrido controlado son de una sola familia, un exceso de flujo inyectado en la cola de la banda \textit{r}, por lo que las curvas de sensibilidad caracterizan esa perturbación y no cualquier anomalía posible. La evaluación sobre clases excluidas cubre el caso real, pero con seis tipos y una sola partición.
+    \item El techo del contrafactual no lo impone el enmascaramiento ni el muestreo. Enmascarando la zona de inyección exacta, que corresponde a localización perfecta e inalcanzable en operación, la reparación llega a 42.4\% y el borrado a 19.2\%. El resto está limitado por la fidelidad del VQ-VAE y por la representación en imágenes.
+    \item Cada banda ocupa cerca de 4.7 tokens de alto en la grilla $32 \times 32$, lo que acota la resolución vertical con que puede representarse la altura de un pico dentro de su carril.
+    \item En $\Delta f = 500$ el VQ-VAE pierde el 18.7\% de las épocas de la propia curva perturbada, de modo que a esa amplitud parte de la degradación medida no es atribuible al contrafactual. Las conclusiones se apoyan en $\Delta f \leq 300$.
+    \item Las métricas se reportan sin intervalos de confianza, sobre 40 objetos en detección y 300 en contrafactuales. Las diferencias pequeñas entre configuraciones deben leerse con esa reserva.
 \end{itemize}
 
 \section{Conclusiones}
 
-% TODO: completar con conclusiones finales
+\subsection{Cumplimiento de los objetivos}
+
+Durante el desarrollo de esta tesis se abordaron los cinco objetivos específicos planteados en la Introducción, cumpliéndose cuatro de ellos por completo y el tercero de forma parcial:
+
+\begin{itemize}
+    \item Se logró diseñar e implementar la representación 2grid de curvas de luz multibanda como imágenes RGB de 256×256 píxeles, generando 1.389.147 imágenes para el dataset completo. La normalización por objeto, que era parte del objetivo, tuvo que rediseñarse durante el trabajo: la versión basada en percentiles cumple la comparabilidad entre supernovas de distinta luminosidad pero anula la señal de los outliers, por lo que se reemplazó por una normalización con mediana y MAD que cumple ambos requisitos.
+
+    \item Se logró entrenar el VQ-VAE con codebook EMA y codebook reset sobre ELAsTiCC-1, alcanzando una pérdida de reconstrucción de 0.000216 en el modelo base, con una perplexity efectiva de entre 162 y 196 embeddings sobre los 512 disponibles.
+
+    \item Se logró estudiar el efecto de la clasificación supervisada sobre $\mathbf{z}_q$, obteniendo uso completo del codebook y una pureza media de 0.154, unas 2.6 veces la esperable por azar. La organización semántica inducida separa los tipos morfológicamente distintos, SLSN-I y PISN, pero deja mezclados los tipos estándar. Este objetivo se cumplió de forma parcial, ya que la pregunta de si esa organización mejora la interpretabilidad de los contrafactuales requiere generar contrafactuales con un VQ-VAE sin cabeza de clasificación y compararlos, comparación que no se realizó.
+
+    \item Se logró entrenar el prior MaskGIT sobre las secuencias de tokens y utilizarlo tanto para asignar scores de anomalía como para generar contrafactuales por completado condicional, entrenando además dos variantes que se diferencian en la forma de la máscara y evaluándolas de forma cruzada.
+
+    \item Se logró evaluar el pipeline de detección, alcanzando un recall de 0.98 y un AUROC de 0.996 para las perturbaciones más grandes sobre objetos del fold de validación, no vistos ni por el VQ-VAE ni por el prior MaskGIT, y acotando el extremo opuesto del barrido, donde el detector llega al azar exacto en $\Delta f = 1$. La evaluación se extendió además a anomalías reales, retirando seis clases del entrenamiento y puntuándolas después, con 0.634 de AUROC promedio frente a 0.612 del baseline de reconstrucción. La evaluación de los contrafactuales según plausibilidad, parsimonia y consistencia temporal entre bandas se realizó en FLUXCAL y no en el espacio de píxeles, ya que las métricas en píxeles quedan dominadas por el fondo de la imagen.
+\end{itemize}
+
+\subsection{Aportes}
+
+Respecto del estado del arte, este trabajo deja tres resultados que no dependen del dataset particular utilizado:
+
+\begin{itemize}
+    \item La constatación de que la normalización por percentiles, que es la práctica habitual al rasterizar curvas de luz, es incompatible con la detección de outliers, junto con una alternativa medida que la reemplaza.
+    \item La observación de que la forma de la máscara con que se interroga a un prior enmascarado importa más al puntuar que al entrenar, lo que permite mejorar la detección sin reentrenar el modelo.
+    \item Un protocolo de evaluación de contrafactuales en el espacio físico de la señal, con un extractor calibrado contra reconstrucciones limpias y un criterio que cuenta el borrado de observaciones como fracaso en vez de excluirlo.
+    \item La advertencia de que, al rasterizar series de tiempo, normalizar un eje por objeto descarta la variable física de ese eje, junto con la medición de cuánto cuesta: sobre clases excluidas, la duración descartada por la normalización temporal discrimina mejor por sí sola que el pipeline completo. El diagnóstico por rasgo que lo revela es barato y aplicable a cualquier método que rasterice curvas.
+\end{itemize}
+
+\subsection{Discusión de los resultados obtenidos}
+
+El pipeline propuesto detecta perturbaciones inyectadas en curvas de luz de supernovas y produce explicaciones contrafactuales localizadas, con un desempeño que depende críticamente de tres decisiones que no eran evidentes al comienzo.
+
+La primera es cómo se codifica el flujo en la altura del trazo. Normalizar por percentiles del objeto, que es la elección natural para hacer comparables supernovas de brillo distinto, destruye la señal que se quiere detectar: un outlier grande fija la escala con que se lo mide. Reemplazar los percentiles por mediana y MAD, con compresión $\operatorname{arcsinh}$, lleva el recall en $\Delta f = 500$ de 0.38 a 1.00 y la correlación entre score y amplitud de 0.09 a 0.60. Sin monotonía el detector no ordena las anomalías por tamaño, y sin ese orden no tiene sentido reportar una curva de sensibilidad.
+
+La segunda es la forma de la máscara con que se interroga al prior. Enmascarar una región contigua al momento de puntuar, en vez de posiciones sueltas, sube el recall en $\Delta f = 100$ de 0.38 a 0.95. El efecto proviene de la puntuación y no del entrenamiento: el prior entrenado con máscara aleatoria, que es el más barato y el que mejor pérdida alcanza, se puede puntuar con ventana sin reentrenar. Con máscara dispersa, los vecinos visibles de la propia anomalía permiten interpolarla y el prior no se sorprende.
+
+La tercera es dónde se reescribe al generar el contrafactual, ya que seleccionar tokens por percentil de NLL cubre apenas una cuarta parte de la zona anómala, dejando que el prior redibuje condicionado a la anomalía que quedó en pie. Delimitar la región con un estadístico de barrido y dilatarla dos tokens sube la reparación del residuo en flujo de 28.9\% a 36.0\%, además de reducir la confusión entre bandas de 17.9\% a 3.1\%.
+
+Sobre la interpretabilidad, el contrafactual repara cinco veces más que un control que reescribe una región equivalente en posición arbitraria, lo que respalda que la explicación apunta al lugar correcto. La magnitud de la reparación, en cambio, es modesta, y el enmascaramiento con la zona de inyección exacta muestra que el techo no está en el procedimiento sino en la representación: aun con localización perfecta queda sin reparar el 57.6\% del residuo. Mejoras adicionales pasan por la fidelidad del VQ-VAE y por cómo se rasterizan las bandas, más que por refinar el criterio de selección o el muestreo.
+
+La evaluación sobre clases excluidas del entrenamiento, que es la que separa una caracterización de sensibilidad de una demostración de que el método encuentra objetos raros, deja un resultado mucho más modesto que el barrido controlado y bastante más informativo. El método detecta los tipos morfológicamente exóticos y no detecta los que se confunden con las clases vistas, y el diagnóstico por rasgo explica por qué: la variable que más separa a las clases exóticas es la duración de la curva, que la normalización temporal del renderizado descarta antes de que el modelo la vea. El límite medido no está entonces en el prior ni en el codebook, sino en una decisión de representación que se puede revisar.
 
 \section{Trabajo futuro}
 
 \begin{itemize}
+    \item Renderizar el eje temporal en escala absoluta, con una referencia común en días para todos los objetos en vez de normalizar por el recorrido de cada uno, de modo que la duración quede escrita en el ancho que ocupa la curva. Es la respuesta directa al diagnóstico de la Sección~\ref{sec:res_heldout} y obliga a reentrenar la cadena completa, porque el VQ-VAE y el prior quedarían fuera de distribución con otra normalización. El compromiso que hay que medir es la pérdida de resolución de forma en las curvas más cortas, que sobre ELAsTiCC-1 pasarían a ocupar cerca de un 15\% del ancho disponible.
+    \item Extender la evaluación sobre clases excluidas a varias particiones, rotando cuáles de los 17 tipos quedan fuera, para separar el desempeño del método de las particularidades de las seis clases elegidas.
+    \item Representar los tokens en varias escalas en vez de una grilla plana de $32 \times 32$, siguiendo la predicción por escalas de VAR~\cite{tian2024var}. Una anomalía puntual y una meseta de cientos de días son fenómenos de escalas distintas que la grilla plana representa con la misma resolución, mientras que una jerarquía permitiría descomponer el score por nivel e indicar no solo que un objeto es anómalo sino a qué escala lo es.
+    \item Codificar las bandas como canales separados en vez de colores dentro de carriles apilados. Cada banda recuperaría la resolución vertical completa, la confusión de banda dejaría de ser posible por construcción y la inversión a FLUXCAL no necesitaría extractor.
+    \item Aumentar el número de rondas $R$ del estimador de la Ecuación~\ref{eq:nll_token}. El ruido del score decrece como $R^{-1/2}$ y afecta por igual a detección, monotonía y localización.
+    \item Acompañar las métricas con intervalos de confianza por bootstrap sobre los objetos.
+    \item Cerrar el tercer objetivo específico, generando contrafactuales con un VQ-VAE entrenado sin cabeza de clasificación y comparándolos contra los actuales, para aislar el efecto de la organización semántica del codebook sobre la interpretabilidad.
     \item Evaluar distintos valores de $\lambda$ para el peso de la clasificación y su efecto en el downstream de anomaly detection.
     \item Explorar tamaños de codebook alternativos ($K = 256$, $K = 1024$) y su efecto en la calidad de los contrafactuales.
     \item Aplicar el pipeline a datos reales del Observatorio Vera C. Rubin cuando estén disponibles.

@@ -10,7 +10,13 @@ No basta con marcar un ejemplo como atípico; es necesario explicarlo. Entre las
 
 El dataset ELAsTiCC-1, desarrollado en el contexto del Observatorio Vera C. Rubin, contiene cerca de 1.4 millones de curvas de luz simuladas de 17 tipos de supernovas. La escala y complejidad de este dataset hacen inviable la inspección manual, y los métodos de clasificación supervisada requieren etiquetas que en la práctica no siempre estarán disponibles en tiempo real. Un sistema de detección de anomalías no supervisado, capaz además de generar explicaciones interpretables, es fundamental para el flujo de trabajo de la astronomía de grandes volúmenes de datos.
 
-Desde el punto de vista metodológico, la representación de curvas de luz multibanda como imágenes 2grid —donde las seis bandas fotométricas se organizan como subgráficos apilados— permite aprovechar arquitecturas convolucionales estándar y capturar de forma natural la correlación temporal entre bandas, eliminando la necesidad de manejar muestreo irregular.
+Desde el punto de vista metodológico, la representación de curvas de luz multibanda como imágenes 2grid, donde las seis bandas fotométricas se organizan como subgráficos apilados, permite aprovechar arquitecturas convolucionales estándar y capturar de forma natural la correlación temporal entre bandas, eliminando la necesidad de manejar muestreo irregular.
+
+\section{Alcances del trabajo}
+
+Esta tesis desarrolla un pipeline completo que va desde la conversión de las curvas de luz en imágenes hasta la generación de explicaciones contrafactuales, entrenando cada etapa sobre los 1.389.147 objetos de ELAsTiCC-1 y evaluando el resultado sobre supernovas del conjunto de validación a las que se les inyectan perturbaciones sintéticas de amplitud y duración controladas.
+
+Esa decisión de evaluación delimita el alcance de lo que puede concluirse, ya que inyectar una anomalía conocida permite medir con qué sensibilidad responde el método frente a una perturbación de tamaño dado, pero no equivale a demostrar que encuentra objetos astrofísicamente raros, cuestión que se retoma en las conclusiones. El trabajo se realiza además sobre datos simulados, por lo que la validación sobre observaciones reales del Observatorio Vera C. Rubin queda fuera de lo abordado aquí, y tampoco se comparan los resultados contra otros detectores de anomalías de la literatura, dado que el foco está puesto en caracterizar el comportamiento del pipeline propuesto y en identificar qué componentes determinan su desempeño.
 
 \section{Objetivos}
 

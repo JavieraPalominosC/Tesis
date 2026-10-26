@@ -6,7 +6,7 @@ En astronomía, detectar anomalías en curvas de luz permite priorizar objetos p
 
 \section{Representación de curvas de luz como imágenes}
 
-La representación de series de tiempo como imágenes ha sido explorada en distintos contextos de aprendizaje automático, con el objetivo de aprovechar la capacidad de las redes convolucionales para detectar patrones espaciales. En este trabajo, cada curva de luz multibanda se convierte en una imagen 2grid de 256×256 píxeles RGB, donde las seis bandas fotométricas (u, g, r, i, z, Y) se disponen verticalmente como subgráficos apilados. El eje horizontal codifica el tiempo en días julianos modificados (MJD), y el eje vertical el flujo fotométrico.
+La representación de series de tiempo como imágenes ha sido explorada en distintos contextos de aprendizaje automático, con el objetivo de aprovechar la capacidad de las redes convolucionales para detectar patrones espaciales. En el caso particular de las curvas de luz fotométricas multibanda, Moreno-Cartagena et al. \cite{moreno2025swinv2} muestran que graficar las bandas y alimentar esas imágenes a transformers visuales preentrenados permite clasificar transientes de forma competitiva, lo que respalda que la información relevante sobrevive al paso por el formato de imagen. En este trabajo, cada curva de luz multibanda se convierte en una imagen 2grid de 256×256 píxeles RGB, donde las seis bandas fotométricas (u, g, r, i, z, Y) se disponen verticalmente como subgráficos apilados. El eje horizontal codifica el tiempo en días julianos modificados (MJD), y el eje vertical el flujo fotométrico.
 
 Para que las curvas sean visibles y comparables entre objetos de distinta luminosidad, el tiempo MJD y el flujo fotométrico de cada supernova se normalizan individualmente al rango $[0, 1]$ antes de graficar. Sin esta normalización, las curvas quedan fuera del área visible de la imagen porque los valores reales (MJD ~60.000, flujo ~$-$44 a 95) no corresponden a los límites del gráfico.
 
@@ -16,9 +16,45 @@ Esta representación presenta ventajas concretas frente al uso directo de series
 
 \subsection{Descripción general}
 
-El autoencoder con cuantización vectorial (VQ-VAE, \textit{Vector Quantized Variational Autoencoder}) fue propuesto por van den Oord et al. (2017) como un modelo generativo que aprende representaciones discretas del espacio latente. A diferencia de los VAE estándar que producen representaciones continuas mediante el truco de la reparametrización, el VQ-VAE mapea cada vector latente a su vecino más cercano en un codebook de embeddings aprendidos. Esta discretización permite modelar distribuciones multimodales complejas sin colapso posterior y produce representaciones interpretables como secuencias de tokens, lo que facilita el uso de modelos de lenguaje sobre el espacio latente.
+El autoencoder con cuantización vectorial (VQ-VAE, \textit{Vector Quantized Variational Autoencoder}) fue propuesto por van den Oord et al. \cite{vqvae2017} como un modelo generativo que aprende representaciones discretas del espacio latente. A diferencia de los VAE estándar que producen representaciones continuas mediante el truco de la reparametrización, el VQ-VAE mapea cada vector latente a su vecino más cercano en un codebook de embeddings aprendidos. Esta discretización permite modelar distribuciones multimodales complejas sin colapso posterior y produce representaciones interpretables como secuencias de tokens, lo que facilita el uso de modelos de lenguaje sobre el espacio latente.
 
-El VQ-VAE consta de tres componentes principales: un encoder, un codebook y un decoder.
+El VQ-VAE consta de tres componentes principales: un encoder, un codebook y un decoder, cuya disposición se esquematiza en la Figura~\ref{fig:esquema_vqvae}, donde se incluye además la cabeza de clasificación que se describe en la Sección~\ref{sec:cls_zq}.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    font=\small,
+    caja/.style={draw, rounded corners=2pt, minimum height=10mm, minimum width=12mm,
+                 align=center, inner sep=2pt},
+    tensor/.style={draw, fill=black!5, minimum height=10mm, minimum width=10mm, align=center},
+    flecha/.style={-{Stealth[length=2mm]}, thick},
+]
+\node[tensor] (x) {$\mathbf{x}$\\[-1pt]\scriptsize $3{\times}256^2$};
+\node[caja, right=3mm of x, fill=blue!8] (enc) {Encoder\\$E_\phi$};
+\node[tensor, right=3mm of enc] (ze) {$\mathbf{z}_e$\\[-1pt]\scriptsize $256{\times}32^2$};
+\node[caja, right=3mm of ze, fill=orange!12] (q) {Cuantización\\$\mathbf{z}_e \to \mathbf{e}_k$};
+\node[tensor, right=3mm of q] (zq) {$\mathbf{z}_q$\\[-1pt]\scriptsize $256{\times}32^2$};
+\node[caja, right=3mm of zq, fill=blue!8] (dec) {Decoder\\$D_\theta$};
+\node[tensor, right=3mm of dec] (xr) {$\hat{\mathbf{x}}$\\[-1pt]\scriptsize $3{\times}256^2$};
+
+\foreach \a/\b in {x/enc, enc/ze, ze/q, q/zq, zq/dec, dec/xr}
+    \draw[flecha] (\a) -- (\b);
+
+\node[caja, below=8mm of q, fill=orange!12, minimum width=22mm]
+    (cb) {Codebook\\$\{\mathbf{e}_k\}_{k=1}^{512}$};
+\draw[flecha, dashed] (cb) -- node[right, font=\scriptsize] {vecino más cercano} (q);
+
+\node[caja, below=8mm of dec, fill=green!10] (cls) {Cabeza de\\clasificación};
+\node[tensor, right=3mm of cls] (y) {$\hat{y}$\\[-1pt]\scriptsize 17 tipos};
+\draw[flecha] (zq.south) |- (cls.west);
+\draw[flecha] (cls) -- (y);
+
+\draw[flecha, dashed, gray] (xr.north) to[out=110, in=70]
+    node[above, font=\scriptsize, black] {$\mathcal{L}_{\mathrm{recon}}$} (x.north);
+\end{tikzpicture}
+\caption{Arquitectura del VQ-VAE. El encoder comprime la imagen 2grid a una grilla latente de $32{\times}32$, cada uno de cuyos 1024 vectores se reemplaza por su vecino más cercano en el codebook, y el decoder reconstruye la imagen desde la versión cuantizada. La cabeza de clasificación opera sobre $\mathbf{z}_q$ y aporta un término supervisado adicional a la pérdida.}
+\label{fig:esquema_vqvae}
+\end{figure}
 
 \subsection{Encoder}
 
@@ -96,6 +132,7 @@ donde $\bar{p}_k$ es la fracción de vectores asignados al embedding $k$.
 El VQ-VAE entrenado de forma no supervisada aprende una representación orientada a minimizar el error de reconstrucción, sin ninguna señal que organice los embeddings del codebook por tipo de objeto astronómico. Para estudiar si es posible y beneficioso inducir una organización semántica del codebook, se propone extender el VQ-VAE con una \textbf{cabeza de clasificación supervisada} que opera sobre la representación cuantizada $\mathbf{z}_q$.
 
 \subsection{Cabeza de clasificación sobre $\mathbf{z}_q$}
+\label{sec:cls_zq}
 
 La cabeza de clasificación es un MLP que toma $\mathbf{z}_q \in \mathbb{R}^{D \times H' \times W'}$ y produce logits sobre las $C = 17$ clases de supernovas:
 
@@ -111,7 +148,7 @@ La clasificación se realiza sobre $\mathbf{z}_q$ y no sobre $\mathbf{z}_e$ porq
 \mathcal{L} = \mathcal{L}_{\text{recon}} + \mathcal{L}_{\text{vq}} + \lambda \cdot \mathcal{L}_{\text{class}}
 \end{equation}
 
-donde $\mathcal{L}_{\text{class}} = \text{CrossEntropy}(f_\psi(\mathbf{z}_q), y)$ y $\lambda = 1.0$.
+donde $\mathcal{L}_{\text{class}} = \text{CrossEntropy}(f_\psi(\mathbf{z}_q), y)$ y $\lambda = 0.1$.
 
 \subsection{Análisis de afinidad del codebook}
 
@@ -132,7 +169,43 @@ Esta información se visualiza proyectando los 512 embeddings del codebook con U
 
 \section{Modelo prior sobre el espacio latente discreto}
 
-Una vez entrenado el VQ-VAE, cada imagen queda representada como una secuencia de 1024 tokens enteros $\mathbf{s} \in \{1, \ldots, 512\}^{32 \times 32}$. Se entrena un prior tipo \textbf{MaskGIT} (\textit{Masked Generative Image Transformer}) que aprende la distribución conjunta $p(\mathbf{s})$.
+Una vez entrenado el VQ-VAE, cada imagen queda representada como una secuencia de 1024 tokens enteros $\mathbf{s} \in \{1, \ldots, 512\}^{32 \times 32}$. Se entrena un prior tipo \textbf{MaskGIT} (\textit{Masked Generative Image Transformer}) \cite{maskgit2022} que aprende la distribución conjunta $p(\mathbf{s})$.
+
+El entrenamiento consiste en reemplazar un subconjunto de los tokens por un símbolo especial de máscara y pedirle al transformer que recupere los originales a partir del contexto visible, según se ilustra en la Figura~\ref{fig:esquema_maskgit}. La forma geométrica de ese subconjunto es una decisión de diseño, ya que se pueden enmascarar posiciones sueltas repartidas por toda la grilla o bien una región contigua, y ambas alternativas se comparan en este trabajo.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\small]
+\def\lado{2.8mm}
+
+% Grilla de tokens. #1 desplazamiento x, #2 celdas enmascaradas, #3 rotulo
+\newcommand{\grilla}[3]{%
+  \begin{scope}[shift={(#1,0)}]
+    \foreach \r in {0,...,7} \foreach \c in {0,...,7} {
+      \node[draw, minimum size=\lado, inner sep=0pt, fill=black!6]
+           at (\c*\lado, -\r*\lado) {};
+    }
+    \foreach \r/\c in {#2} {
+      \node[draw, minimum size=\lado, inner sep=0pt, fill=orange!55]
+           at (\c*\lado, -\r*\lado) {};
+    }
+    \node[font=\scriptsize, align=center] at (3.5*\lado, -8.9*\lado) {#3};
+  \end{scope}}
+
+\grilla{0}{0/2, 1/5, 2/0, 2/6, 3/3, 4/1, 4/7, 5/4, 6/2, 7/5}{máscara aleatoria}
+\grilla{2.9}{2/3, 2/4, 2/5, 3/3, 3/4, 3/5, 4/3, 4/4, 4/5}{máscara de ventana}
+
+\node[draw, rounded corners=2pt, fill=blue!8, minimum height=9mm, minimum width=19mm,
+      align=center, font=\scriptsize] (tr) at (6.6, -0.98) {Transformer\\bidireccional};
+\node[align=center, font=\scriptsize, text width=30mm] (out) at (9.3, -0.98)
+     {$p(s_i \mid \mathbf{s}_{\text{visible}})$\\[1pt] en cada posición\\ enmascarada};
+
+\draw[-{Stealth[length=2mm]}, thick] (5.5, -0.98) -- (tr.west);
+\draw[-{Stealth[length=2mm]}, thick] (tr.east) -- (out.west);
+\end{tikzpicture}
+\caption{Esquema del prior MaskGIT. Se enmascara un subconjunto de los tokens de la grilla latente, en naranjo, y el transformer bidireccional predice la distribución de cada posición oculta usando todo el contexto visible. Se muestran las dos formas de máscara comparadas en este trabajo: posiciones sueltas repartidas por la grilla y una región contigua.}
+\label{fig:esquema_maskgit}
+\end{figure}
 
 \subsection{Score de anomalía}
 
@@ -145,6 +218,8 @@ La cantidad de interés es la log-verosimilitud negativa de la secuencia bajo el
 Una curva de luz típica produce tokens frecuentes y score bajo; un outlier produce combinaciones inusuales y score alto. MaskGIT no evalúa $p(\mathbf{s})$ de forma autorregresiva: el estimador práctico (NLL medio sobre tokens enmascarados, NLL por posición y el umbral de hit $\tau = 0.3$) se detalla en el capítulo de metodología.
 
 \subsection{Generación de contrafactuales}
+
+La idea de aprovechar el mismo prior enmascarado que asigna el score para construir la explicación proviene de Lee et al. \cite{lee2023timevqvae_ad}, quienes detectan anomalías en series de tiempo con un modelo generativo latente enmascarado y obtienen la explicación remuestreando las posiciones señaladas como anómalas, de modo que el contrafactual queda restringido por construcción a lo que el prior considera normal. En este trabajo se sigue ese esquema, adaptándolo a la grilla bidimensional de tokens que produce la representación en imágenes.
 
 Los tokens más improbables se enmascaran y remuestrean condicionalmente:
 

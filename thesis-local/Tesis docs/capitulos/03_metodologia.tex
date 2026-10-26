@@ -64,17 +64,13 @@ Desde el punto de vista de la detección de anomalías sin supervisión, destaca
     \item \textbf{SLSN-I+host} (100.977 objetos): supernovas superluminosas con curvas muy extendidas (mediana 163 observaciones).
 \end{itemize}
 
-\section{Preprocesamiento: imágenes 2grid}
+\section{Generación de las imágenes y particiones}
 
-A partir del dataset se generaron 895.354 imágenes 2grid de 256×256 píxeles. La generación se realizó en paralelo en el cluster Leftraru HPC, lanzando un job SLURM independiente por cada tipo de supernova. Las imágenes se almacenan en \texttt{data/images/elasticc\_1/2grid/\{SNID\}.png}.
+Las curvas de luz se rasterizan como imágenes 2grid de 256×256 píxeles, generadas en paralelo en el cluster Leftraru HPC con un job SLURM independiente por tipo de supernova. El detalle de cómo se dibuja cada curva se trata en la Sección~\ref{sec:render_2grid}, y aquí se describen las dos versiones del conjunto y su partición.
 
-Para el entrenamiento del VQ-VAE se utilizaron 899.440 imágenes divididas en:
-\begin{itemize}
-    \item \textbf{Training:} 718.673 imágenes (80\%, fold 0)
-    \item \textbf{Validación:} 179.669 imágenes (20\%, fold 0)
-\end{itemize}
+El primer conjunto, con el que se entrenaron el VQ-VAE base y la extensión con clasificación supervisada, cubre 895.354 objetos y se particiona con 5-fold cross-validation estratificada por tipo (\texttt{StratifiedKFold}, \texttt{random\_state=42}), usando el fold 0: 718.673 imágenes de entrenamiento y 179.669 de validación.
 
-La partición utiliza 5-fold cross-validation estratificada por tipo de supernova (\texttt{StratifiedKFold}, \texttt{random\_state=42}).
+El conjunto final, generado tras fijar la codificación del flujo de la Sección~\ref{sec:codificacion_flujo}, cubre los 1.389.147 objetos del dataset y se divide en 1.250.233 imágenes de entrenamiento y 138.914 de validación. Todos los resultados de detección y contrafactuales se apoyan en esta segunda versión, y los objetos usados para evaluar provienen del fold de validación.
 \chapter{Metodología}
 
 La metodología se organiza en tres etapas secuenciales: preprocesamiento de los datos como imágenes, entrenamiento del VQ-VAE, y detección de anomalías con generación de contrafactuales.
@@ -113,20 +109,55 @@ La perplexity de 1.00 indica colapso total del codebook. A pesar de que la calid
 
 Estos resultados, junto con las limitaciones del muestreo irregular, motivaron el cambio a representación en imágenes.
 
-\section{Preprocesamiento: conversión de curvas de luz a imágenes 2grid}
+\section{Conversión de curvas de luz a imágenes 2grid}
+\label{sec:render_2grid}
 
-Las curvas de luz se convierten en imágenes RGB de 256×256 píxeles con 6 bandas apiladas verticalmente.
+Las curvas de luz se convierten en imágenes RGB de 256×256 píxeles con 6 bandas apiladas verticalmente, cada una en un carril propio y con un color distinto, según se muestra en la Figura~\ref{fig:ejemplo_2grid}. El eje horizontal recorre el tiempo normalizado del objeto y la altura del trazo dentro de cada carril codifica el flujo, por lo que la imagen conserva la correspondencia temporal entre bandas sin necesidad de interpolar el muestreo irregular.
 
-\subsection{Normalización por objeto}
+\begin{figure}[H]
+\centering
+\insertimage[\label{fig:ejemplo_2grid}]{img/ejemplo_2grid.png}{width=\textwidth}{Imágenes 2grid de cuatro supernovas de tipos distintos, generadas con la codificación \texttt{mad300}. Las bandas se apilan de \textit{Y} arriba a \textit{u} abajo. El muestreo desigual entre bandas queda a la vista: la SNII-NMF del segundo panel tiene 12 observaciones en \textit{z} pero solo 5 en \textit{g} y 3 en \textit{u}, por lo que los carriles inferiores aparecen casi vacíos.}
+\end{figure}
 
-Para cada supernova, el tiempo MJD y el flujo fotométrico se normalizan individualmente al rango $[0, 1]$:
+\subsection{Normalización temporal}
+
+Para cada supernova el tiempo MJD se normaliza al rango $[0, 1]$ usando su propio recorrido observado:
 
 \begin{equation}
-\hat{t} = \frac{t - t_{\min}}{t_{\max} - t_{\min}}, \qquad
-\hat{f} = \frac{f - Q_{0.01}}{Q_{0.99} - Q_{0.01}}
+\hat{t} = \frac{t - t_{\min}}{t_{\max} - t_{\min}}.
 \end{equation}
 
-Con esta normalización, las imágenes tienen $\sim$10\% de píxeles con contenido, frente al 4\% sin normalización.
+\subsection{Codificación del flujo}
+\label{sec:codificacion_flujo}
+
+La altura del trazo dentro del carril de cada banda codifica el flujo fotométrico. La primera versión del renderizador usaba un reescalado lineal entre percentiles del propio objeto,
+
+\begin{equation}
+u_{\text{lineal}} = \mathrm{clip}\!\left(\frac{f - Q_{0.01}}{Q_{0.99} - Q_{0.01}},\; 0,\; 1\right),
+\label{eq:enc_lineal}
+\end{equation}
+
+que lleva las imágenes a $\sim$10\% de píxeles con contenido frente al 4\% sin normalizar.
+
+El problema de la Ecuación~\ref{eq:enc_lineal} aparece justamente en el régimen que interesa a esta tesis. El percentil $Q_{0.99}$ queda fijado por los puntos más brillantes de la curva, de modo que un outlier suficientemente grande define su propia escala: al inyectar el pico, la curva completa se reescala hacia abajo y el pico deja de subir dentro del carril. Sobre el conjunto de perturbaciones controladas, $Q_{0.99}$ se multiplica por 60 entre $\Delta f = 10$ y $\Delta f = 1000$ MAD, mientras que la desviación absoluta mediana (MAD) del mismo objeto solo crece 1.4 veces. La representación satura: a partir de cierta amplitud las imágenes perturbadas dejan de distinguirse entre sí, y con escala congelada llegan a ser idénticas píxel a píxel.
+
+La codificación adoptada reemplaza los percentiles por la mediana y la desviación absoluta mediana del propio objeto, y comprime con $\operatorname{arcsinh}$ en lugar de recortar:
+
+\begin{equation}
+u = \frac{1}{2}\left[
+\frac{\operatorname{arcsinh}\!\left(\dfrac{f - \operatorname{med}(f)}{\operatorname{MAD}(f)}\right)}
+{\operatorname{arcsinh}(U)} + 1
+\right],
+\qquad
+\operatorname{MAD}(f) = \operatorname{med}\left(\left|f - \operatorname{med}(f)\right|\right).
+\label{eq:enc_mad}
+\end{equation}
+
+El MAD necesita más de un 50\% de contaminación para desplazarse, así que un pico aislado no arrastra la escala. El parámetro $U$ fija cuántos MAD entran en el carril y gobierna el compromiso entre resolución para la morfología normal y techo para el outlier: valores chicos aprovechan mejor el carril pero saturan antes, valores grandes aplanan la curva normal. El recorte que subsiste opera en $\pm U \cdot \operatorname{MAD}$ respecto de la mediana, una cota que no se mueve al inyectar la perturbación.
+
+Los estadísticos se calculan sobre la curva que se está dibujando, incluida la perturbada. Esto reproduce lo que haría el pipeline en operación, donde no existe una versión limpia de referencia contra la cual normalizar.
+
+La elección de $U$ se resolvió empíricamente entrenando el pipeline completo por separado para $U = 100$ y $U = 300$ y comparándolos contra la Ecuación~\ref{eq:enc_lineal} en igualdad de condiciones (Sección~\ref{sec:res_codificacion}). Se adoptó $U = 300$, y las imágenes generadas con esa configuración se denotan \texttt{mad300} en el resto del documento.
 
 \subsection{Normalización para el modelo}
 
@@ -195,7 +226,7 @@ La visualización mediante UMAP de los tokens generados mostró que las clases d
 \textbf{Hiperparámetro} & \textbf{Valor} \\
 \hline
 Número de clases & 17 \\
-Peso de clasificación ($\lambda$) & 1.0 \\
+Peso de clasificación ($\lambda$) & 0.1 \\
 Dropout clasificador & 0.1 \\
 \hline
 \end{tabular}
@@ -203,74 +234,166 @@ Dropout clasificador & 0.1 \\
 \label{tab:cls_config}
 \end{table}
 
-\subsection{Resultados preliminares (epoch 0 en curso)}
+\section{Entrenamiento sobre el dataset completo}
+\label{sec:entrenamiento_full}
 
-Al inicio del entrenamiento con clasificación, el modelo muestra:
+La selección de la codificación (Sección~\ref{sec:codificacion_flujo}) se resolvió sobre un subconjunto de 196.000 imágenes, entrenando VQ-VAE y prior MaskGIT por separado para cada variante. Fijada la codificación, el pipeline se volvió a correr de extremo a extremo sobre las 1.389.147 curvas de luz: renderizado con \texttt{mad300}, partición en folds, entrenamiento del VQ-VAE, tokenización del dataset completo y entrenamiento de los priors.
 
-\begin{itemize}
-    \item \textbf{cls\_loss}: parte en $\sim$2.83 (entropía máxima para 17 clases) y desciende a $\sim$2.29 en los primeros 2.000 steps.
-    \item \textbf{acc}: sube de 5.9\% (random) a $\sim$31\% en los primeros 2.000 steps.
-    \item \textbf{perplexity}: $\sim$335, significativamente más alta que el modelo base ($\sim$162), indicando que la señal de clasificación no colapsa el codebook sino que mantiene alta diversidad.
-    \item \textbf{recon\_loss}: $\sim$0.012, comparable con el modelo base al final del epoch 0.
-\end{itemize}
+Los dos priors difieren únicamente en la forma de la máscara de entrenamiento descrita en la Sección~\ref{sec:forma_mascara}. Comparten arquitectura, tokens de entrada, partición y presupuesto de epochs, de modo que cualquier diferencia entre ellos es atribuible al esquema de enmascaramiento.
 
-% TODO: actualizar con resultados finales del entrenamiento
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Etapa} & \textbf{Imágenes} & \textbf{Epochs} \\
+\hline
+Comparación de codificaciones (por rama) & 196.000 & 40 \\
+VQ-VAE final (\texttt{mad300}) & 1.389.147 & 25 \\
+Prior MaskGIT, máscara aleatoria & 1.389.147 & 25 \\
+Prior MaskGIT, máscara de ventana & 1.389.147 & 25 \\
+\hline
+\end{tabular}
+\caption{Escala de las corridas de entrenamiento. Las tres etapas finales comparten el mismo conjunto de tokens, con 1.250.233 imágenes de entrenamiento y 138.914 de validación.}
+\label{tab:corridas}
+\end{table}
 
 \section{Detección de anomalías}
 
 Una vez entrenado el VQ-VAE, cada supernova queda representada como una secuencia $\mathbf{s} \in \{1, \ldots, 512\}^{32 \times 32}$ de $T = 1024$ tokens. El prior MaskGIT aprende $p(\mathbf{s})$ como modelo enmascarado: no factoriza la secuencia de izquierda a derecha, sino que predice tokens tapados a partir del resto. El score de anomalía que se usa en esta tesis es un estimador de $-\log p(\mathbf{s})$ construido con ese mismo mecanismo.
 
-\subsection{Score global de MaskGIT}
+\subsection{NLL por token}
+\label{sec:nll_token}
 
-En cada ronda $r = 1, \ldots, R$ se elige un conjunto aleatorio $\mathcal{M}_r$ con fracción $\rho = 0.5$ de las posiciones, se reemplazan por el token de máscara y el prior entrega $p(s_i \mid \mathbf{s}_{\setminus \mathcal{M}_r})$. La contribución de esa ronda es el NLL medio sobre las posiciones enmascaradas:
-
-\begin{equation}
-\mathrm{NLL}^{(r)}(\mathbf{s})
-= \frac{1}{|\mathcal{M}_r|}
-\sum_{i \in \mathcal{M}_r}
--\log p\!\left(s_i \mid \mathbf{s}_{\setminus \mathcal{M}_r}\right).
-\end{equation}
-
-El score de la imagen es el promedio entre rondas, con $R = 10$:
-
-\begin{equation}
-\mathrm{score}(\mathbf{s})
-= \frac{1}{R}\sum_{r=1}^{R} \mathrm{NLL}^{(r)}(\mathbf{s}).
-\end{equation}
-
-Solo entran al promedio las posiciones tapadas en esa ronda. Un objeto típico del conjunto de entrenamiento queda con $\mathrm{score} \approx 3$; combinaciones de tokens poco frecuentes suben el valor.
-
-\subsection{Criterio de detección en perturbaciones controladas}
-
-MaskGIT no entrega una etiqueta binaria. Para decidir si una perturbación de la fotometría es visible al prior se compara el objeto consigo mismo:
-
-\begin{equation}
-\Delta\mathrm{score}
-= \mathrm{score}(\mathbf{s}_{\mathrm{pert}})
-- \mathrm{score}(\mathbf{s}_{\mathrm{control}}).
-\end{equation}
-
-Se declara hit si $\Delta\mathrm{score} > \tau$. El umbral $\tau = 0.3$ no proviene de un test de hipótesis ni de un percentil calibrado sobre una muestra de negativos. Es la escala de la dispersión intra-grupo de los scores en la representación waterfall: supernovas del mismo tipo ya difieren entre sí en $\sim 0.3$ sin ninguna perturbación. Una subida menor que esa variación natural no se distingue de cambiar de objeto dentro de la misma clase.
-
-El valor es operativo: no es un número suelto ni un $p$-value. En los experimentos sintéticos se reporta además $\tau \in \{0.15, 0.5\}$ para verificar que las conclusiones no dependan de un solo corte.
-
-\section{Generación de contrafactuales}
-
-El contrafactual usa el mismo prior, pero no el score escalar. Se estima un NLL \emph{por token}: en cada ronda se acumula $-\log p(s_i \mid \mathbf{s}_{\setminus \mathcal{M}_r})$ solo si $i$ estaba enmascarado, y se promedia sobre las rondas en que esa posición tocó máscara,
+En cada ronda $r = 1, \ldots, R$ se elige un conjunto $\mathcal{M}_r$ con fracción $\rho = 0.5$ de las posiciones, se reemplazan por el token de máscara y el prior entrega $p(s_i \mid \mathbf{s}_{\setminus \mathcal{M}_r})$. Cada posición acumula su NLL solo en las rondas en que fue tapada:
 
 \begin{equation}
 \mathrm{NLL}_i
-= \frac{\displaystyle\sum_{r=1}^{R} \mathbf{1}[i\in\mathcal{M}_r]\,
--\log p\!\left(s_i \mid \mathbf{s}_{\setminus \mathcal{M}_r}\right)}
-{\displaystyle\sum_{r=1}^{R} \mathbf{1}[i\in\mathcal{M}_r]}.
+= \frac{\displaystyle\sum_{r=1}^{R} \mathbf{1}[i\in\mathcal{M}_r]\;
+\left(-\log p\!\left(s_i \mid \mathbf{s}_{\setminus \mathcal{M}_r}\right)\right)}
+{\displaystyle\sum_{r=1}^{R} \mathbf{1}[i\in\mathcal{M}_r]},
+\qquad R = 24.
+\label{eq:nll_token}
 \end{equation}
 
-En las figuras contrafactuales se usa $R = 5$ (basta para ordenar posiciones). Se enmascaran los tokens con $\mathrm{NLL}_i$ sobre el percentil $0.85$ de esa misma imagen (unas $154$ de $1024$ posiciones) y se remuestrean condicionalmente:
+El mapa $\{\mathrm{NLL}_i\}$ se reordena a la grilla $32 \times 32$ y conserva la correspondencia espacial con la imagen, lo que permite tanto puntuar como localizar. El score de anomalía del objeto es el máximo sobre posiciones,
 
 \begin{equation}
-\mathbf{s}' \sim p(\mathbf{s}_{\mathrm{mask}} \mid \mathbf{s}_{\mathrm{visible}}).
+\mathrm{score}(\mathbf{s}) = \max_i \mathrm{NLL}_i .
+\label{eq:score_max}
 \end{equation}
 
-Ese percentil es relativo a la imagen, no a un umbral absoluto de anomalía. Toda secuencia tiene un $15\%$ de tokens peor rankeados, de modo que el contrafactual siempre reescribe algo. El mapa $|\hat{\mathbf{x}} - \hat{\mathbf{x}}'|$ localiza dónde actúa esa reescritura; no equivale a un hit en $\Delta\mathrm{score}$.
+Se toma el máximo y no el promedio, ya que una anomalía localizada afecta unos pocos tokens de los 1024, por lo que su efecto sobre la media se diluye hasta desaparecer.
 
-La calidad se evalúa según plausibilidad, parsimonia y consistencia temporal entre bandas.
+El número de rondas controla el ruido del estimador, dado que con $R$ chico una posición entra pocas veces en el promedio y su NLL termina dependiendo de qué otras posiciones le tocaron visibles en esas rondas, razón por la cual se usa $R = 24$.
+
+\subsection{Forma de la máscara}
+\label{sec:forma_mascara}
+
+El conjunto $\mathcal{M}_r$ admite dos construcciones, que se usan tanto para entrenar el prior como para puntuar:
+
+\begin{enumerate}
+    \item \textbf{Aleatoria:} las posiciones se sortean de forma independiente sobre las 1024 celdas. Cada token tapado conserva casi todos sus vecinos visibles, de modo que el prior resuelve el problema interpolando localmente.
+    \item \textbf{Ventana:} se tapa un rectángulo contiguo en la grilla $32 \times 32$, con lados sorteados de modo que el área reproduzca la fracción $\rho$. Buena parte de los tokens tapados queda sin vecinos visibles y la completación exige información de más largo alcance.
+\end{enumerate}
+
+Las dos elecciones son independientes entre entrenamiento y evaluación, de modo que se entrenaron dos priors y cada uno se puntuó con las dos formas. El cruce separa la calidad del modelo de la coincidencia entre la máscara de entrenamiento y la de evaluación (Sección~\ref{sec:res_mascaras}).
+
+\subsection{Protocolo de perturbaciones controladas}
+\label{sec:protocolo_sintetico}
+
+Evaluar detección sobre supernovas reales exige saber de antemano cuáles son anómalas, información que el dataset no entrega. La alternativa es inyectar anomalías de amplitud conocida y medir a partir de qué tamaño el prior las registra.
+
+Los objetos se toman del fold de validación, de modo que ni el VQ-VAE ni el prior los vieron durante el entrenamiento. Se seleccionan SNIa-SALT2 con al menos seis épocas en la banda \textit{r} dentro del último 30\% de su recorrido temporal. Sobre esas épocas de la cola se suma un desplazamiento proporcional a la dispersión del propio objeto,
+
+\begin{equation}
+f_j \;\longleftarrow\; f_j + \Delta f \cdot \operatorname{MAD}_r,
+\qquad j \in \text{cola},
+\label{eq:inyeccion}
+\end{equation}
+
+donde $\operatorname{MAD}_r$ es la desviación absoluta mediana del flujo en la banda \textit{r} de esa supernova. Escalar por el MAD del objeto y no por una constante en FLUXCAL hace que $\Delta f$ signifique lo mismo en curvas de brillo distinto, a costa de que un mismo $\Delta f$ corresponda a flujos absolutos diferentes según el objeto. La conversión a unidades físicas se hace al reportar, multiplicando por el MAD medio de la muestra.
+
+El barrido cubre $\Delta f \in \{10, 20, 30, 50, 70, 100, 150, 200, 300, 500\}$. Cada objeto aporta además una versión sin perturbar, que actúa como control y define tanto el umbral como la línea base de localización. La perturbación se inyecta en el flujo antes de renderizar, de modo que los estadísticos de la Ecuación~\ref{eq:enc_mad} se recalculan sobre la curva ya contaminada.
+
+\subsection{Criterio de detección en perturbaciones controladas}
+
+MaskGIT no entrega una etiqueta binaria, por lo que el umbral se fija sobre la distribución de scores de los controles, tomando $\tau$ como su percentil 95 y declarando detección cuando $\mathrm{score}(\mathbf{s}_{\mathrm{pert}}) > \tau$, con lo que la tasa de falsos positivos sobre controles queda en 5\% por construcción.
+
+Se reporta además una versión pareada, en que cada objeto perturbado se compara contra su propio control,
+
+\begin{equation}
+\mathrm{score}(\mathbf{s}_{\mathrm{pert}}) > \mathrm{score}(\mathbf{s}_{\mathrm{control}}),
+\end{equation}
+
+que elimina la variabilidad entre objetos a costa de exigir la curva limpia, no disponible en operación. La comparación entre ambas mide cuánto del error viene de la dispersión intrínseca entre supernovas.
+
+La localización se evalúa aparte: se declara acierto si $\arg\max_i \mathrm{NLL}_i$ cae dentro de la zona donde se inyectó la perturbación. Como la zona ocupa una fracción no despreciable de la imagen, la misma métrica se calcula sobre los controles para fijar la línea base de azar.
+
+\subsection{Protocolo de clases excluidas}
+\label{sec:protocolo_heldout}
+
+El protocolo anterior mide sensibilidad a una perturbación de forma conocida, no capacidad de encontrar objetos genuinamente raros. Para eso se repartieron de otro modo los 17 tipos del dataset: seis clases se retiraron por completo del entrenamiento y quedaron reservadas como conjunto de anomalías reales, de modo que la evaluación no necesita datos nuevos ni etiquetas de anomalía inventadas.
+
+Las clases excluidas son \texttt{SNIa-91bg}, \texttt{SNIax}, \texttt{SNIIb+HostXT\_V19}, \texttt{SLSN-I+host}, \texttt{SLSN-I\_no\_host} y \texttt{PISN}, que suman 421.508 imágenes, el 30.3\% del dataset. Quedan 967.639 imágenes de once clases para entrenar. La selección mezcla a propósito dos regímenes de dificultad: \texttt{SLSN-I} y \texttt{PISN} son morfológicamente muy distintas del resto, mientras que \texttt{SNIax} y \texttt{SNIa-91bg} son variantes subluminosas de las SNIa y \texttt{SNIIb} transiciona hacia el tipo Ib, por lo que deberían confundirse con las clases vistas. Reportar un promedio sobre las seis escondería esa diferencia, así que los resultados van siempre desglosados por clase.
+
+Las clases excluidas no aparecen ni en entrenamiento ni en validación. Dejarlas en validación habría bastado para contaminar el resultado, porque la selección del mejor checkpoint las habría visto de forma indirecta. Las etiquetas de las once clases restantes se remapean a $0,\dots,10$, ya que los índices originales quedan con huecos y la cabeza de clasificación necesita índices contiguos. El VQ-VAE y el prior se reentrenan desde cero con esa partición y con los mismos hiperparámetros de la corrida completa, de manera que la única variable sea qué clases se vieron. Los tokens, en cambio, se generan sobre las 1.389.147 imágenes, porque los de las clases excluidas hacen falta para poder puntuarlas.
+
+La evaluación compara 1.996 objetos del fold de validación de las clases vistas contra unos 500 de cada clase excluida, 2.991 anomalías en total, y se resume con el AUROC de cada clase excluida frente al conjunto de normales.
+
+Una diferencia con el barrido sintético obliga a revisar el estadístico de puntuación. Allá la anomalía ocupa un tramo acotado de la imagen y el máximo del mapa $\{\mathrm{NLL}_i\}$ es el resumen natural; acá lo inusual es el objeto completo, de modo que la NLL promedio sobre la secuencia debería ajustarse mejor. Se reportan ambas, cruzadas con las dos formas de máscara, por las mismas razones de la Sección~\ref{sec:forma_mascara}.
+
+\subsection{Baselines de comparación}
+\label{sec:baselines}
+
+Los baselines se evalúan sobre las clases excluidas y no sobre el barrido sintético, por una razón que invalidaría la comparación. La perturbación de la Ecuación~\ref{eq:inyeccion} se define sumando $\Delta f$ veces el MAD del objeto, así que un detector que mida la desviación máxima en unidades de MAD es prácticamente un filtro adaptado a ella y ganaría por construcción, sin que eso dijera nada sobre detección de anomalías. Las clases excluidas no están definidas en esas unidades, de modo que ahí la comparación es limpia.
+
+El baseline principal es el \textbf{error de reconstrucción del VQ-VAE}, que es la estrategia habitual en detección de anomalías con autoencoders: el modelo aprendió a redibujar solo supernovas de las clases vistas, se le pasa una imagen y se toma como score el error cuadrático medio entre original y reconstrucción. Se eligió por tres motivos. Es un modelo y no una receta de estadísticos escogidos a mano, de modo que no cabe objetar la selección de rasgos. No cuesta cómputo adicional, porque el VQ-VAE ya está entrenado. Y sobre todo es la ablación más limpia del método propuesto: mismo VQ-VAE, mismas imágenes y mismo codebook, cambiando únicamente la pregunta, ya que el baseline consulta al decodificador si puede redibujar la imagen y el método consulta al prior qué tan improbable es la secuencia de tokens. Cualquier diferencia de desempeño queda atribuida al prior.
+
+Se agregan dos referencias que no son redes neuronales. La primera, \texttt{mad\_max}, es la desviación máxima en unidades de MAD sobre la banda \textit{r}, es decir el estadístico de una línea. La segunda es un \textbf{Isolation Forest} ajustado únicamente con los objetos normales, que es el protocolo correcto en detección no supervisada, sobre quince estadísticos de resumen de la curva normalizados por el MAD del propio objeto para que el detector no separe simplemente por brillo aparente.
+
+Los mismos estadísticos se usan después en un diagnóstico aparte, midiendo el AUROC que alcanza cada rasgo por sí solo. Eso permite distinguir si la señal que captan los modelos está en la morfología de la curva o en variables que el renderizado conserva o descarta.
+
+\section{Generación de contrafactuales}
+
+El contrafactual responde a qué habría mostrado el objeto de no ser anómalo. Se construye sobre el mismo mapa $\{\mathrm{NLL}_i\}$ de la Ecuación~\ref{eq:nll_token}: se tapan las posiciones sospechosas, se remuestrean condicionalmente en el resto de la secuencia,
+
+\begin{equation}
+\mathbf{s}' \sim p(\mathbf{s}_{\mathrm{mask}} \mid \mathbf{s}_{\mathrm{visible}}),
+\end{equation}
+
+y se decodifica $\hat{\mathbf{x}}' = G_\theta(\mathbf{z}_q(\mathbf{s}'))$. El procedimiento se descompone en dos decisiones independientes, qué tapar y cómo remuestrear, que se resolvieron por separado.
+
+\subsection{Selección de la región a reescribir}
+\label{sec:cf_seleccion}
+
+El criterio inicial toma los tokens con $\mathrm{NLL}_i$ sobre el percentil 95 de la propia imagen, unas 51 de 1024 posiciones. Es un presupuesto relativo, no un umbral absoluto de anomalía: toda secuencia tiene un 5\% de tokens peor rankeados, de modo que el contrafactual siempre reescribe algo.
+
+La alternativa impone contigüidad mediante un estadístico de barrido, buscando sobre la máscara binaria de tokens marcados el rectángulo $\mathcal{R}$ que maximiza el exceso de marcados por sobre lo esperable según su área,
+
+\begin{equation}
+\mathcal{R} = \arg\max_{\mathcal{R}'}
+\left[\;\sum_{i \in \mathcal{R}'} \mathbf{1}[i \text{ marcado}] \;-\; q\,\left|\mathcal{R}'\right| \;\right],
+\end{equation}
+
+con $q$ proporcional a la densidad global de marcados. El óptimo se resuelve de forma exacta: fijado un par de filas, el problema se reduce a subarreglo contiguo de suma máxima sobre las columnas. El rectángulo resultante se dilata luego un margen de dos tokens en cada dirección.
+
+Ambos criterios se compararon midiendo qué fracción de la zona realmente perturbada queda cubierta por la máscara y qué fracción de la máscara cae fuera de esa zona, según se detalla en la Sección~\ref{sec:res_contrafactuales}, y a partir de esa comparación se adoptó el rectángulo dilatado.
+
+\subsection{Remuestreo}
+
+Las posiciones tapadas no se rellenan de una vez, sino que en cada uno de los $n = 10$ pasos el prior evalúa la secuencia parcialmente completa, se sortea un candidato por posición vacía y se fijan definitivamente las de mayor probabilidad, dejando el resto para los pasos siguientes, de modo que el contexto disponible crece a medida que avanza el revelado.
+
+El sorteo se restringe a los $k = 10$ candidatos más probables de cada posición. El recorte de la cola importa: muestrear de la distribución completa introduce tokens improbables que quedan fijos como contexto de todo lo que se revela después, y tomar directamente la moda produce reconstrucciones peores que el muestreo restringido. El barrido sobre $k$, sobre el uso de recocido de temperatura y sobre $n$ se documenta en la Sección~\ref{sec:res_contrafactuales}.
+
+\subsection{Evaluación en flujo}
+\label{sec:cf_evaluacion}
+
+Comparar $\hat{\mathbf{x}}$ con $\hat{\mathbf{x}}'$ píxel a píxel mide sobre todo el fondo de la imagen, que ocupa la mayor parte del área y no contiene fotometría, por lo que las métricas se calculan invirtiendo el renderizado y volviendo a FLUXCAL. Esto además deja la evaluación en el mismo espacio en que trabajan los métodos de detección explicable sobre series de tiempo \cite{lee2023timevqvae_ad}, donde el contrafactual se compara directamente contra la señal original y no contra una representación intermedia.
+
+Para cada época observada se localiza la columna correspondiente dentro del carril de su banda, se suma la intensidad de la columna y se toma el centroide vertical de esa intensidad, que se convierte a flujo invirtiendo la Ecuación~\ref{eq:enc_mad}. Una columna cuya suma de intensidad cae bajo un umbral se declara sin traza legible.
+
+Ese umbral se calibra en lugar de fijarse a ojo, midiendo sobre curvas limpias reconstruidas por el VQ-VAE, donde por construcción la época existe y cualquier borrado sería un error del extractor, la intensidad mínima observada, y tomando luego el valor más alto que no produce ningún borrado falso. El conjunto de calibración es disjunto del de evaluación, y el mismo umbral se aplica a la curva limpia, la perturbada y el contrafactual.
+
+La métrica principal es la reducción del residuo respecto de la curva limpia dentro de la ventana perturbada. Cuando el contrafactual borra una época en vez de corregirla, esa época se imputa con el valor de la perturbada, o sea ganancia nula. Un contrafactual que elimina la observación no explica qué habría sido normal en esa fecha, de modo que contarlo como reparación sobreestimaría el método. Se reporta por separado la tasa de borrado, que mide esa forma de fallo.
+
+Como línea base se genera un contrafactual de control enmascarando una región de igual tamaño en una posición sorteada al azar. La diferencia entre ambos aísla lo que aporta dirigir la reescritura al lugar detectado, y separa la reparación real del efecto de reescribir cualquier parte de la imagen.

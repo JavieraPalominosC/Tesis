@@ -72,6 +72,14 @@
 % IMPORTACIÓN DEL TEMPLATE
 \input{template}
 
+\setcounter{secnumdepth}{2}
+\counterwithout{figure}{chapter}
+\counterwithout{table}{chapter}
+
+% Diagramas del marco teórico
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, fit, backgrounds, calc}
+
 % INICIO DE LAS PÁGINAS
 \begin{document}
 
@@ -83,12 +91,35 @@
 
 % RESUMEN O ABSTRACT
 \begin{abstractd}
-	% TODO: completar resumen
-	En este trabajo se presenta un pipeline de detección de anomalías y generación
-	de contrafactuales para curvas de luz de supernovas del dataset ELAsTiCC-1.
-	El enfoque convierte las curvas de luz multibanda en imágenes 2grid y utiliza
-	un autoencoder con cuantización vectorial (VQ-VAE) con un prior tipo MaskGIT
-	para detectar outliers y generar explicaciones contrafactuales interpretables.
+	Los surveys astronómicos de gran escala producirán catálogos de curvas de luz
+	demasiado grandes para revisarse objeto por objeto, por lo que hace falta no
+	solo señalar cuáles son raros sino explicar en qué lo son. En esta tesis se
+	aborda ese problema sobre el dataset simulado ELAsTiCC-1, convirtiendo las
+	curvas de luz multibanda en imágenes 2grid de 256$\times$256 píxeles, de las
+	que se generaron 1.389.147, para luego tokenizarlas con un autoencoder con
+	cuantización vectorial (VQ-VAE) de 512 embeddings y modelar la distribución de
+	esos tokens con un prior MaskGIT, que asigna un score de anomalía y, al
+	enmascarar la región sospechosa, genera un contrafactual por completado
+	condicional.
+
+	Tres decisiones de diseño resultaron determinantes. Normalizar el flujo por
+	percentiles del propio objeto, que es la práctica habitual al rasterizar curvas
+	de luz, resulta incompatible con la detección de outliers, ya que una anomalía
+	suficientemente grande termina fijando la escala con la que se la mide, por lo
+	que se reemplazó por una normalización con mediana y desviación absoluta
+	mediana con compresión $\operatorname{arcsinh}$, que lleva el recall de 0.38 a
+	1.00 en las perturbaciones mayores. Enmascarar una región contigua al momento
+	de puntuar, en vez de posiciones sueltas, sube el recall de 0.38 a 0.95 en
+	amplitudes intermedias sin necesidad de reentrenar el prior. Delimitar la zona
+	a reescribir con un estadístico de barrido, en lugar de seleccionar tokens por
+	percentil, mejora la reparación del residuo en flujo de 28.9\% a 36.0\%, además
+	de reducir la confusión entre bandas de 17.9\% a 3.1\%.
+
+	Sobre objetos del fold de validación se alcanza un recall de 0.98 y un AUROC de
+	0.996 para las perturbaciones mayores, si bien todas las anomalías evaluadas son
+	sintéticas y de una sola familia, por lo que lo medido corresponde a la
+	sensibilidad del método frente a una perturbación controlada y no a su capacidad
+	de encontrar objetos genuinamente raros.
 \end{abstractd}
 
 % DEDICATORIA
