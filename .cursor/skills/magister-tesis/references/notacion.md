@@ -21,6 +21,53 @@
 
 ---
 
+## Términos de la etapa de detección y contrafactuales
+
+Fijados al escribir los capítulos 4 y 5. Si aparece un sinónimo, es un error.
+
+| Concepto | Forma correcta | Nunca usar |
+|----------|---------------|------------|
+| La codificación del flujo adoptada | `mad300` (en `\texttt{}`) | "asinh/MAD", "la codificación robusta", "U=300" a secas |
+| La codificación anterior | codificación lineal (Ec. de percentiles) | "la codificación actual", "p01-p99", "waterfall" |
+| La dispersión del objeto | MAD, definido como desviación absoluta mediana | "MAD score", "desviación mediana" |
+| Las unidades de flujo | FLUXCAL | "flujo absoluto", "unidades de flujo" |
+| La amplitud de la perturbación | $\Delta f$, en unidades del MAD del objeto | "df", "delta flujo", "amplitud" a secas |
+| La amplitud en unidades físicas | $\overline{\Delta F}$ en FLUXCAL | mezclar $\Delta f$ y $\Delta F$ sin aclarar unidades |
+| Las dos formas de máscara | máscara aleatoria / máscara de ventana | "random", "window", "máscara contigua", "parche" |
+| La imagen sin perturbar | control | "baseline", "curva base", "original" |
+| La zona donde se inyecta | zona perturbada / ventana perturbada | "región anómala", "zona objetivo" |
+| El acierto de $\arg\max$ NLL | localización | "detección espacial", "hit espacial" |
+| El límite con máscara perfecta | oráculo | "upper bound", "cota superior", "techo" a secas |
+| El contrafactual que elimina la época | borrado | "eliminación", "pérdida de puntos", "supresión" |
+| Cuánto de la anomalía tapa la máscara | cobertura | "recall de la máscara", "overlap" |
+| El trazo dibujado en la banda equivocada | confusión de banda | "band confusion", "error de color" |
+| La reparación en flujo | reducción del residuo | "mejora", "corrección", "fidelidad" |
+
+**Cuidado con dos palabras que se prestan a confusión y significan cosas distintas:**
+
+- **MAD** se usa en dos roles: como estadístico de escala dentro de la codificación (Ec. `mad300`)
+  y como unidad de la amplitud inyectada ($\Delta f$ veces el MAD). Al escribir hay que decir cuál.
+- **score de anomalía** es el **máximo** del NLL por token, no el promedio. El promedio diluye una
+  anomalía localizada entre los 1024 tokens. Si un texto dice "promedio", está desactualizado.
+
+---
+
+## Notación de la etapa de detección
+
+| Símbolo | Significado |
+|---------|-------------|
+| $\mathrm{NLL}_i$ | NLL de la posición $i$, promediado sobre las rondas en que fue enmascarada |
+| $R = 24$ | Número de rondas de enmascaramiento al puntuar (NO 10; ese valor es de una versión vieja) |
+| $\rho = 0.5$ | Fracción de posiciones enmascaradas por ronda |
+| $\mathcal{M}_r$ | Conjunto de posiciones enmascaradas en la ronda $r$ |
+| $\tau$ | Umbral de detección, percentil 95 de los scores de los controles |
+| $U = 300$ | Cuántos MAD entran en el carril de la banda en `mad300` |
+| $k = 10$ | Top-$k$ del muestreo al generar el contrafactual |
+| $n = 10$ | Pasos de revelado progresivo del contrafactual |
+| $\mathcal{R}$ | Rectángulo del estadístico de barrido que delimita la región a reescribir |
+
+---
+
 ## Notación matemática estándar
 
 ### Variables principales

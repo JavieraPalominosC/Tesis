@@ -64,7 +64,12 @@ Lee `references/estilo-humano.md` para las reglas completas. Resumen de lo más 
   ❌ "los enfoques tradicionales ---X, Y y Z--- resultan..."  
   ✅ "los enfoques tradicionales (X, Y y Z) resultan..."
 - La longitud de los párrafos debe variar. No todos los párrafos tienen la misma estructura de 3 oraciones.
-- Las oraciones cortas están bien. El ritmo importa.
+- **Oraciones largas, encadenadas con comas.** Javiera no escribe frases cortas de remate; una frase
+  tipo eslogan es la marca más clara de que el texto no es suyo. Ver `references/muestra-javiera.md`,
+  la única muestra verificada de su escritura, y la sección "Voz real de Javiera" de
+  `references/estilo-humano.md`, que manda sobre el resto de la guía.
+- **Nunca primera persona.** Usa "se" impersonal incluso donde sonaría forzado ("se tuvo que viajar").
+- "además de" es su conector natural para agregar información.
 
 ---
 
@@ -93,14 +98,62 @@ Lee `references/notacion.md` para la lista completa. Lo más usado:
 
 ---
 
+## Regla dura: ningún número sin fuente
+
+El riesgo más alto al escribir esta tesis no es que el texto suene a IA. Es escribir una cifra que
+ya no corresponde, o que contradice otra parte del documento. Ha pasado varias veces.
+
+**Antes de escribir cualquier número, hay que abrirlo en su fuente.** Nunca copiarlo de otra sección
+del `.tex`, de un resumen de conversación, ni de memoria.
+
+| Qué se quiere citar | Dónde está la verdad |
+|---------------------|----------------------|
+| Métricas de detección, contrafactuales, codificación | `imagenes/*.json` en la raíz del repo |
+| Hiperparámetros de entrenamiento | `configs/*.yaml` (ojo: `cls_weight` es el $\lambda$) |
+| Pérdidas y epoch del mejor modelo | nombre del checkpoint en `results/**/checkpoints/` |
+| Tamaño de los conjuntos | `data/enc_cmp/mad300/folds_full.json` |
+| Cómo se calcula una métrica | el script en `scripts/` que la produjo |
+
+Errores reales que esta regla habría evitado:
+
+- La tabla de metodología decía $\lambda = 1.0$; los YAML y el capítulo 4 dicen 0.1.
+- La metodología describía el score con $R = 10$ y como promedio de NLL; el código usa $R = 24$
+  y el máximo.
+- `dominio.md` de esta misma skill tenía $\lambda = 1.0$ y propagó el error.
+
+**Al terminar de escribir, verificar coherencia cruzada:** si una cifra aparece en dos capítulos,
+tiene que ser la misma. Buscarla con `rg` antes de dar por cerrado el trabajo.
+
+---
+
 ## Flujo de trabajo cuando se pide agregar/editar contenido
 
 1. **Identificar el archivo destino** usando la tabla de estructura de arriba.
 2. **Leer el archivo completo** (o la sección relevante) para entender el contexto inmediato, el tono, y evitar redundancias.
-3. **Revisar notacion.md y estilo-humano.md** antes de redactar.
-4. **Redactar** en LaTeX directamente: incluir `\section{}`, `\subsection{}`, ecuaciones, tablas, figuras según corresponda.
-5. **Entregar** el bloque LaTeX listo, indicando claramente en qué parte del archivo va (después de qué línea o sección).
-6. Si hay un `% TODO` relevante en el archivo, marcarlo como resuelto quitando el comentario o reemplazándolo.
+3. **Abrir las fuentes de los números** que se van a citar (ver la regla dura de arriba).
+4. **Revisar notacion.md y estilo-humano.md** antes de redactar.
+5. **Redactar** en LaTeX directamente: incluir `\section{}`, `\subsection{}`, ecuaciones, tablas, figuras según corresponda.
+6. **Compilar para verificar**, con el envoltorio mínimo descrito más abajo. Revisar que no queden
+   `Overfull \hbox` (tablas que se salen del margen) ni referencias rotas.
+7. Si hay un `% TODO` relevante en el archivo, marcarlo como resuelto quitando el comentario o reemplazándolo.
+
+---
+
+## Figuras y compilación
+
+- Los scripts dejan las figuras en `imagenes/` en la raíz del repo. Las que se referencian en un
+  `.tex` hay que copiarlas a `thesis-local/Tesis docs/img/` y **avisarle a Javiera que las suba a
+  Overleaf**, porque el repo local y Overleaf no están sincronizados.
+- **Antes de escribir un pie de figura, abrir la imagen con la herramienta de lectura.** Un pie que
+  describe paneles que no existen es peor que no ponerlo.
+- Macro de figura: el template define `\insertimage[\label{...}]{ruta}{opciones}{caption}`. El
+  capítulo 4 tiene además figuras viejas con `\includegraphics` dentro de `figure`. **Las dos
+  formas compilan**; usar `\insertimage` en material nuevo y no reescribir las viejas solo por
+  uniformidad.
+- El template **no compila** con la instalación local de LaTeX (falla en `\AtBeginShipout`; es un
+  problema preexistente de la instalación, no del texto). Para validar sintaxis, compilar los
+  capítulos sueltos con un envoltorio mínimo que defina `\insertimage` como stub y apunte
+  `\graphicspath` a `thesis-local/Tesis docs/`.
 
 ---
 
@@ -114,15 +167,36 @@ Lee `references/notacion.md` para la lista completa. Lo más usado:
 
 ---
 
-## Secciones pendientes (TODOs activos al momento de crear la skill)
+## Secciones pendientes
 
 - `main.tex`: completar resumen, dedicatoria, agradecimientos
-- `04_resultados.tex`: figuras reconstrucción 2grid, UMAP tokens, curvas ROC, ejemplos contrafactuales
-- `05_discusion_conclusiones.tex`: análisis UMAP antes/después, pureza codebook, plausibilidad contrafactuales, conclusiones finales
-- `03_metodologia.tex`: resultados finales del VQ-VAE con clasificación (epoch 0 en curso al crear la skill)
+- `04_resultados.tex`: figura de reconstrucciones 2grid (pares original/reconstruido)
+- `05_discusion_conclusiones.tex`: subsección "Organización semántica del codebook" (UMAP antes/después, si la pureza mejora los contrafactuales)
+
+Ya escritas: codificación del flujo, prior MaskGIT, detección de anomalías y contrafactuales en
+`04_resultados.tex`; limitaciones, calidad de los contrafactuales, conclusiones y trabajo futuro en
+`05_discusion_conclusiones.tex`.
+
+## Figuras
+
+Las figuras generadas por los scripts viven en `imagenes/` en la raíz del repo. Las que ya están
+referenciadas en los `.tex` se copiaron a `thesis-local/Tesis docs/img/` y hay que subirlas a Overleaf.
+El template local no compila con la instalación de LaTeX de la máquina (falla en `\AtBeginShipout`,
+problema preexistente); para validar sintaxis se puede compilar los capítulos con un envoltorio
+mínimo que defina `\insertimage` como stub.
 
 ---
 
 ## Conocimiento del dominio
 
 Lee `references/dominio.md` si necesitas contexto sobre el dominio astronómico, el modelo, o decisiones de diseño que ya están fijadas en la tesis.
+
+## Archivos de referencia de esta skill
+
+| Archivo | Cuándo leerlo |
+|---------|---------------|
+| `references/estilo-humano.md` | Siempre antes de redactar o revisar prosa |
+| `references/muestra-javiera.md` | Al calibrar voz. Única muestra verificada de su escritura |
+| `references/registro-memoria-fcfm.md` | Convenciones de género: cómo se discute un resultado, cómo se cierran las conclusiones. Referencia de otra persona, no de voz |
+| `references/notacion.md` | Siempre antes de redactar; términos y símbolos fijados |
+| `references/dominio.md` | Contexto astronómico, arquitectura y estado del experimento |

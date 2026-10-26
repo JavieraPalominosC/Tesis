@@ -39,22 +39,51 @@ qué es "normal" primero.
 
 ### Clasificación supervisada
 - Cabeza MLP sobre z_q (GlobalAvgPool → Linear(256→128) → ReLU → Dropout → Linear(128→17))
-- λ=1.0 para el peso de la clasificación
+- λ=0.1 para el peso de la clasificación (`cls_weight` en los YAML de `configs/`)
 - Motivación: inducir organización semántica en el codebook
+
+### Codificación del flujo (decisión posterior, reemplaza la normalización por percentiles)
+- La normalización lineal p01–p99 satura: el outlier fija el p99 y por lo tanto su propia escala.
+  Medido: p99 se multiplica por 60 entre Δf=10 y Δf=1000; el MAD solo 1.4x.
+- Adoptada `mad300`: u = (asinh((f − mediana)/MAD) / asinh(300) + 1) / 2, con recorte en ±300·MAD.
+- Se eligió comparando tres ramas (lineal, mad100, mad300) con VQ-VAE y prior propios sobre 196k
+  imágenes. `mad100` falla; su VQ-VAE reconstruye y clasifica peor.
+- Código único de la codificación: `scripts/enc_flujo.py`.
 
 ### Prior MaskGIT
 - Opera sobre secuencias de 1024 tokens (32×32)
-- Score de anomalía: -log p(s)
-- Generación de contrafactuales: enmascarar tokens más improbables, remuestrear condicionalmente
+- Score de anomalía: **máximo** del NLL por token, con R=24 rondas de enmascaramiento (ρ=0.5).
+  El promedio NO sirve: diluye una anomalía localizada entre 1024 posiciones.
+- Dos priors entrenados, idénticos salvo la forma de la máscara: aleatoria y ventana (rectángulo
+  contiguo). Sus val/loss no son comparables entre sí porque cada uno se evalúa con su máscara.
+- Hallazgo: lo que manda es la forma con que se **puntúa**, no con la que se entrenó. El prior
+  aleatorio puntuado con ventana es la mejor combinación y no requiere reentrenar.
+
+### Contrafactuales
+- Región a reescribir: rectángulo de un estadístico de barrido sobre el mapa de NLL, dilatado 2 tokens.
+  El criterio por percentil 95 cubre solo el 25% de la anomalía y es peor, salvo en Δf pequeños.
+- Remuestreo: 10 pasos de revelado progresivo, muestreo restringido a top-k=10.
+- Evaluación en FLUXCAL invirtiendo el render, con extractor de trazas calibrado en 0.73 (el umbral
+  más alto que no borra ninguna época de una curva limpia reconstruida).
+- El borrado de épocas se cuenta como fracaso, no se excluye. Excluirlo infla la reparación de 36% a >60%.
 
 ---
 
-## Estado del experimento al momento de crear la skill
+## Estado del experimento (septiembre 2026)
 
-- **Stage 1 (VQ-VAE base)**: completado, 16 epochs. train/loss=0.0003, recon_loss=0.000216, perplexity≈162-196
-- **Stage 1 extendido (con clasificación)**: en curso al crear la skill. Epoch 0 en progreso: acc sube de 5.9% a 31% en 2000 steps, perplexity≈335
-- **Stage 2 (MaskGIT)**: pendiente
-- **Detección de anomalías y contrafactuales**: pendiente
+- **VQ-VAE base**: 16 epochs. train/loss=0.0003, recon_loss=0.000216, perplexity≈162–196
+- **VQ-VAE con clasificación**: 7 epochs, val acc 55.6%, acc sobre validación completa 38.8%
+- **VQ-VAE `mad300` sobre 1.39M**: epoch 23, train/loss=0.0781. macro-F1 0.387
+- **Prior MaskGIT `mad300`**: aleatoria val/loss=3.1837 (epoch 16), ventana val/loss=3.6200 (epoch 23)
+- **Detección**: recall 1.00 en Δf=500, AUROC 0.997 (prior aleatorio puntuado con ventana),
+  sobre 40 SNIa del fold de validación
+- **Contrafactuales**: reducción del residuo en FLUXCAL 36.0%, borrado 29.4%, oráculo 42.4%
+- **Capítulos escritos**: 3, 4 y 5 actualizados con todo lo anterior
+
+### Pendiente
+- Prior entrenado solo con SNIa
+- Evaluación sobre clases excluidas del entrenamiento (lo que falta para hablar de utilidad real)
+- Verificar por qué la localización cae en Δf=500 (hipótesis: el pico invade la banda vecina)
 
 ---
 
