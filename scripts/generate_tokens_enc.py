@@ -21,7 +21,9 @@ from src.models.vqvae.model import VQVAE
 from src.data.vqvae_dataset import VQVAEDataset
 
 RAMA = sys.argv[1]
-assert RAMA in ('actual', 'mad100', 'mad300')
+# mad300t es mad300 con el eje temporal en escala absoluta en vez de normalizado
+# por objeto: misma codificacion de flujo, otro renderizado.
+assert RAMA in ('actual', 'mad100', 'mad300', 'mad300t')
 CORRIDA = sys.argv[2] if len(sys.argv) > 2 else ''
 SUF = f'_{CORRIDA}' if CORRIDA else ''
 

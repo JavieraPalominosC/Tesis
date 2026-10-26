@@ -65,6 +65,16 @@ N_BANDS = len(all_bands)
 STEP = 2.0
 AMP = 1.8
 
+# T_ABS fija una escala temporal en dias comun a todos los objetos. Sin ella el
+# eje se normaliza por el span de cada curva, asi que toda curva ocupa el ancho
+# completo y la duracion absoluta desaparece de la imagen; el diagnostico por
+# rasgo mostro que esa es la variable que mas separa a las clases excluidas.
+# Con escala comun la duracion queda escrita en el ancho que ocupa la curva, a
+# cambio de resolucion de forma para las curvas cortas.
+T_ABS = float(os.environ.get('T_ABS', 0) or 0)
+if T_ABS > 0:
+    print(f'{fname} [{ENC}]: eje temporal absoluto, T = {T_ABS:g} d', flush=True)
+
 
 print(f'{fname} [{ENC}]: cargando parquet...', flush=True)
 df = pd.read_parquet(os.path.join(RAW_DIR, fname))
@@ -96,7 +106,10 @@ for snid, obj_df in tqdm(grouped, total=len(grouped)):
         mjd_all = obj_df[col_mjd]
         obj_flux = obj_df[col_flux].astype('float64').values
         mjd_min, mjd_max = mjd_all.min(), mjd_all.max()
-        mjd_range = mjd_max - mjd_min if mjd_max > mjd_min else 1.0
+        if T_ABS > 0:
+            mjd_range = T_ABS
+        else:
+            mjd_range = mjd_max - mjd_min if mjd_max > mjd_min else 1.0
 
         ax.clear()
         for band_key, j in all_bands.items():

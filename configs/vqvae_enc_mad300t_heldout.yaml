@@ -1,0 +1,34 @@
+# Ablacion del eje temporal. Identico a configs/vqvae_enc_mad300_heldout.yaml
+# salvo por el directorio de imagenes: aca las curvas estan renderizadas con una
+# escala de tiempo comun de 1110 dias en vez de normalizada por el span de cada
+# objeto, de modo que la duracion absoluta queda escrita en el ancho que ocupa
+# la curva.
+#
+# Motivo: el diagnostico por rasgo de los baselines mostro que la duracion en
+# dias, por si sola, separa las clases excluidas mejor que la cadena completa
+# (AUROC 0,895 contra 0,883 en SLSN-I_no_host), y el renderizado por objeto la
+# borra antes de que el VQ-VAE vea la imagen.
+#
+# Las mismas seis clases quedan fuera: SNIa-91bg, SNIax, SNIIb+HostXT_V19,
+# SLSN-I+host, SLSN-I_no_host y PISN. Todo lo demas se mantiene igual para que
+# la unica variable sea el eje temporal.
+vqvae:
+  in_channels: 3
+  hidden_channels: [64, 128, 256]
+  embedding_dim: 256
+  num_embeddings: 512
+  commitment_cost: 0.25
+  learning_rate: 0.0002
+  batch_size: 32
+  num_epochs: 25
+  num_workers: 8
+  image_dir: "data/enc_cmp/mad300t/images"
+  image_size: 256
+  val_split: 0.1
+  folds_path: "data/enc_cmp/mad300t/folds_heldout.json"
+  labels_path: "data/enc_cmp/mad300t/labels_heldout.json"
+  num_classes: 11
+  cls_weight: 0.1
+  cls_dropout: 0.1
+  checkpoint_dir: "results/enc_cmp_heldout/mad300t/vqvae/checkpoints"
+  log_dir: "results/enc_cmp_heldout/mad300t/vqvae/logs"

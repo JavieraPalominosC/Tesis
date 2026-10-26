@@ -40,6 +40,7 @@ from scripts.eval_enc_cmp import (
 )
 from scripts.eval_mascara_cruzada import FORMAS, nll_map, N_RONDAS
 from scripts.analizar_maskgits import zona_objetivo
+from scripts.split_maskgit import val_maskgit
 from src.models.maskgit import MaskGIT
 from src.models.vqvae.model import VQVAE
 
@@ -48,9 +49,13 @@ RAW_DIR = 'data/lightcurves/elasticc_1/raw'
 BASE_FILE = 'lc_SNIa-SALT2.parquet'
 FOLDS = 'data/enc_cmp/mad300/folds_full.json'
 VQ_CKPT = 'results/enc_cmp_full/mad300/vqvae/checkpoints/**/*.ckpt'
+# Con PRIOR_TAG=_folds se usan los priors reentrenados sobre la misma particion que
+# el VQ-VAE. En ese caso la validacion del prior coincide con la del VQ-VAE y el
+# filtro de split_maskgit sobra, asi que se desactiva solo.
+PRIOR_TAG = os.environ.get('PRIOR_TAG', '')
 MODELOS = {
-    'aleatoria': 'results/enc_cmp_full/mad300/maskgit/checkpoints/**/*.ckpt',
-    'ventana': 'results/enc_cmp_full/mad300/maskgit_ventana/checkpoints/**/*.ckpt',
+    'aleatoria': f'results/enc_cmp_full/mad300/maskgit{PRIOR_TAG}/checkpoints/**/*.ckpt',
+    'ventana': f'results/enc_cmp_full/mad300/maskgit_ventana{PRIOR_TAG}/checkpoints/**/*.ckpt',
 }
 OUT = Path('results/enc_cmp_full/eval')
 DFS = [10, 20, 30, 50, 70, 100, 150, 200, 300, 500]
@@ -58,7 +63,18 @@ N_OBJ, CTRL_Q, SEED = 40, 0.95, 0
 
 
 def candidatos(n_obj):
-    """SNIa del fold de validacion con cola suficiente en la banda r."""
+    """SNIa no vistos en entrenamiento, con cola suficiente en la banda r.
+
+    No alcanza con exigir que esten en el fold de validacion del VQ-VAE. El
+    prior MaskGIT de la corrida completa uso una particion propia, sorteada
+    aparte y con otra razon, de modo que el 79,9% de esa validacion termino
+    igual en su entrenamiento; entre ellos 32 de los 40 objetos que se venian
+    usando para evaluar. Se exige entonces pertenecer a las dos validaciones a
+    la vez.
+
+    Con PERMITIR_FUGA=1 se recupera el criterio anterior, unicamente para
+    reproducir cifras viejas.
+    """
     with open(FOLDS) as f:
         val = json.load(f)['0']['val']
     en_val = set()
@@ -66,6 +82,15 @@ def candidatos(n_obj):
         m = re.match(r'(\d+)', Path(p).stem)
         if m:
             en_val.add(m.group(1))
+
+    if PRIOR_TAG:
+        print(f'prior{PRIOR_TAG}: comparte particion con el VQ-VAE, '
+              f'{len(en_val):,} candidatos sin filtro extra', flush=True)
+    elif os.environ.get('PERMITIR_FUGA') != '1':
+        antes = len(en_val)
+        en_val &= val_maskgit()
+        print(f'validacion del VQ-VAE: {antes:,} -> {len(en_val):,} tras exigir '
+              f'que el prior tampoco los haya visto', flush=True)
 
     df = pd.read_parquet(os.path.join(RAW_DIR, BASE_FILE))
     df['SNID'] = df['SNID'].astype(str)
@@ -178,7 +203,7 @@ def main():
         del mg
         torch.cuda.empty_cache()
 
-    with open(OUT / 'final_mad300.json', 'w') as f:
+    with open(OUT / f'final_mad300{PRIOR_TAG}.json', 'w') as f:
         json.dump({'dfs': DFS, 'objetos': sorted(curvas), 'mads': mads,
                    'rondas': N_RONDAS, 'celdas': res}, f, indent=2)
 
@@ -205,7 +230,7 @@ def main():
     fig2.suptitle(f'mad300 sobre 1.39M, {len(curvas)} SNIa fuera del entrenamiento',
                   fontsize=11)
     fig2.tight_layout()
-    fig2.savefig(OUT / 'final_mad300.png', dpi=140)
+    fig2.savefig(OUT / f'final_mad300{PRIOR_TAG}.png', dpi=140)
     plt.close(fig2)
     print(f'\nListo en {OUT}/', flush=True)
 

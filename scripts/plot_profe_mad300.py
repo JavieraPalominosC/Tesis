@@ -34,8 +34,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 OUT = Path(os.environ.get('PROFE_FIG_OUT', 'imagenes'))
-EVAL = OUT / 'final_mad300.json'
-BARRIDO = OUT / 'barrido_dt_df.json'
+# Con PRIOR_TAG=_folds se leen los resultados de los priors que comparten
+# particion con el VQ-VAE, y el contorno pasa a salir del barrido extendido,
+# que llega a 320 dias en vez de 80 y usa los objetos sin fuga.
+TAG = os.environ.get('PRIOR_TAG', '')
+EVAL = OUT / f'final_mad300{TAG}.json'
+BARRIDO = OUT / (f'barrido_extendido{TAG}.json' if TAG else 'barrido_dt_df.json')
 GANADORA, REFERENCIA = 'aleatoria|ventana', 'aleatoria|aleatoria'
 DESTACADOS = [10, 50, 150, 500]
 COLORS = ['#444444', '#4C78A8', '#F58518', '#54A24B', '#E45756']
@@ -223,9 +227,26 @@ def main():
     # --- 4. contorno de recall en (Delta F, Delta t) -------------------------
     if BARRIDO.exists():
         b = json.load(open(BARRIDO))
-        dts = [int(t) for t in b['dts']]
-        x_flux = np.array(b['dfs'], float) * b['mad_medio']
-        pts = {k: int(np.median(v)) for k, v in b['puntos_por_dt'].items()}
+        if TAG:
+            # El barrido extendido indexa por 'df|dt' y nombra las celdas solo
+            # por la forma de puntuacion, porque el prior es siempre el aleatorio.
+            dts = [int(t) for t in b['dts']]
+            dfs_b = [int(v) for v in b['dfs_2d']]
+            mad_b = float(np.mean([float(v) for v in b['mads'].values()]))
+            etiq_y = {str(t): f'{100 * b["cobertura_dt"][str(t)]:.0f}%' for t in dts}
+            recalls = {
+                c: np.array([[b['celdas'][f.split('|')[1]]['dos_d'][f'{d}|{t}']['recall']
+                              for d in dfs_b] for t in dts], float)
+                for c, f in ((GANADORA, GANADORA), (REFERENCIA, REFERENCIA))
+            }
+        else:
+            dts = [int(t) for t in b['dts']]
+            dfs_b = b['dfs']
+            mad_b = b['mad_medio']
+            etiq_y = {k: f'{int(np.median(v))} pts' for k, v in b['puntos_por_dt'].items()}
+            recalls = {c: np.array(b['celdas'][c]['recall'], float)
+                       for c in (GANADORA, REFERENCIA)}
+        x_flux = np.array(dfs_b, float) * mad_b
 
         # Los df y los dt no estan igualmente espaciados, y dibujar el mapa en sus
         # coordenadas reales aplasta las filas de abajo hasta hacerlas ilegibles.
@@ -241,7 +262,7 @@ def main():
         fig, axes = plt.subplots(1, 2, figsize=(14.5, 5.6), sharey=True)
         rec_g = None
         for ax, (clave, titulo) in zip(axes, paneles):
-            rec = np.array(b['celdas'][clave]['recall'], float)
+            rec = recalls[clave]
             if clave == GANADORA:
                 rec_g = rec
             im = ax.pcolormesh(ix, iy, rec, shading='nearest', cmap='Blues',
@@ -267,7 +288,7 @@ def main():
             ax.set_title(f'{titulo}\nrecall {100 * rec.min():.0f}% a '
                          f'{100 * rec.max():.0f}%', fontsize=10)
         axes[0].set_yticks(iy)
-        axes[0].set_yticklabels([f'{t}  ({pts[str(t)]} pts)' for t in dts], fontsize=8)
+        axes[0].set_yticklabels([f'{t}  ({etiq_y[str(t)]})' for t in dts], fontsize=8)
         axes[0].set_ylabel(r'$\Delta t$ de la ventana perturbada  [dias]')
         fig.colorbar(im, ax=axes, label='recall', fraction=0.03, pad=0.02)
         fig.suptitle('Recall en el plano $(\\Delta F,\\,\\Delta t)$, mad300 sobre 1.39M   '
@@ -277,12 +298,11 @@ def main():
                  color='#555555')
         fig.savefig(OUT / 'contour_dt_dF.png', dpi=140, bbox_inches='tight')
         plt.close(fig)
-        meta['contorno'] = {'dts': dts, 'dfs': b['dfs'],
+        meta['contorno'] = {'dts': dts, 'dfs': dfs_b,
                             'delta_f_medio': x_flux.tolist(),
                             'recall_ganadora': rec_g.tolist(),
-                            'recall_referencia': b['celdas'][REFERENCIA]['recall'],
-                            'span_mediano_por_dt': b['span_mediano_por_dt'],
-                            'puntos_medianos_por_dt': pts}
+                            'recall_referencia': recalls[REFERENCIA].tolist(),
+                            'etiqueta_por_dt': etiq_y}
         print('contorno listo')
     else:
         print(f'sin {BARRIDO}: el contorno queda pendiente')

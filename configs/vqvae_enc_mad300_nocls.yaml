@@ -1,0 +1,28 @@
+# Rama de ablacion para el objetivo 3: mismo VQ-VAE mad300 del subconjunto pero
+# sin cabeza de clasificacion (num_classes 0 hace que el modelo no la construya).
+#
+# Todo lo demas es identico a configs/vqvae_enc_mad300.yaml, incluidas las
+# imagenes y la particion, de modo que la unica variable entre ambas ramas es la
+# senal supervisada sobre z_q. Sirve para medir si la organizacion semantica del
+# codebook mejora los contrafactuales, que es la parte del objetivo 3 que quedo
+# sin responder.
+vqvae:
+  in_channels: 3
+  hidden_channels: [64, 128, 256]
+  embedding_dim: 256
+  num_embeddings: 512
+  commitment_cost: 0.25
+  learning_rate: 0.0002
+  batch_size: 32
+  num_epochs: 40
+  num_workers: 8
+  image_dir: "data/enc_cmp/mad300/images"
+  image_size: 256
+  val_split: 0.1
+  folds_path: "data/enc_cmp/mad300/folds.json"
+  labels_path: "data/enc_cmp/mad300/labels.json"
+  num_classes: 0
+  cls_weight: 0.0
+  cls_dropout: 0.1
+  checkpoint_dir: "results/enc_cmp_nocls/mad300/vqvae/checkpoints"
+  log_dir: "results/enc_cmp_nocls/mad300/vqvae/logs"

@@ -18,6 +18,11 @@ token.rtf
 *.fdb_latexmk
 *.synctex.gz
 *.toc
+*.blg
+*.lof
+*.lot
+*.out
+thesis-local/Tesis docs/check.*
 
 lightning_logs/
 *.log
