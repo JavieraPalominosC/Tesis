@@ -1,0 +1,155 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-noquoting]{babel}
+\usepackage[letterpaper,margin=2.5cm]{geometry}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+\usepackage{array}
+
+\setlist{itemsep=3pt,topsep=4pt}
+\addto\captionsspanish{\renewcommand{\refname}{Bibliografía}}
+
+\newcommand{\seccion}[1]{\vspace{6pt}\noindent{\large\textbf{$\bullet$ #1}}\par\vspace{2pt}}
+
+\begin{document}
+
+\begin{center}
+{\Large\textbf{Métodos contrafactuales para la detección e interpretación de anomalías en curvas de luz astronómicas multibanda}}
+\end{center}
+
+\vspace{4pt}
+\noindent
+\textbf{Estudiante:} Javiera Palominos Clarke\\
+\textbf{Profesor(a) guía:} Francisco Förster Burón\\
+\textbf{Profesor(a) co-guía:} Pablo Estévez\\
+\textbf{Fecha:}
+
+\seccion{Antecedentes}
+
+La detección de anomalías es un tema de gran relevancia en muchos campos científicos, en particular en la astronomía, donde el Observatorio Vera C. Rubin generará millones de alertas fotométricas por noche en seis bandas (\textit{u}, \textit{g}, \textit{r}, \textit{i}, \textit{z} e \textit{Y}), por lo que encontrar objetos con comportamientos inusuales dentro de ese volumen de datos no puede hacerse de forma manual. La importancia de detectar estos outliers está en que el Observatorio Vera C. Rubin observará el universo con una cadencia y profundidad nunca antes exploradas, lo que permitirá la detección de clases astrofísicas que no se han visto hasta ahora.
+
+Además de detectar anomalías, se necesita entender por qué un objeto es considerado un outlier, para que los astrónomos puedan decidir si vale la pena gatillar observaciones de seguimiento, y es ahí donde entran los métodos contrafactuales, que explican una anomalía mostrando qué cambios harían que ese objeto dejara de ser considerado anómalo.
+
+Existen estudios que muestran cómo las explicaciones contrafactuales mejoran la comprensión de las anomalías en series de tiempo, ayudando a los usuarios a entender qué cambios habrían evitado que una observación fuera clasificada como outlier \cite{cummins2024,schemmer2023}, además de que generar varios contrafactuales para una misma anomalía entrega una visión más completa de las características que la definen \cite{sulem2022}. Otros trabajos han llevado estas ideas a problemas parecidos, como las máscaras dinámicas para explicar predicciones sobre series de tiempo \cite{crabbe2021} y la detección de anomalías con modelado generativo enmascarado sobre un espacio latente discreto \cite{lee2024}, que combina un autoencoder con cuantización vectorial (VQ-VAE) \cite{vqvae2017} con un prior tipo MaskGIT \cite{maskgit2022} y que es el trabajo más cercano a esta tesis.
+
+Todos estos métodos fueron pensados para series de tiempo con muestreo regular y una sola escala de amplitud, por lo que no se pueden usar directamente sobre curvas de luz astronómicas, que tienen muestreo irregular, seis bandas observadas con cadencias distintas, períodos largos sin observaciones y flujos que varían en varios órdenes de magnitud de un objeto a otro, además de que en una supernova el propio pico de la curva ya es un cambio de flujo muy grande, lo que hace difícil separar lo que es parte del comportamiento normal del objeto de lo que es realmente anómalo.
+
+\seccion{Objetivos}
+
+\textbf{Objetivo General}
+
+Desarrollar un método de detección de anomalías en curvas de luz astronómicas multibanda con muestreo irregular que entregue, para cada anomalía detectada, una explicación contrafactual localizada en el tiempo y en la banda, basado en una representación discreta aprendida con un VQ-VAE y un prior MaskGIT, y evaluarlo sobre las curvas de luz simuladas del dataset ELAsTiCC-1, preparado para el Observatorio Vera C. Rubin.
+
+\textbf{Objetivos Específicos}
+
+\begin{enumerate}
+    \item Analizar los métodos de detección de anomalías y de explicaciones contrafactuales para series de tiempo disponibles en la literatura, identificando qué supuestos de cada uno no se cumplen en curvas de luz astronómicas multibanda.
+    \item Diseñar una representación de las curvas de luz multibanda como imágenes 2grid, junto con una codificación del flujo basada en la mediana y el MAD de cada objeto, que evite que la escala de la imagen quede fijada por la misma anomalía que se busca detectar.
+    \item Adaptar el esquema de detección de anomalías con modelado generativo enmascarado en un espacio latente discreto a curvas de luz astronómicas, entrenando un VQ-VAE con una cabeza de clasificación supervisada sobre el espacio cuantizado y un prior MaskGIT sobre sus tokens, y definiendo un score de anomalía basado en el máximo de la log-verosimilitud negativa por token.
+    \item Proponer un método de generación de contrafactuales que localice la región anómala a partir del mapa de log-verosimilitud negativa por token y la reescriba mediante remuestreo condicional del prior MaskGIT, de forma que el contrafactual modifique solo la parte de la curva de luz responsable de la anomalía.
+    \item Diseñar un protocolo de evaluación basado en la inyección de anomalías sintéticas de amplitud y duración controladas, que mida la detección, la localización de la anomalía y la calidad del contrafactual en FLUXCAL, invirtiendo la representación en imagen hacia la curva de luz.
+\end{enumerate}
+
+\seccion{Metodología}
+
+Para alcanzar los objetivos planteados, se seguirá la siguiente metodología:
+
+\textbf{Revisión bibliográfica:} Se revisará la literatura de detección de anomalías y explicaciones contrafactuales en series de tiempo, poniendo atención a los supuestos sobre el muestreo, la cantidad de canales y la escala de los datos que cada método necesita, para identificar qué partes hay que modificar al llevarlos a curvas de luz astronómicas.
+
+\textbf{Datos:} Se usará el dataset ELAsTiCC-1, que contiene cerca de 1,4 millones de curvas de luz simuladas de 17 tipos de supernovas con la cadencia esperada para el Observatorio Vera C. Rubin, lo que permite trabajar con datos parecidos a los que entregará el telescopio antes de que comience a operar. Estas curvas presentan muestreo irregular, períodos sin observaciones y errores distintos en cada época, por lo que en esta fase se estudiarán sus principales características temporales y por banda.
+
+\textbf{Representación de las curvas de luz:} Cada curva de luz se convertirá en una imagen 2grid, donde las seis bandas se dibujan como carriles apilados verticalmente, lo que resuelve el problema del muestreo irregular y permite usar arquitecturas convolucionales estándar. Para el eje del flujo se compararán una normalización lineal por percentiles y codificaciones basadas en la mediana y el MAD de cada objeto con compresión asinh, eligiendo la que no se sature frente a perturbaciones grandes.
+
+\textbf{Desarrollo del modelo:} Sobre las imágenes 2grid se entrenará un VQ-VAE, con codebook actualizado por EMA y reinicio de los embeddings que no se usan, además de una cabeza de clasificación supervisada sobre el espacio cuantizado para que el codebook quede organizado según el tipo de supernova. Luego se entrenará un prior MaskGIT sobre las secuencias de tokens, comparando máscaras aleatorias y máscaras de ventana contigua tanto al entrenar como al puntuar.
+
+\textbf{Detección y contrafactuales:} El score de anomalía de cada objeto se calculará como el máximo de la log-verosimilitud negativa por token entregada por el prior MaskGIT, y el mapa completo de esa log-verosimilitud se usará para delimitar la región a reescribir, que luego se completa con el prior para obtener el contrafactual.
+
+\textbf{Métricas de evaluación:} Para la detección se usarán AUROC, recall y precisión con un umbral fijado en el percentil 95 de los scores de curvas sin perturbar, además de la localización, que mide si el token con mayor log-verosimilitud negativa cae dentro de la zona perturbada. Para los contrafactuales se medirá la reducción del residuo en FLUXCAL dentro de la ventana perturbada, el borrado de épocas y la confusión de banda, comparando contra un oráculo que conoce la zona perturbada y contra un control que reescribe una región al azar.
+
+\textbf{Interacción con equipo multidisciplinar:} Se revisarán los ejemplos contrafactuales generados con el equipo de astrónomos del broker ALeRCE, para verificar que las explicaciones tengan sentido desde el punto de vista astrofísico.
+
+\seccion{Resultados Esperados}
+
+A partir de la metodología propuesta, se espera obtener los siguientes resultados:
+
+\textbf{Método de detección e interpretación:} Un método que detecte anomalías en curvas de luz multibanda sin necesitar etiquetas de anomalía y que entregue para cada una un contrafactual que indique en qué banda y en qué parte de la curva está el comportamiento anómalo.
+
+\textbf{Caracterización de la sensibilidad:} Una medición de cómo responden la detección y los contrafactuales según la amplitud y la duración de la perturbación, para saber desde qué tamaño de anomalía el método es confiable.
+
+\textbf{Comparación de variantes:} Una comparación entre las codificaciones del flujo, las formas de máscara del prior MaskGIT y los criterios para elegir la región a reescribir, que permita identificar qué componentes del método determinan su desempeño, además de sus limitaciones al evaluarse con anomalías inyectadas sobre datos simulados.
+
+\seccion{Plan de Trabajo}
+
+A continuación, se detallan las etapas principales del proyecto:
+
+\textbf{Revisión bibliográfica y curación de datos (Agosto - Octubre):}
+\begin{itemize}
+    \item Revisión bibliográfica de los trabajos de detección de anomalías y explicaciones contrafactuales en series de tiempo.
+    \item Análisis exploratorio de ELAsTiCC-1 y generación de las imágenes 2grid.
+\end{itemize}
+
+\textbf{Desarrollo del modelo de detección (Octubre - Diciembre):}
+\begin{itemize}
+    \item Entrenamiento del VQ-VAE y evaluación de la calidad de reconstrucción y del uso del codebook.
+    \item Comparación de las codificaciones del flujo.
+    \item Entrenamiento del prior MaskGIT y definición del score de anomalía.
+\end{itemize}
+
+\textbf{Generación y evaluación de contrafactuales (Enero - Abril):}
+\begin{itemize}
+    \item Desarrollo del procedimiento de localización y reescritura de la región anómala.
+    \item Diseño del protocolo de inyección de anomalías sintéticas y de la evaluación en FLUXCAL.
+    \item Revisión de los contrafactuales con el equipo de ALeRCE.
+    \item Análisis cuantitativo y cualitativo de los resultados.
+\end{itemize}
+
+\textbf{Escritura de la tesis (Abril - Junio):}
+\begin{itemize}
+    \item Introducción, con el contexto, el planteamiento del problema y los objetivos.
+    \item Metodología, con la descripción del método desarrollado.
+    \item Resultados, con el análisis cuantitativo y cualitativo.
+    \item Conclusiones, con la discusión de los hallazgos, sus limitaciones y el trabajo futuro.
+\end{itemize}
+
+\seccion{Resultados preliminares}
+
+Con el prior MaskGIT entrenado con máscara aleatoria y puntuado con máscara de ventana, sobre 40 SNIa del conjunto de validación a las que se les inyectó una perturbación y con el umbral en el percentil 95 de los scores de las mismas curvas sin perturbar, el recall llega a 1.00 en $\Delta f = 500$ y a 0.80 en $\Delta f = 100$, con $\Delta f$ medido en unidades del MAD de cada objeto, mientras que el mismo prior puntuado con máscara aleatoria llega solo a 0.13 en $\Delta f = 100$, lo que indica que pesa más la forma de la máscara con que se puntúa que la forma con que se entrenó el prior.
+
+En los contrafactuales, reescribir la región que el modelo identifica como anómala reduce el residuo en FLUXCAL bastante más que reescribir una región elegida al azar, aunque en una parte de los casos el contrafactual borra la observación en vez de corregirla, por lo que esos casos se cuentan como fracaso en la evaluación.
+
+\begin{thebibliography}{9}
+\setlength{\itemsep}{2pt}
+
+\bibitem{cummins2024}
+Cummins, L., Sommers, A., Mittal, S., Rahimi, S., Seale, M., Jaboure, J., \& Arnold, T. (2024). Explainable Anomaly Detection: Counterfactual driven What-If Analysis. arXiv. \url{https://arxiv.org/abs/2408.11935}
+
+\bibitem{schemmer2023}
+Schemmer, M., Holstein, J., Bauer, N., Kühl, N., \& Satzger, G. (2023). Towards Meaningful Anomaly Detection: The Effect of Counterfactual Explanations on the Investigation of Anomalies in Multivariate Time Series. arXiv. \url{https://arxiv.org/abs/2302.03302}
+
+\bibitem{sulem2022}
+Sulem, D., Donini, M., Zafar, M. B., Aubet, F., Gasthaus, J., Januschowski, T., Das, S., Kenthapadi, K., \& Archambeau, C. (2022). Diverse Counterfactual Explanations for Anomaly Detection in Time Series. arXiv. \url{https://arxiv.org/abs/2203.11103}
+
+\bibitem{crabbe2021}
+Crabbé, J., \& van der Schaar, M. (2021). Explaining Time Series Predictions with Dynamic Masks. arXiv. \url{https://arxiv.org/abs/2106.05303}
+
+\bibitem{lee2024}
+Lee, D., Malacarne, S., \& Aune, E. (2024). Explainable time series anomaly detection using masked latent generative modeling. \textit{Pattern Recognition}, 156, 110826. \url{https://doi.org/10.1016/j.patcog.2024.110826}
+
+\bibitem{vqvae2017}
+van den Oord, A., Vinyals, O., \& Kavukcuoglu, K. (2017). Neural Discrete Representation Learning. \textit{Advances in Neural Information Processing Systems}, 30. \url{https://arxiv.org/abs/1711.00937}
+
+\bibitem{maskgit2022}
+Chang, H., Zhang, H., Jiang, L., Liu, C., \& Freeman, W. T. (2022). MaskGIT: Masked Generative Image Transformer. \textit{Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition}, 11315--11325. \url{https://arxiv.org/abs/2202.04200}
+\end{thebibliography}
+
+\vspace{1.5cm}
+\noindent
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{5cm}@{\hspace{0.6cm}}>{\raggedright\arraybackslash}p{5cm}@{\hspace{0.6cm}}>{\raggedright\arraybackslash}p{5cm}@{}}
+\hrulefill & \hrulefill & \hrulefill \\
+Firma y nombre estudiante & Firma y nombre profesor(a) guía & Firma y nombre profesor(a) co-guía (si hay)
+\end{tabular}
+
+\end{document}
