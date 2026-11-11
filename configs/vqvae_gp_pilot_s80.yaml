@@ -1,0 +1,23 @@
+# Subset del piloto GP: 16 objetos por clase × survey × fold.
+# 26×2×5×16 = 4.160. Misma codificación as-is, mismos folds del paper,
+# mismas imágenes cacheadas en data/gp_pilot/images.
+vqvae:
+  in_channels: 1
+  hidden_channels: [64, 128, 256]
+  embedding_dim: 256
+  num_embeddings: 512
+  commitment_cost: 0.25
+  learning_rate: 0.0002
+  batch_size: 32
+  num_epochs: 25
+  num_workers: 4
+  image_dir: "data/gp_pilot/images"
+  image_size: 256
+  folds_path: "data/gp_pilot_s80/folds.json"
+  labels_path: "data/gp_pilot_s80/labels.json"
+  num_classes: 26
+  cls_weight: 0.1
+  cls_dropout: 0.1
+  run_name: "vqvae-gp-s80"
+  checkpoint_dir: "results/gp_pilot_s80/vqvae/checkpoints"
+  log_dir: "results/gp_pilot_s80/vqvae/logs"

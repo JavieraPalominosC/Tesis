@@ -1,0 +1,25 @@
+# GP transientes completos (cv) sin las seis clases excluidas, que quedan
+# como anomalías reales: SNIa-91bg-elastic, SNIax-elastic, SLSN-I y las tres
+# PISN. Equivale al experimento heldout de ELAsTiCC-1 (SNIIb no tiene par).
+# 9 clases × 800 (DDF+WFD) = 7.200 objetos; fold 0 del paper = val (~1.440).
+# Mismas imágenes as-is y misma arquitectura que el subset chico.
+vqvae:
+  in_channels: 1
+  hidden_channels: [64, 128, 256]
+  embedding_dim: 256
+  num_embeddings: 512
+  commitment_cost: 0.25
+  learning_rate: 0.0002
+  batch_size: 32
+  num_epochs: 25
+  num_workers: 8
+  image_dir: "data/gp_pilot/images"
+  image_size: 256
+  folds_path: "data/gp_tr_ho/folds.json"
+  labels_path: "data/gp_tr_ho/labels.json"
+  num_classes: 9
+  cls_weight: 0.1
+  cls_dropout: 0.1
+  run_name: "vqvae-gp-tr-ho"
+  checkpoint_dir: "results/gp_tr_ho/vqvae/checkpoints"
+  log_dir: "results/gp_tr_ho/vqvae/logs"

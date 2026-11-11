@@ -12,6 +12,9 @@ token.rtf
 # Copias comprimidas de directorios que ya estan versionados.
 *.zip
 
+# Tarballs de datos (sample del paper, varios GB).
+*.tar
+
 # Intermedios de compilacion de LaTeX; el .pdf y el .bbl si se versionan.
 *.aux
 *.fls
